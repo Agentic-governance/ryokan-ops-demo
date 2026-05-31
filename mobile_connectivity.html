@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>連携状況</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+    --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+    --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+    --navy:#1E3A5F;--navy-lite:#DCE5F0;
+    --amber:#D97706;--amber-lite:#FEF3C7;
+    --green:#15803D;--green-lite:#DCFCE7;
+    --purple:#7C3AED;--purple-lite:#EDE9FE;
+    --teal:#0E7490;--teal-lite:#CCFBF1;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;
+    background:#F0F0F0;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:20px 0;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .phone-frame {
+    width:375px;
+    min-height:812px;
+    background:var(--bg);
+    border-radius:40px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow:hidden;
+    position:relative;
+  }
+
+  .status-bar {
+    height:44px;
+    background:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+  }
+  .status-bar .time { font-size:14px; font-weight:700; }
+  .status-bar .carrier { font-size:11px; opacity:0.85; letter-spacing:0.3px; }
+  .status-bar .icons { font-size:12px; letter-spacing:2px; }
+
+  .app-header {
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    border-bottom:1px solid var(--rule-soft);
+    background:var(--bg);
+  }
+  .app-header .logo {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-weight:700;
+    font-size:15px;
+    color:var(--navy);
+  }
+  .app-header .logo .dot { width:8px; height:8px; background:var(--brand); border-radius:50%; }
+  .app-header .title { font-size:17px; font-weight:700; color:var(--text); }
+  .app-header .bell {
+    position:relative;
+    font-size:20px;
+  }
+  .app-header .bell .badge {
+    position:absolute;
+    top:-4px; right:-6px;
+    background:var(--brand);
+    color:#fff;
+    font-size:10px;
+    font-weight:700;
+    width:16px; height:16px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+  }
+
+  .content {
+    padding-bottom:100px;
+    overflow-y:auto;
+  }
+
+  .hero {
+    margin:14px 16px 10px;
+    padding:14px;
+    border-radius:16px;
+    background:linear-gradient(135deg, var(--navy) 0%, #0f2742 100%);
+    color:#fff;
+    box-shadow:0 10px 20px rgba(30,58,95,0.14);
+  }
+  .hero .kicker {
+    font-size:11px;
+    letter-spacing:0.06em;
+    opacity:0.82;
+    margin-bottom:6px;
+  }
+  .hero .headline {
+    font-size:16px;
+    font-weight:700;
+    line-height:1.45;
+  }
+  .hero .sub {
+    margin-top:8px;
+    font-size:12px;
+    color:rgba(255,255,255,0.85);
+    line-height:1.6;
+  }
+
+  .quick-stats {
+    display:flex;
+    gap:10px;
+    padding:0 16px 8px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .quick-stats::-webkit-scrollbar { display:none; }
+  .stat-card {
+    flex:0 0 calc(33.33% - 7px);
+    min-width:105px;
+    background:var(--surface);
+    border-radius:12px;
+    padding:12px;
+    text-align:center;
+  }
+  .stat-card .value { font-size:26px; font-weight:700; color:var(--text); line-height:1.1; }
+  .stat-card .value.red { color:var(--brand); }
+  .stat-card .value.amber { color:var(--amber); }
+  .stat-card .label { font-size:11px; color:var(--text-mute); margin-top:4px; font-weight:500; }
+  .stat-card .delta { font-size:11px; color:var(--green); font-weight:600; margin-top:2px; }
+
+  .section {
+    padding:0 16px;
+    margin-top:16px;
+  }
+
+  .accordion {
+    border:1px solid var(--rule-soft);
+    border-radius:16px;
+    overflow:hidden;
+    background:var(--bg);
+    margin-bottom:12px;
+  }
+  .accordion-h {
+    width:100%;
+    border:none;
+    background:var(--bg);
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:14px 14px 12px;
+    cursor:pointer;
+    font:inherit;
+    text-align:left;
+  }
+  .accordion-h:active { background:var(--surface); }
+  .accordion-h .icon {
+    width:30px;
+    height:30px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+    flex-shrink:0;
+  }
+  .icon.navy { background:var(--navy-lite); color:var(--navy); }
+  .icon.green { background:var(--green-lite); color:var(--green); }
+  .icon.amber { background:var(--amber-lite); color:var(--amber); }
+  .icon.brand { background:var(--brand-lite); color:var(--brand); }
+  .accordion-h .meta { flex:1; min-width:0; }
+  .accordion-h .title-row {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:4px;
+  }
+  .accordion-h .title {
+    font-size:14px;
+    font-weight:700;
+    color:var(--text);
+  }
+  .accordion-h .state {
+    font-size:11px;
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:999px;
+    white-space:nowrap;
+    background:var(--surface);
+    color:var(--text-sub);
+  }
+  .accordion-h .state.ok { background:var(--green-lite); color:var(--green); }
+  .accordion-h .state.warn { background:var(--amber-lite); color:var(--amber); }
+  .accordion-h .state.bad { background:var(--brand-lite); color:var(--brand); }
+  .accordion-h .desc {
+    font-size:12px;
+    color:var(--text-sub);
+    line-height:1.55;
+  }
+  .accordion-h .chev {
+    align-self:center;
+    font-size:18px;
+    color:var(--text-mute);
+    transition:transform 0.2s ease;
+    padding-top:2px;
+  }
+  .accordion.open .accordion-h .chev { transform:rotate(90deg); }
+  .accordion-b {
+    display:none;
+    border-top:1px solid var(--rule-soft);
+    background:linear-gradient(180deg, #fff 0%, #fcfcfc 100%);
+  }
+  .accordion.open .accordion-b { display:block; }
+
+  .pill-row {
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    padding:12px 14px 0;
+  }
+  .pill {
+    font-size:10.5px;
+    font-weight:700;
+    padding:5px 8px;
+    border-radius:999px;
+    background:var(--surface);
+    color:var(--text-sub);
+    border:1px solid var(--rule-soft);
+  }
+  .pill.brand { background:var(--brand-soft); color:var(--brand); border-color:var(--brand-lite); }
+  .pill.green { background:var(--green-lite); color:var(--green); border-color:transparent; }
+  .pill.amber { background:var(--amber-lite); color:var(--amber); border-color:transparent; }
+  .pill.navy { background:var(--navy-lite); color:var(--navy); border-color:transparent; }
+
+  .list {
+    padding:12px 14px 14px;
+  }
+  .list-item {
+    border:1px solid var(--rule-soft);
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:10px;
+    background:#fff;
+  }
+  .row-top {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .row-top .left {
+    min-width:0;
+    flex:1;
+  }
+  .row-top .code {
+    font-size:13px;
+    font-weight:700;
+    color:var(--text);
+    line-height:1.4;
+  }
+  .row-top .sub {
+    font-size:11px;
+    color:var(--text-mute);
+    line-height:1.5;
+    margin-top:2px;
+  }
+  .row-top .badge {
+    font-size:10px;
+    font-weight:700;
+    padding:4px 8px;
+    border-radius:8px;
+    white-space:nowrap;
+  }
+  .badge.green { background:var(--green-lite); color:var(--green); }
+  .badge.amber { background:var(--amber-lite); color:var(--amber); }
+  .badge.brand { background:var(--brand-lite); color:var(--brand); }
+  .badge.navy { background:var(--navy-lite); color:var(--navy); }
+
+  .metric-grid {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0,1fr));
+    gap:8px;
+    margin-top:10px;
+  }
+  .metric {
+    background:var(--surface);
+    border-radius:10px;
+    padding:8px 10px;
+  }
+  .metric .k {
+    font-size:10px;
+    color:var(--text-mute);
+    margin-bottom:2px;
+  }
+  .metric .v {
+    font-size:14px;
+    font-weight:700;
+    color:var(--text);
+  }
+  .metric .v.red { color:var(--brand); }
+  .metric .v.amber { color:var(--amber); }
+  .metric .v.green { color:var(--green); }
+
+  .cta-row {
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+  }
+  .btn {
+    flex:1;
+    padding:10px 0;
+    border-radius:10px;
+    font:inherit;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    border:none;
+  }
+  .btn.primary { background:var(--brand); color:#fff; }
+  .btn.secondary { background:var(--bg); color:var(--text-sub); border:1px solid var(--rule); }
+  .btn.ghost { background:var(--surface); color:var(--navy); border:1px solid var(--rule-soft); }
+
+  .note {
+    padding:0 14px 14px;
+    font-size:11px;
+    color:var(--text-mute);
+    line-height:1.65;
+  }
+  .note strong { color:var(--text); }
+
+  .parity-banner {
+    margin:0 16px 10px;
+    padding:12px 14px;
+    border-radius:14px;
+    background:linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+    color:#fff;
+  }
+  .parity-banner .t {
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:4px;
+  }
+  .parity-banner .d {
+    font-size:12px;
+    line-height:1.55;
+    color:rgba(255,255,255,0.9);
+  }
+
+  .bottom-nav {
+    position:sticky;
+    bottom:0;
+    left:0; right:0;
+    height:83px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--rule-soft);
+    display:flex;
+    padding-bottom:20px;
+  }
+  .nav-tab {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    text-decoration:none;
+    color:var(--text-mute);
+    font-size:10px;
+    font-weight:500;
+    cursor:pointer;
+    padding-top:6px;
+  }
+  .nav-tab .icon { font-size:22px; line-height:1; }
+  .nav-tab.active { color:var(--brand); }
+  .nav-tab.active .label-text { font-weight:600; }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="status-bar">
+    <span class="time">15:42</span>
+    <span class="carrier">&#9679;&#9679;&#9679; リゾート箱根</span>
+    <span class="icons">&#9632;&#9632;&#9632;&#9632;&#9632;</span>
+  </div>
+
+  <div class="app-header">
+    <div class="logo"><span class="dot"></span> 旅館運営システム</div>
+    <span class="title">連携状況</span>
+    <div class="bell">&#128276;<span class="badge">4</span></div>
+  </div>
+
+  <div class="content">
+    <div class="hero">
+      <div class="kicker">営業日 2026/05/30</div>
+      <div class="headline">○○リゾート箱根の連携は、ネット予約サイトへ直接つながず、手間いらず（予約サイト一元管理）を通して統制。</div>
+      <div class="sub">新規/変更/取消の予約データ取込、予約サイト一元管理の在庫・料金反映、売止/再販、予約サイト一元管理の残室と基幹システム在庫の不一致、Booking.comの料金差（公式より安い）警告をこの1画面で確認。</div>
+    </div>
+
+    <div class="quick-stats">
+      <div class="stat-card">
+        <div class="value red">7</div>
+        <div class="label">取込待ち</div>
+        <div class="delta">変更 2件</div>
+      </div>
+      <div class="stat-card">
+        <div class="value amber">72s</div>
+        <div class="label">平均遅延</div>
+        <div class="delta" style="color:var(--amber);">予約サイト一元管理経由</div>
+      </div>
+      <div class="stat-card">
+        <div class="value">1</div>
+        <div class="label">差異</div>
+        <div class="delta" style="color:var(--brand);">再同期要</div>
+      </div>
+    </div>
+
+    <div class="parity-banner">
+      <div class="t">Booking.com 料金差（公式より安い）警告 -8%</div>
+      <div class="d">公式サイトより8%安い在庫を検知。ネット予約サイトへ直接つながず、予約サイト一元管理を通して一括是正する前提で確認してください。</div>
+    </div>
+
+    <div class="section">
+      <div class="accordion open" data-accordion>
+        <button class="accordion-h" type="button" aria-expanded="true">
+          <div class="icon navy">&#128229;</div>
+          <div class="meta">
+            <div class="title-row">
+              <div class="title">予約データ取込状況</div>
+              <div class="state warn">取込待ち 7件</div>
+            </div>
+            <div class="desc">新規 / 変更 / 取消 を分離。変更の予約データは手動での再取込が必要。</div>
+          </div>
+          <div class="chev">&#8250;</div>
+        </button>
+        <div class="accordion-b">
+          <div class="pill-row">
+            <span class="pill navy">新規 3</span>
+            <span class="pill amber">変更 2</span>
+            <span class="pill brand">取消 2</span>
+            <span class="pill">基幹システム出力: 未</span>
+            <span class="pill">扱先: 未設定 1</span>
+          </div>
+          <div class="list">
+            <div class="list-item">
+              <div class="row-top">
+                <div class="left">
+                  <div class="code">新規 / RKT-7782041</div>
+                  <div class="sub">楽天 / 2名 / 5/31チェックイン / SC-99214</div>
+                </div>
+                <div class="badge green">自動取込済</div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><div class="k">取込状態</div><div class="v green">完了</div></div>
+                <div class="metric"><div class="k">重複制御</div><div class="v">g1</div></div>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="row-top">
+                <div class="left">
+                  <div class="code">変更 / BDC-5520198</div>
+                  <div class="sub">Booking / 人数 2→3、日程変更 / 手動での再取込が必要</div>
+                </div>
+                <div class="badge amber">要 手動再取込</div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><div class="k">差分</div><div class="v amber">人数変更</div></div>
+                <div class="metric"><div class="k">操作</div><div class="v red">再取込待ち</div></div>
+              </div>
+              <div class="cta-row">
+                <button class="btn primary">再取り込み</button>
+                <button class="btn secondary">詳細</button>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="row-top">
+                <div class="left">
+                  <div class="code">取消 / IKY-1180443</div>
+                  <div class="sub">一休 / 既存予約の取消 / 取消データは自動反映</div>
+                </div>
+                <div class="badge brand">自動反映</div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><div class="k">基幹システム反映</div><div class="v">済</div></div>
+                <div class="metric"><div class="k">残室戻し</div><div class="v green">即時</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="note"><strong>実運用:</strong> 変更の予約データは上書きしない。更新の世代番号と重複防止の仕組みで処理の順序逆転を吸収し、手動での再取込で確定させる。</div>
+        </div>
+      </div>
+
+      <div class="accordion open" data-accordion>
+        <button class="accordion-h" type="button" aria-expanded="true">
+          <div class="icon brand">&#128736;</div>
+          <div class="meta">
+            <div class="title-row">
+              <div class="title">予約サイト一元管理の連携状況</div>
+              <div class="state ok">在庫・料金 反映中</div>
+            </div>
+            <div class="desc">手間いらずを通して各ネット予約サイトへ在庫・料金を反映。遅延秒と再送を見える化。</div>
+          </div>
+          <div class="chev">&#8250;</div>
+        </button>
+        <div class="accordion-b">
+          <div class="pill-row">
+            <span class="pill brand">手間いらず経由</span>
+            <span class="pill green">各予約サイト 在庫・料金</span>
+            <span class="pill">直接つなぎなし</span>
+          </div>
+          <div class="list">
+            <div class="list-item">
+              <div class="row-top">
+                <div class="left">
+                  <div class="code">Booking.com</div>
+                  <div class="sub">在庫 12室 / 料金更新済 / 遅延 68秒</div>
+                </div>
+                <div class="badge green">正常</div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><div class="k">最終反映</div><div class="v">1.1分前</div></div>
+                <div class="metric"><div class="k">エラー</div><div class="v green">0</div></div>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="row-top">
+                <div class="left">
+                  <div class="code">楽天トラベル</div>
+                  <div class="sub">在庫 8室 / 料金更新済 / 遅延 92秒</div>
+                </div>
+                <div class="badge amber">再送中</div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><div class="k">最終反映</div><div class="v">1.5分前</div></div>
+                <div class="metric"><div class="k">エラー</div><div class="v amber">1件</div></div>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="row-top">
+                <div class="left">
+                  <div class="code">一休.com / Agoda / Expedia</div>
+                  <div class="sub">共通在庫プール反映済 / 遅延 55-84秒</div>
+                </div>
+                <div class="badge green">OK</div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><div class="k">処理対象</div><div class="v">3サイト</div></div>
+                <div class="metric"><div class="k">平均遅延</div><div class="v green">72秒</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="note">ネット予約サイトは基幹システムへ直接つながない。予約サイト一元管理が中間で在庫と料金を配信し、予約はデータで回収する。</div>
+        </div>
+      </div>
+
+      <div class="accordion" data-accordion>
+        <button class="accordion-h" type="button" aria-expanded="false">
+          <div class="icon amber">&#128273;</div>
+          <div class="meta">
+            <div class="title-row">
+              <div class="title">販売停止 / 再販を1タップ</div>
+              <div class="state bad">全サイト手仕舞い</div>
+            </div>
+            <div class="desc">1タップで全サイト即時手仕舞い。登録確認を抜かさない運用。</div>
+          </div>
+          <div class="chev">&#8250;</div>
+        </button>
+        <div class="accordion-b">
+          <div class="pill-row">
+            <span class="pill amber">最短3クリック相当</span>
+            <span class="pill">サイトへ登録する</span>
+            <span class="pill brand">未送信 0</span>
+          </div>
+          <div class="list">
+            <div class="list-item">
+              <div class="row-top">
+                <div class="left">
+                  <div class="code">本館和室10畳</div>
+                  <div class="sub">全サイト即時手仕舞い / 残室 0 / 再販待ち</div>
+                </div>
+                <div class="badge brand">売止中</div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><div class="k">反映先</div><div class="v">手間いらず</div></div>
+                <div class="metric"><div class="k">操作</div><div class="v red">即時登録</div></div>
+              </div>
+              <div class="cta-row">
+                <button class="btn primary">全サイト売止</button>
+                <button class="btn ghost">サイトへ登録</button>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="row-top">
+                <div class="left">
+                  <div class="code">離れ露天付</div>
+                  <div class="sub">繁忙期の再販待ち / 料金再計算済 / 解除条件確認</div>
+                </div>
+                <div class="badge green">再販可</div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><div class="k">状態</div><div class="v green">販売再開</div></div>
+                <div class="metric"><div class="k">注意</div><div class="v amber">登録確認</div></div>
+              </div>
+              <div class="cta-row">
+                <button class="btn primary">再販</button>
+                <button class="btn secondary">条件確認</button>
+              </div>
+            </div>
+          </div>
+          <div class="note">売止・再販は、最終的に「サイトへ登録する」まで完了させる。押し忘れは未送信件数で見逃さない。</div>
+        </div>
+      </div>
+
+      <div class="accordion open" data-accordion>
+        <button class="accordion-h" type="button" aria-expanded="true">
+          <div class="icon green">&#128200;</div>
+          <div class="meta">
+            <div class="title-row">
+              <div class="title">在庫の不一致 &amp; 料金差（公式より安い）</div>
+              <div class="state warn">再同期 1件</div>
+            </div>
+            <div class="desc">予約サイト一元管理の残室と基幹システム在庫のズレを常時表示。Booking -8% 警告を併記。</div>
+          </div>
+          <div class="chev">&#8250;</div>
+        </button>
+        <div class="accordion-b">
+          <div class="pill-row">
+            <span class="pill green">予約サイト一元管理 残室 8</span>
+            <span class="pill brand">基幹システム在庫 7</span>
+            <span class="pill amber">不一致 1</span>
+            <span class="pill navy">再同期</span>
+          </div>
+          <div class="list">
+            <div class="list-item">
+              <div class="row-top">
+                <div class="left">
+                  <div class="code">予約サイト一元管理の残室 と 基幹システム在庫</div>
+                  <div class="sub">本館和室10畳 / 予約サイト一元管理 8 室、基幹システム 7 室</div>
+                </div>
+                <div class="badge amber">不一致あり</div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><div class="k">差分</div><div class="v red">-1室</div></div>
+                <div class="metric"><div class="k">対応</div><div class="v green">再同期</div></div>
+              </div>
+              <div class="cta-row">
+                <button class="btn primary">再同期</button>
+                <button class="btn secondary">差分確認</button>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="row-top">
+                <div class="left">
+                  <div class="code">Booking.com 料金差（公式より安い）</div>
+                  <div class="sub">公式サイト比 -8% / 是正対象 / 予約サイト一元管理を通して調整</div>
+                </div>
+                <div class="badge brand">警告</div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric"><div class="k">違反幅</div><div class="v red">-8%</div></div>
+                <div class="metric"><div class="k">処理</div><div class="v amber">要補正</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="note">料金差（公式より安い）の警告は自動是正ではない。販売面の判断は予約サイト一元管理を通して行う前提の警告表示。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-tab active" href="mobile_connectivity.html">
+      <span class="icon">&#128279;</span>
+      <span class="label-text">連携</span>
+    </a>
+    <a class="nav-tab" href="mobile_reservations.html">
+      <span class="icon">&#128221;</span>
+      <span class="label-text">予約</span>
+    </a>
+    <a class="nav-tab" href="mobile_rooms.html">
+      <span class="icon">&#127968;</span>
+      <span class="label-text">客室</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#128463;</span>
+      <span class="label-text">もっと</span>
+    </a>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-accordion]').forEach((item) => {
+    const head = item.querySelector('.accordion-h');
+    const setOpen = (open) => {
+      item.classList.toggle('open', open);
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    head.addEventListener('click', () => setOpen(!item.classList.contains('open')));
+  });
+</script>
+
+</body>
+</html>

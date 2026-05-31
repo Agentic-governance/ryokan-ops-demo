@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>ゲスト管理 (宿泊者名簿 / 総合プロファイル)</title>
+<style>
+:root {
+  --bg:#FFFFFF; --text:#1A1A1A; --text-sub:#4A4A4A; --text-mute:#8C8C8C;
+  --rule:#D0D0D0; --rule-soft:#E5E5E5; --rule-lite:#F0F0F0; --surface:#F7F7F7;
+  --brand:#C8102E; --brand-lite:#FCE5E8; --brand-soft:#FFF0F2; --brand-dark:#8B0F1F;
+  --navy:#1E3A5F; --navy-lite:#DCE5F0;
+  --amber:#D97706; --amber-lite:#FEF3C7;
+  --green:#15803D; --green-lite:#DCFCE7;
+  --purple:#7C3AED; --purple-lite:#EDE9FE;
+  --teal:#0E7490; --teal-lite:#CFFAFE;
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif; color:var(--text); background:var(--bg); width:1440px; min-height:900px; font-size:13px; line-height:1.5; }
+a { text-decoration:none; color:inherit; }
+.header { position:fixed; top:0; left:0; width:1440px; height:56px; background:var(--bg); border-bottom:1px solid var(--rule-soft); z-index:100; display:flex; align-items:center; padding:0 20px; gap:16px; }
+.header-logo { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.header-logo .dot { width:12px; height:12px; border-radius:50%; background:var(--brand); }
+.header-logo span { font-size:16px; font-weight:700; }
+.header-facility { display:flex; align-items:center; gap:6px; padding:6px 12px; border:1px solid var(--rule); border-radius:4px; font-size:13px; cursor:pointer; white-space:nowrap; flex-shrink:0; }
+.header-search { flex:1; max-width:360px; margin:0 auto; position:relative; }
+.header-search input { width:100%; height:34px; border:1px solid var(--rule); border-radius:4px; padding:0 12px 0 34px; font-size:13px; background:var(--surface); outline:none; font-family:inherit; }
+.header-search::before { content:'\1F50D'; position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px; }
+.header-right { display:flex; align-items:center; gap:16px; margin-left:auto; }
+.header-bell { position:relative; font-size:18px; cursor:pointer; }
+.badge-notif { position:absolute; top:-6px; right:-8px; background:var(--brand); color:#fff; font-size:10px; font-weight:600; padding:1px 5px; border-radius:8px; }
+.header-user { display:flex; align-items:center; gap:8px; cursor:pointer; }
+.header-user-info { text-align:right; }
+.header-user-info .name { font-size:13px; font-weight:600; }
+.header-user-info .role { font-size:11px; color:var(--text-mute); }
+.header-user .arrow { font-size:10px; color:var(--text-mute); }
+.sidebar { position:fixed; top:56px; left:0; width:200px; height:calc(100vh - 56px); background:var(--bg); border-right:1px solid var(--rule-soft); padding:12px 0; z-index:90; overflow-y:auto; }
+.sidebar-item { display:block; padding:10px 16px; font-size:13px; color:var(--text-sub); border-left:3px solid transparent; }
+.sidebar-item:hover { background:var(--surface); color:var(--text); }
+.sidebar-item.active { border-left-color:var(--brand); background:var(--brand-soft); color:var(--brand); font-weight:600; }
+.sidebar-sub { font-size:10px; color:var(--text-mute); padding:12px 16px 4px; text-transform:uppercase; letter-spacing:.5px; }
+.main { margin-top:56px; margin-left:200px; padding:20px 24px; width:1240px; }
+.page-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:4px; }
+.page-title { font-size:19px; font-weight:700; }
+.page-title .ai-badge { font-size:11px; font-weight:700; color:var(--purple); background:var(--purple-lite); padding:2px 8px; border-radius:4px; margin-left:8px; }
+.page-sub { font-size:12px; color:var(--text-mute); margin-bottom:14px; }
+.seg { display:inline-flex; border:1px solid var(--rule); border-radius:5px; overflow:hidden; }
+.seg button { border:none; background:var(--bg); padding:6px 12px; font-size:12px; font-family:inherit; cursor:pointer; color:var(--text-sub); border-right:1px solid var(--rule); }
+.seg button:last-child { border-right:none; }
+.seg button.on { background:var(--brand); color:#fff; font-weight:600; }
+.kpi-strip { display:flex; gap:12px; margin-bottom:18px; }
+.kpi-card { flex:1; padding:13px 14px; border-radius:6px; background:var(--bg); border:1px solid var(--rule-soft); box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.kpi-card .label { font-size:10px; color:var(--text-mute); text-transform:uppercase; letter-spacing:.3px; margin-bottom:4px; min-height:26px; line-height:1.3; }
+.kpi-card .value { font-size:20px; font-weight:700; }
+.kpi-card .sub { font-size:10px; margin-top:2px; color:var(--text-mute); }
+.cols { display:flex; gap:18px; align-items:flex-start; }
+.col-l { flex:0 0 65%; min-width:0; }
+.col-r { flex:1; min-width:0; }
+.card { border:1px solid var(--rule-soft); border-radius:8px; background:var(--bg); box-shadow:0 1px 3px rgba(0,0,0,.04); margin-bottom:18px; overflow:hidden; }
+.card-h { padding:11px 16px; border-bottom:1px solid var(--rule-soft); display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.card-h .t { font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px; }
+.card-h .src { font-size:9.5px; color:var(--text-mute); background:var(--surface); padding:2px 7px; border-radius:10px; white-space:nowrap; }
+.card-b { padding:14px 16px; }
+.card-b.nopad { padding:0; }
+.alert-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:12px; }
+.alert-strip .a { background:var(--surface); border:1px solid var(--rule-lite); border-radius:6px; padding:9px 10px; font-size:10.5px; line-height:1.4; }
+.alert-strip .a b { display:block; font-size:12px; margin-bottom:2px; color:var(--text); }
+.alert-strip .a.red { background:var(--brand-soft); border-color:var(--brand-lite); }
+.alert-strip .a.amber { background:var(--amber-lite); }
+.alert-strip .a.green { background:var(--green-lite); }
+.alert-strip .a.navy { background:var(--navy-lite); }
+.req-box { background:var(--surface); border:1px dashed var(--rule); border-radius:6px; padding:10px 12px; font-size:11px; line-height:1.55; margin-bottom:12px; }
+.req-box b { color:var(--brand-dark); }
+.req-list { display:grid; grid-template-columns:repeat(2,1fr); gap:6px 14px; margin-top:6px; }
+.req-list div { padding-left:12px; position:relative; }
+.req-list div::before { content:'•'; position:absolute; left:0; color:var(--brand); }
+.action-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.btn-sm { padding:6px 13px; border-radius:5px; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; border:none; }
+.btn-red { background:var(--brand); color:#fff; }
+.btn-navy { background:var(--navy); color:#fff; }
+.btn-out { background:var(--bg); color:var(--text-sub); border:1px solid var(--rule); }
+.btn-teal { background:var(--teal); color:#fff; }
+table.tbl { width:100%; border-collapse:collapse; font-size:11.5px; }
+table.tbl th { text-align:left; font-size:9.5px; color:var(--text-mute); text-transform:uppercase; padding:7px 8px; border-bottom:1px solid var(--rule-soft); white-space:nowrap; }
+table.tbl td { padding:8px; border-bottom:1px solid var(--rule-lite); vertical-align:top; }
+table.tbl tr:hover td { background:var(--surface); }
+table.tbl tr.sel td { background:var(--brand-soft); }
+.name { font-weight:700; color:var(--navy); }
+.name small { font-weight:600; color:var(--text-mute); }
+.badge { display:inline-block; padding:2px 7px; border-radius:4px; font-size:9.5px; font-weight:700; white-space:nowrap; }
+.b-red { background:var(--brand-lite); color:var(--brand); }
+.b-green { background:var(--green-lite); color:var(--green); }
+.b-purple { background:var(--purple-lite); color:var(--purple); }
+.b-navy { background:var(--navy-lite); color:var(--navy); }
+.b-amber { background:var(--amber-lite); color:var(--amber); }
+.b-grey { background:var(--rule-lite); color:var(--text-mute); }
+.muted { color:var(--text-mute); }
+.lang-badges { display:flex; gap:4px; flex-wrap:wrap; }
+.pill { display:inline-block; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:700; letter-spacing:.3px; }
+.pill.en { background:var(--navy-lite); color:var(--navy); }
+.pill.zh { background:var(--brand-lite); color:var(--brand); }
+.pill.ko { background:var(--purple-lite); color:var(--purple); }
+.detail { border:1px solid var(--rule-soft); border-radius:8px; background:var(--bg); box-shadow:0 1px 3px rgba(0,0,0,.04); overflow:hidden; }
+.detail .panel-header { background:var(--surface); padding:12px 16px; font-size:13px; font-weight:700; border-bottom:1px solid var(--rule-soft); color:var(--navy); }
+.panel-section { padding:14px 16px; border-bottom:1px solid var(--rule-lite); }
+.panel-section:last-child { border-bottom:none; }
+.section-title { font-size:11px; font-weight:700; color:var(--text-mute); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+.profile-name { font-size:16px; font-weight:700; margin-bottom:4px; }
+.profile-meta { font-size:12px; color:var(--text-sub); margin-bottom:3px; }
+.profile-kpis { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.profile-kpis .p { background:var(--surface); border-radius:6px; padding:8px 9px; }
+.profile-kpis .k { font-size:9px; color:var(--text-mute); text-transform:uppercase; }
+.profile-kpis .v { font-size:15px; font-weight:700; }
+.pref-tags { display:flex; flex-wrap:wrap; gap:6px; }
+.pref-tag { padding:3px 10px; background:var(--surface); border:1px solid var(--rule-soft); border-radius:4px; font-size:11px; color:var(--text-sub); }
+.timeline-item { display:flex; gap:10px; margin-bottom:8px; font-size:12px; align-items:flex-start; }
+.timeline-dot { width:8px; height:8px; border-radius:50%; background:var(--navy); flex-shrink:0; margin-top:4px; }
+.timeline-date { color:var(--text-mute); min-width:74px; flex-shrink:0; }
+.timeline-desc { color:var(--text-sub); }
+.timeline-amount { color:var(--text); font-weight:600; margin-left:4px; }
+.note-box { background:var(--brand-soft); border-radius:6px; padding:10px 12px; font-size:12px; color:var(--text-sub); line-height:1.65; }
+.merge { border:1px solid var(--rule-soft); border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.merge .head { padding:12px 16px; background:var(--amber-lite); font-size:13px; font-weight:700; color:var(--amber); border-bottom:1px solid var(--rule-soft); }
+.merge table { width:100%; border-collapse:collapse; font-size:11.5px; }
+.merge th { text-align:left; padding:8px 12px; font-size:10px; color:var(--text-mute); background:var(--surface); border-bottom:1px solid var(--rule-soft); }
+.merge td { padding:8px 12px; border-bottom:1px solid var(--rule-lite); vertical-align:middle; }
+.match-bar-wrap { width:72px; display:inline-flex; align-items:center; gap:5px; }
+.match-bar { height:6px; border-radius:3px; background:var(--rule-lite); flex:1; }
+.match-bar-fill { height:100%; border-radius:3px; }
+.btn-merge { padding:4px 12px; background:var(--brand); color:#fff; border:none; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; }
+.btn-check { padding:4px 12px; background:var(--bg); color:var(--text-sub); border:1px solid var(--rule); border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; }
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="screen1_dashboard.html" class="header-logo"><div class="dot"></div><span>旅館運営システム</span></a>
+  <div class="header-facility">温泉旅館○○リゾート箱根 — 全施設横断ビュー <span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
+  <div class="header-search"><input type="text" placeholder="予約番号・ゲスト名・旅券番号を検索"></div>
+  <div class="header-right">
+    <div class="header-bell">&#x1F514;<span class="badge-notif">9</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
+  </div>
+</header>
+<nav class="sidebar">
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item active" href="screen5_guests.html">ゲスト管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item" href="screen8_reports.html">レポート</a>
+  <div class="sidebar-sub">ゲスト運用</div>
+  <a class="sidebar-item active" href="screen5_guests.html">ゲスト総合プロファイル</a>
+  <a class="sidebar-item" href="screen5_guests.html">名簿・旅券</a>
+  <a class="sidebar-item" href="screen5_guests.html">統合候補</a>
+  <a class="sidebar-item" href="screen5_guests.html">多言語メッセージ</a>
+</nav>
+<div class="main">
+  <div class="page-head">
+    <div class="page-title">ゲスト管理 <span class="ai-badge">ゲスト総合プロファイル / 宿泊者名簿</span></div>
+    <div class="seg"><button class="on">営業日 2026/05/30</button><button>館内滞在中</button><button>到着予定</button></div>
+  </div>
+  <div class="page-sub">常連 5名を即時参照。名簿必須項目と旅券保存、館内動線 / 申し送り / 要注意 を同一画面で処理する前提のデモ画面。</div>
+
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="label">在館ゲスト / 本日更新</div><div class="value" style="color:var(--navy);">128<span style="font-size:13px;font-weight:400;">名</span></div><div class="sub">宿泊 84 / 日帰り 44</div></div>
+    <div class="kpi-card"><div class="label">名簿必須項目 完了率</div><div class="value" style="color:var(--green);">96.2<span style="font-size:13px;font-weight:400;">%</span></div><div class="sub">未完了 5件は旅券未済を含む</div></div>
+    <div class="kpi-card"><div class="label">外国人 旅券保存対象</div><div class="value" style="color:var(--amber);">31<span style="font-size:13px;font-weight:400;">件</span></div><div class="sub">国籍 / 旅券番号 / 写し保存3年</div></div>
+    <div class="kpi-card"><div class="label">重複統合 候補</div><div class="value" style="color:var(--brand);">7<span style="font-size:13px;font-weight:400;">組</span></div><div class="sub">電話・メール・旅券一致で抽出</div></div>
+    <div class="kpi-card"><div class="label">送信待ち 申し送り</div><div class="value" style="color:var(--purple);">14<span style="font-size:13px;font-weight:400;">件</span></div><div class="sub">フロント / 食事 / 仲居 / 会議室</div></div>
+  </div>
+
+  <div class="cols">
+    <div class="col-l">
+      <div class="card">
+        <div class="card-h">
+          <div class="t">宿泊者名簿・ゲスト一覧</div>
+          <div class="src">2025年改正対応 / 行を選ぶと右に詳細表示</div>
+        </div>
+        <div class="card-b nopad">
+          <div class="req-box">
+            <b>宿泊者名簿の必須項目</b> を全ゲストで明示。
+            <div class="req-list">
+              <div>氏名</div><div>住所</div>
+              <div>連絡先</div><div>外国人は国籍</div>
+              <div>外国人は旅券番号</div><div>旅券写しの保存 3年</div>
+            </div>
+          </div>
+          <div class="alert-strip" style="padding:0 16px 12px;">
+            <div class="a red"><b>旅券未済</b>K.M 様 / W.J 様の一部到着資料未収</div>
+            <div class="a amber"><b>VIP / 記念日</b>512号室 J.W 様 と E.C 様 は要ケア</div>
+            <div class="a green"><b>アレルギー / ハラル</b>厨房・食事処へ自動連携済</div>
+            <div class="a navy"><b>与信NG</b>該当時は申し送りに表示しチェックインを抑止</div>
+          </div>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>氏名 / 客室</th><th>言語</th><th>国籍 / 旅券</th><th>館内動線</th><th>申し送り</th><th>要注意</th><th>累計利用額</th><th>会員</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="sel">
+                <td><div class="name">J.W 様 <small>#512</small></div><div class="muted">Expedia / 英語</div></td>
+                <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
+                <td>米国 / P7***18</td>
+                <td>温泉 → 食事処 A → 会議室 2F</td>
+                <td>フロントへ静かな導線・追加枕</td>
+                <td><span class="badge b-red">VIP</span> <span class="badge b-amber">記念日</span></td>
+                <td>¥1,280,000</td>
+                <td><span class="badge b-navy">Diamond</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">E.C 様 <small>#512</small></div><div class="muted">Booking / 英語</div></td>
+                <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
+                <td>英国 / P2***41</td>
+                <td>食事処 B → テラス → 温泉</td>
+                <td>ベジ料理・アレルギー再確認 / 英語メニュー送付</td>
+                <td><span class="badge b-green">ベジ</span> <span class="badge b-purple">多言語</span></td>
+                <td>¥910,000</td>
+                <td><span class="badge b-navy">Platinum</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">W.J 様 <small>#418</small></div><div class="muted">公式直販 / 繁中</div></td>
+                <td><div class="lang-badges"><span class="pill zh">中文</span></div></td>
+                <td>中国 / P8***62</td>
+                <td>ロビー → バリアフリー客室 → 食事処 C</td>
+                <td>高齢同伴の移動補助 / 申し送り済</td>
+                <td><span class="badge b-red">旅券未済</span> <span class="badge b-amber">同伴配慮</span></td>
+                <td>¥620,000</td>
+                <td><span class="badge b-purple">Gold</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">K.M 様 <small>#305</small></div><div class="muted">電話 / 韓国語</div></td>
+                <td><div class="lang-badges"><span class="pill ko">한국어</span></div></td>
+                <td>韓国 / P9***07</td>
+                <td>売店 → 温泉 → カラオケ</td>
+                <td>タトゥー問合せ / 見えにくい浴場導線</td>
+                <td><span class="badge b-amber">旅券確認待ち</span></td>
+                <td>¥240,000</td>
+                <td><span class="badge b-grey">Member</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">T.I 様 <small>#208</small></div><div class="muted">リピーター 5回</div></td>
+                <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
+                <td>日本 / 免除対象外</td>
+                <td>フロント → 温泉 → 食事処 A</td>
+                <td>仲居へ領収書要 / 夕食後に再精算</td>
+                <td><span class="badge b-navy">常連</span></td>
+                <td>¥540,000</td>
+                <td><span class="badge b-green">Silver+</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">S.J 様 <small>#411</small></div><div class="muted">ネット予約サイト / 米国</div></td>
+                <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
+                <td>米国 / P3***55</td>
+                <td>食事処 B → 会議室 1F</td>
+                <td>会議室への映像・音響サポート / 受付へ連絡</td>
+                <td><span class="badge b-grey">静音希望</span></td>
+                <td>¥720,000</td>
+                <td><span class="badge b-purple">Gold</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">L.W 様 <small>#219</small></div><div class="muted">中国直販 / 中文</div></td>
+                <td><div class="lang-badges"><span class="pill zh">中文</span></div></td>
+                <td>中国 / P6***88</td>
+                <td>温泉 → 売店 → 客室</td>
+                <td>朝食の席割りを厨房へ送信</td>
+                <td><span class="badge b-green">団体</span></td>
+                <td>¥380,000</td>
+                <td><span class="badge b-grey">Member</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">K.S 様 <small>#287</small></div><div class="muted">韓国 / 韓国語</div></td>
+                <td><div class="lang-badges"><span class="pill ko">한국어</span></div></td>
+                <td>韓国 / P4***72</td>
+                <td>ラウンジ → 食事処 B → 温泉</td>
+                <td>ハラル相当の相談・食材説明あり</td>
+                <td><span class="badge b-purple">ハラル配慮</span></td>
+                <td>¥295,000</td>
+                <td><span class="badge b-green">Silver</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">M.B 様 <small>#503</small></div><div class="muted">Agoda / 英語</div></td>
+                <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
+                <td>米国 / P1***09</td>
+                <td>会議室 2F → 客室 → 温泉</td>
+                <td>請求書を英語で送信 / 申し送り経由</td>
+                <td><span class="badge b-grey">法人</span></td>
+                <td>¥1,040,000</td>
+                <td><span class="badge b-navy">Platinum</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">S.M 様 <small>#146</small></div><div class="muted">日本 / 再来</div></td>
+                <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
+                <td>日本 / 免除対象外</td>
+                <td>温泉 → 食事処 A</td>
+                <td>アレルギーなし、辛味苦手</td>
+                <td><span class="badge b-amber">記念日</span></td>
+                <td>¥660,000</td>
+                <td><span class="badge b-purple">Gold</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">C.R 様 <small>#392</small></div><div class="muted">中文 / 直販</div></td>
+                <td><div class="lang-badges"><span class="pill zh">中文</span></div></td>
+                <td>中国 / P5***33</td>
+                <td>ロビー → 会議室 1F → 食事処 C</td>
+                <td>会議後に送迎車を手配</td>
+                <td><span class="badge b-green">送迎</span></td>
+                <td>¥430,000</td>
+                <td><span class="badge b-grey">Member</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">P.J 様 <small>#277</small></div><div class="muted">韓国 / 韓国語</div></td>
+                <td><div class="lang-badges"><span class="pill ko">한국어</span></div></td>
+                <td>韓国 / P8***19</td>
+                <td>温泉 → 食事処 B → 売店</td>
+                <td>浴衣サイズ申告済 / 申し送り送信済</td>
+                <td><span class="badge b-grey">浴衣</span></td>
+                <td>¥310,000</td>
+                <td><span class="badge b-grey">Member</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">T.Y 様 <small>#190</small></div><div class="muted">日本 / 宴会</div></td>
+                <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
+                <td>日本 / 免除対象外</td>
+                <td>会議室 2F → 宴会場 → 客室</td>
+                <td>領収書分割 / 送客先へ申し送り</td>
+                <td><span class="badge b-red">与信NG</span></td>
+                <td>¥820,000</td>
+                <td><span class="badge b-amber">Bronze</span></td>
+              </tr>
+              <tr>
+                <td><div class="name">A.M 様 <small>#446</small></div><div class="muted">ドイツ / 英語</div></td>
+                <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
+                <td>独国 / P2***64</td>
+                <td>温泉 → 食事処 A → ラウンジ</td>
+                <td>ベジ・乳製品少なめ / 多言語メッセージ送信</td>
+                <td><span class="badge b-green">ベジ</span></td>
+                <td>¥515,000</td>
+                <td><span class="badge b-purple">Gold</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="merge">
+        <div class="head">重複ゲスト統合パネル</div>
+        <table>
+          <thead>
+            <tr><th>ゲストA</th><th>ゲストB</th><th>一致度</th><th>理由</th><th>アクション</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>J.W 様 <span class="muted">#512</span></td>
+              <td>J.W 様 <span class="muted">#801</span></td>
+              <td><div class="match-bar-wrap"><div class="match-bar"><div class="match-bar-fill" style="width:96%;background:var(--green);"></div></div><span style="font-weight:600;color:var(--green);">96%</span></div></td>
+              <td>メール / 電話 / 旅券一致</td>
+              <td><button class="btn-merge">統合</button></td>
+            </tr>
+            <tr>
+              <td>W.J 様 <span class="muted">#418</span></td>
+              <td>W.J 様 <span class="muted">#907</span></td>
+              <td><div class="match-bar-wrap"><div class="match-bar"><div class="match-bar-fill" style="width:88%;background:var(--amber);"></div></div><span style="font-weight:600;color:var(--amber);">88%</span></div></td>
+              <td>旅券番号の部分一致</td>
+              <td><button class="btn-merge">統合</button></td>
+            </tr>
+            <tr>
+              <td>K.M 様 <span class="muted">#305</span></td>
+              <td>K.M 様 <span class="muted">#310</span></td>
+              <td><div class="match-bar-wrap"><div class="match-bar"><div class="match-bar-fill" style="width:74%;background:var(--amber);"></div></div><span style="font-weight:600;color:var(--amber);">74%</span></div></td>
+              <td>住所一致 / 連絡先近似</td>
+              <td><button class="btn-check">確認</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-r">
+      <div class="detail">
+        <div class="panel-header">ゲスト総合プロファイル — 詳細</div>
+        <div class="panel-section">
+          <div class="section-title">選択中ゲスト</div>
+          <div class="profile-name">J.W 様 <span class="badge b-red" style="margin-left:6px;">VIP</span> <span class="badge b-amber">記念日</span></div>
+          <div class="profile-meta">客室 512 / Expedia / 英語 / 滞在中</div>
+          <div class="profile-meta">登録住所（非表示） / 登録電話（非表示） / 登録メール（非表示）</div>
+          <div class="profile-meta">国籍: 米国 / 旅券番号: P7***18 / 写し保存: 3年</div>
+        </div>
+        <div class="panel-section">
+          <div class="section-title">館内動線 / 申し送り / 要注意</div>
+          <div class="profile-kpis">
+            <div class="p"><div class="k">現在地</div><div class="v">温泉館内</div></div>
+            <div class="p"><div class="k">次の行先</div><div class="v">会議室 2F</div></div>
+            <div class="p"><div class="k">申し送り</div><div class="v">静音導線</div></div>
+            <div class="p"><div class="k">要注意</div><div class="v">VIP / 記念日</div></div>
+          </div>
+        </div>
+        <div class="panel-section">
+          <div class="section-title">ゲスト総合プロファイル</div>
+          <div class="profile-kpis">
+            <div class="p"><div class="k">滞在履歴</div><div class="v">18泊</div></div>
+            <div class="p"><div class="k">嗜好</div><div class="v">静音・高層階</div></div>
+            <div class="p"><div class="k">累計利用額</div><div class="v">¥1,280,000</div></div>
+            <div class="p"><div class="k">会員ランク</div><div class="v">Diamond</div></div>
+          </div>
+        </div>
+        <div class="panel-section">
+          <div class="section-title">前回来訪メモ / 制約</div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-date">2026/03/18</div><div class="timeline-desc">食事処 A で会食。朝食は和定食、コーヒーは薄め。</div></div>
+          <div class="timeline-item"><div class="timeline-dot" style="background:var(--text-mute);"></div><div class="timeline-date">2025/12/21</div><div class="timeline-desc">宗教配慮は不要。ナッツ系は都度確認。</div></div>
+          <div class="timeline-item"><div class="timeline-dot" style="background:var(--text-mute);"></div><div class="timeline-date">嗜好</div><div class="timeline-desc">アレルギーなし / ただし香り強い料理は苦手 / ベジ・ハラルなし。</div></div>
+        </div>
+        <div class="panel-section">
+          <div class="section-title">多言語メッセージ送信</div>
+          <div class="note-box">定型文を <b>中 / 英 / 韓</b> で即送信。旅券未済、夕食席、会議室案内、アレルギー確認をワンボタン化。</div>
+          <div class="action-row">
+            <button class="btn-sm btn-red">英語で送信</button>
+            <button class="btn-sm btn-navy">中文で送信</button>
+            <button class="btn-sm btn-teal">한국어で送信</button>
+          </div>
+        </div>
+        <div class="panel-section">
+          <div class="section-title">旅券カメラスキャン導線</div>
+          <div class="note-box">フロント端末のカメラを起動し、旅券番号・国籍・ローマ字氏名を名簿へ自動転記。未保存は 3 年保管キューへ送る。</div>
+          <div class="action-row">
+            <button class="btn-sm btn-out">カメラ起動</button>
+            <button class="btn-sm btn-out">名簿へ自動転記</button>
+            <button class="btn-sm btn-out">3年保存キュー確認</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

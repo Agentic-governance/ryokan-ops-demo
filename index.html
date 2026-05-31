@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>旅館運営システム — 画面デモ</title>
+<style>
+:root{--navy:#14283D;--red:#C8102E;--grey:#6B7886;--rule:#DCE2E9;--panel:#F4F7FA;--ink:#1A2330;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;color:var(--ink);background:#fff;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 24px 64px}
+.kicker{color:var(--red);font-weight:700;letter-spacing:2px;font-size:12px}
+h1{font-size:28px;color:var(--navy);margin:6px 0 4px;font-weight:800}
+.lead{color:var(--grey);font-size:14px;margin-bottom:6px}
+.note{color:#9DAAB7;font-size:12px;margin-bottom:28px}
+h2{font-size:15px;color:var(--navy);margin:26px 0 12px;padding-left:10px;border-left:4px solid var(--red)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+a.card{display:block;border:1px solid var(--rule);border-radius:8px;padding:14px 16px;text-decoration:none;color:var(--navy);background:var(--panel);transition:.15s}
+a.card:hover{border-color:var(--navy);background:#fff;box-shadow:0 2px 10px rgba(20,40,61,.08);transform:translateY(-1px)}
+a.card .t{font-weight:700;font-size:14px}
+a.card .d{color:var(--grey);font-size:11.5px;margin-top:2px}
+.foot{margin-top:40px;color:#9DAAB7;font-size:11px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">DEMO</div>
+  <h1>旅館運営システム — 画面デモ</h1>
+  <p class="lead">基幹システムを置き換えず、その上で現場判断・AIの提案・承認の仕組みを束ねる運用レイヤー。</p>
+  <p class="note">PC 12 画面 ＋ モバイル 11 画面。各画面はクリックで実際に操作できます（サンプルデータ・個人名は非表示）。</p>
+
+  <h2>PC 画面</h2>
+  <div class="grid">
+    <a class="card" href="screen1_dashboard.html"><div class="t">ダッシュボード</div><div class="d">今日の運営リスクとAIの確認事項</div></a>
+    <a class="card" href="screen_approvals.html"><div class="t">承認待ち一覧</div><div class="d">金額・在庫・顧客の変更を承認・記録で管理</div></a>
+    <a class="card" href="screen_meals.html"><div class="t">食事管理</div><div class="d">食事の提供能力が客室の販売数を決める</div></a>
+    <a class="card" href="screen3_reservations.html"><div class="t">予約管理</div><div class="d">予約・到着・連携の状態を一元表示</div></a>
+    <a class="card" href="screen4_rooms.html"><div class="t">客室管理</div><div class="d">清掃・客室状況ボード／仲居の割り当て</div></a>
+    <a class="card" href="screen5_guests.html"><div class="t">ゲスト管理</div><div class="d">宿泊者名簿・総合プロファイル</div></a>
+    <a class="card" href="screen6_maintenance.html"><div class="t">設備保全</div><div class="d">止まると困る設備から先に守る</div></a>
+    <a class="card" href="screen7_marketing.html"><div class="t">マーケティング</div><div class="d">需要を先読み、承認付きで実行</div></a>
+    <a class="card" href="screen8_reports.html"><div class="t">レポート（会計）</div><div class="d">税区分・監査バランス</div></a>
+    <a class="card" href="screen2_action_detail.html"><div class="t">アクション詳細</div><div class="d">お客様対応とAI返信案</div></a>
+    <a class="card" href="screen_connectivity.html"><div class="t">連携状況</div><div class="d">基幹システム⇄予約サイトの連携監視</div></a>
+    <a class="card" href="architecture.html"><div class="t">システム構成</div><div class="d">判断はAI・書き込みは承認後のみ</div></a>
+  </div>
+
+  <h2>モバイル画面（役割別）</h2>
+  <div class="grid">
+    <a class="card" href="mobile_today.html"><div class="t">今日（ホーム）</div><div class="d">当日のやること・確認事項</div></a>
+    <a class="card" href="mobile_action.html"><div class="t">アクション詳細</div><div class="d">お客様対応の現場ビュー</div></a>
+    <a class="card" href="mobile_rooms.html"><div class="t">客室</div><div class="d">清掃・客室状況</div></a>
+    <a class="card" href="mobile_approvals.html"><div class="t">承認</div><div class="d">外出先でも承認・記録</div></a>
+    <a class="card" href="mobile_meals.html"><div class="t">食事</div><div class="d">配膳・アレルギー対応</div></a>
+    <a class="card" href="mobile_reservations.html"><div class="t">予約</div><div class="d">予約・到着の確認</div></a>
+    <a class="card" href="mobile_guests.html"><div class="t">ゲスト</div><div class="d">担当ゲストの情報</div></a>
+    <a class="card" href="mobile_maintenance.html"><div class="t">設備保全</div><div class="d">不具合の確認・点検登録</div></a>
+    <a class="card" href="mobile_marketing.html"><div class="t">マーケティング</div><div class="d">予約の動きと販売候補</div></a>
+    <a class="card" href="mobile_reports.html"><div class="t">レポート</div><div class="d">売上・会計の確認</div></a>
+    <a class="card" href="mobile_connectivity.html"><div class="t">連携</div><div class="d">予約データの取り込み状況</div></a>
+  </div>
+
+  <div class="foot">旅館の運営を支えるシステム — 画面デモ（サンプルデータ）。本ページは検索エンジンに登録されません。</div>
+</div>
+</body>
+</html>

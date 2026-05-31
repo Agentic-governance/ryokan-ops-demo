@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>食事・配膳</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4B4B4B;--text-mute:#8D8D8D;
+    --rule:#D5D5D5;--rule-soft:#E8E8E8;--surface:#F7F7F7;
+    --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF2F4;--brand-dark:#8B0F1F;
+    --navy:#1E3A5F;--navy-lite:#DCE5F0;--amber:#D97706;--amber-lite:#FEF3C7;
+    --green:#15803D;--green-lite:#DCFCE7;--blue:#2563EB;--blue-lite:#DBEAFE;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;
+    background:#F0F0F0;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:20px 0;
+    -webkit-font-smoothing:antialiased;
+  }
+  .phone-frame {
+    width:375px;
+    min-height:812px;
+    background:var(--bg);
+    border-radius:40px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow:hidden;
+    position:relative;
+  }
+  .status-bar {
+    height:44px;
+    background:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+  }
+  .status-bar .time { font-size:14px; font-weight:700; }
+  .status-bar .carrier { font-size:11px; opacity:0.85; letter-spacing:0.3px; }
+  .status-bar .icons { font-size:12px; letter-spacing:2px; }
+  .app-header {
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    border-bottom:1px solid var(--rule-soft);
+    background:var(--bg);
+  }
+  .app-header .logo {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-weight:700;
+    font-size:15px;
+    color:var(--navy);
+  }
+  .app-header .logo .dot { width:8px; height:8px; background:var(--brand); border-radius:50%; }
+  .app-header .title { font-size:17px; font-weight:800; color:var(--text); letter-spacing:0.2px; }
+  .app-header .bell { position:relative; font-size:20px; cursor:pointer; }
+  .app-header .bell .badge {
+    position:absolute; top:-4px; right:-6px;
+    background:var(--brand); color:#fff; font-size:10px; font-weight:700;
+    width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    line-height:1;
+  }
+  .content { padding-bottom:100px; overflow-y:auto; }
+  .hero {
+    padding:14px 16px 10px;
+    background:linear-gradient(180deg, #fff 0%, #fff7f8 100%);
+    border-bottom:1px solid var(--rule-soft);
+  }
+  .hero .date-row {
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    margin-bottom:10px;
+  }
+  .hero .date {
+    font-size:12px; color:var(--text-sub); font-weight:600;
+  }
+  .hero .shift {
+    font-size:11px; color:var(--brand);
+    background:var(--brand-soft);
+    border:1px solid #f6c8cf;
+    padding:4px 8px; border-radius:999px; font-weight:700;
+  }
+  .hero .headline {
+    font-size:18px; font-weight:800; color:var(--text); line-height:1.35; margin-bottom:8px;
+  }
+  .hero .subline {
+    font-size:12px; color:var(--text-sub); line-height:1.55;
+  }
+  .glance-grid {
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:10px;
+    padding:12px 16px 4px;
+  }
+  .glance-card {
+    background:var(--bg);
+    border:1px solid var(--rule-soft);
+    border-radius:14px;
+    padding:12px;
+    box-shadow:0 1px 0 rgba(0,0,0,0.02);
+  }
+  .glance-card .label { font-size:11px; color:var(--text-mute); font-weight:600; margin-bottom:6px; }
+  .glance-card .value { font-size:24px; font-weight:800; color:var(--text); line-height:1.05; }
+  .glance-card .hint { font-size:11px; color:var(--text-sub); margin-top:5px; line-height:1.45; }
+  .glance-card.red .value { color:var(--brand); }
+  .glance-card.amber .value { color:var(--amber); }
+  .grid-wide { grid-column:1 / -1; }
+  .mini-bars {
+    display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;
+  }
+  .mini-pill {
+    font-size:11px; font-weight:700; border-radius:999px; padding:5px 8px;
+    background:var(--surface); color:var(--text-sub);
+  }
+  .mini-pill.red { background:var(--brand-soft); color:var(--brand); }
+  .mini-pill.blue { background:var(--blue-lite); color:var(--blue); }
+  .mini-pill.green { background:var(--green-lite); color:var(--green); }
+  .countdown {
+    margin:12px 16px 4px;
+    padding:12px 14px;
+    border-radius:16px;
+    background:linear-gradient(135deg, #1f2f45 0%, #31496a 100%);
+    color:#fff;
+  }
+  .countdown .row { display:flex; justify-content:space-between; gap:10px; align-items:flex-end; }
+  .countdown .label { font-size:11px; opacity:0.82; font-weight:600; margin-bottom:4px; }
+  .countdown .course { font-size:16px; font-weight:800; line-height:1.25; }
+  .countdown .timer { font-size:26px; font-weight:800; letter-spacing:0.4px; }
+  .countdown .note { margin-top:8px; font-size:11px; opacity:0.9; line-height:1.5; }
+  .section-title {
+    padding:14px 16px 8px;
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    font-size:15px; font-weight:800; color:var(--text);
+  }
+  .section-title .count {
+    background:var(--surface);
+    color:var(--text-mute);
+    border-radius:999px;
+    padding:3px 8px;
+    font-size:11px;
+    font-weight:700;
+  }
+  details.meal-card {
+    margin:0 16px 10px;
+    border:1px solid var(--rule-soft);
+    border-radius:16px;
+    overflow:hidden;
+    background:var(--bg);
+  }
+  details.meal-card[open] { box-shadow:0 8px 24px rgba(0,0,0,0.05); }
+  details.meal-card > summary {
+    list-style:none;
+    cursor:pointer;
+    padding:0;
+  }
+  details.meal-card > summary::-webkit-details-marker { display:none; }
+  .card-top {
+    border-top:5px solid var(--navy);
+    padding:12px 12px 10px;
+    background:linear-gradient(180deg, #fff 0%, #fcfcfc 100%);
+  }
+  .card-top .alert-strip {
+    display:flex; align-items:center; gap:8px;
+    background:var(--brand);
+    color:#fff;
+    padding:6px 8px;
+    border-radius:10px;
+    font-size:11px;
+    font-weight:700;
+    margin-bottom:10px;
+    line-height:1.25;
+  }
+  .card-top .alert-strip .tag {
+    background:rgba(255,255,255,0.16);
+    border:1px solid rgba(255,255,255,0.18);
+    padding:2px 6px;
+    border-radius:999px;
+    flex-shrink:0;
+  }
+  .card-top .main-row {
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    margin-bottom:8px;
+  }
+  .room {
+    font-size:19px; font-weight:800; color:var(--text); line-height:1.1;
+  }
+  .party {
+    margin-top:4px; font-size:12px; color:var(--text-sub); line-height:1.45;
+  }
+  .time-course {
+    display:flex; flex-wrap:wrap; gap:6px; justify-content:flex-end;
+  }
+  .chip {
+    font-size:10px; font-weight:800; border-radius:999px; padding:4px 7px;
+    background:var(--surface); color:var(--text-sub);
+    white-space:nowrap;
+  }
+  .chip.time { background:var(--blue-lite); color:var(--blue); }
+  .chip.course { background:var(--amber-lite); color:var(--amber); }
+  .chip.state { background:var(--green-lite); color:var(--green); }
+  .status-strip {
+    display:flex; gap:8px; flex-wrap:wrap;
+    margin-top:6px;
+    font-size:11px;
+  }
+  .status-strip .s {
+    padding:4px 7px;
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--text-sub);
+    font-weight:700;
+  }
+  .status-strip .active { background:var(--green-lite); color:var(--green); }
+  .status-strip .muted { background:#F2F2F2; color:var(--text-mute); }
+  .status-strip .next { background:var(--brand-soft); color:var(--brand); }
+  .card-body {
+    border-top:1px solid var(--rule-soft);
+    padding:10px 12px 12px;
+    background:#fff;
+  }
+  .body-row {
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    justify-content:space-between;
+  }
+  .details-col { min-width:0; flex:1; }
+  .detail-line {
+    font-size:12px; color:var(--text-sub); line-height:1.55;
+    margin-bottom:8px;
+  }
+  .detail-line strong { color:var(--text); }
+  .status-buttons {
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:8px;
+    margin-top:10px;
+  }
+  .status-btn {
+    border:none;
+    border-radius:12px;
+    min-height:44px;
+    padding:8px 10px;
+    font-family:inherit;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:800;
+    color:var(--text);
+    background:var(--surface);
+    text-align:left;
+  }
+  .status-btn .small { display:block; font-size:10px; font-weight:700; color:var(--text-mute); margin-top:2px; }
+  .status-btn.active { background:var(--green-lite); color:var(--green); }
+  .status-btn.ready { background:var(--blue-lite); color:var(--blue); }
+  .status-btn.warn { background:var(--brand-soft); color:var(--brand); }
+  .status-btn.done { background:#EAF7EF; color:var(--green); }
+  .note-box {
+    margin-top:10px;
+    padding:8px 10px;
+    border-radius:10px;
+    background:#fafafa;
+    color:var(--text-sub);
+    font-size:11px;
+    line-height:1.55;
+  }
+  .note-box strong { color:var(--brand); }
+  .summary-row {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    font-size:12px;
+    color:var(--text-mute);
+    margin-bottom:8px;
+  }
+  .summary-row .right { color:var(--text-sub); font-weight:700; }
+  .bottom-nav {
+    position:sticky;
+    bottom:0;
+    left:0; right:0;
+    height:83px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--rule-soft);
+    display:flex;
+    padding-bottom:20px;
+  }
+  .nav-tab {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    text-decoration:none;
+    color:var(--text-mute);
+    font-size:10px;
+    font-weight:500;
+    cursor:pointer;
+    padding-top:6px;
+  }
+  .nav-tab .icon { font-size:22px; line-height:1; }
+  .nav-tab.active { color:var(--brand); }
+  .nav-tab.active .label-text { font-weight:700; }
+</style>
+</head>
+<body>
+<div class="phone-frame">
+  <div class="status-bar">
+    <span class="time">15:42</span>
+    <span class="carrier">&#9679;&#9679;&#9679; リゾート箱根</span>
+    <span class="icons">&#9632;&#9632;&#9632;&#9632;&#9632;</span>
+  </div>
+
+  <div class="app-header">
+    <div class="logo"><span class="dot"></span> 旅館運営システム</div>
+    <span class="title">食事・配膳</span>
+    <div class="bell">
+      &#128276;
+      <span class="badge">5</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="hero">
+      <div class="date-row">
+        <div class="date">営業日 2026/05/30</div>
+        <div class="shift">仲居モバイル</div>
+      </div>
+      <div class="headline">本日夕食 96名。担当卓だけを、配膳から下膳まで迷わず処理。</div>
+      <div class="subline">担当室に紐づく情報だけを縦に流し、時間枠と布団連動を同じ画面で追う。</div>
+    </div>
+
+    <div class="glance-grid">
+      <div class="glance-card red">
+        <div class="label">本日夕食</div>
+        <div class="value">96名</div>
+        <div class="hint">配膳対象の総数</div>
+      </div>
+      <div class="glance-card amber">
+        <div class="label">布団未敷</div>
+        <div class="value">7室</div>
+        <div class="hint">下膳済から布団班へ自動通知</div>
+      </div>
+      <div class="glance-card grid-wide">
+        <div class="label">時間枠別人数</div>
+        <div class="mini-bars">
+          <span class="mini-pill blue">18:00 28名</span>
+          <span class="mini-pill blue">18:30 24名</span>
+          <span class="mini-pill blue">19:00 31名</span>
+          <span class="mini-pill blue">19:30 13名</span>
+        </div>
+        <div class="hint" style="margin-top:8px;">ピークは 19:00 帯。厨房進行に合わせて順に着席確認。</div>
+      </div>
+    </div>
+
+    <div class="countdown">
+      <div class="row">
+        <div>
+          <div class="label">コース進行カウントダウン</div>
+          <div class="course">会席 竹 / 先付・椀物 進行中</div>
+        </div>
+        <div class="timer">12:40</div>
+      </div>
+      <div class="note">次の一斉進行までの目安。配膳済に更新すると厨房とデシャップの段取りが進む。</div>
+    </div>
+
+    <div class="section-title">
+      <span>担当卓 / 担当室</span>
+      <span class="count">8件</span>
+    </div>
+
+    <details class="meal-card" open>
+      <summary>
+        <div class="card-top">
+          <div class="alert-strip"><span class="tag">アレルギー</span> 甲殻類 / 卵 あり。赤帯を最上部固定。</div>
+          <div class="main-row">
+            <div>
+              <div class="room">302号室</div>
+              <div class="party">代表者 T.I 様 / 大2 子1</div>
+            </div>
+            <div class="time-course">
+              <span class="chip time">18:00</span>
+              <span class="chip course">会席 竹</span>
+              <span class="chip state">未着席</span>
+            </div>
+          </div>
+          <div class="status-strip">
+            <span class="s active">未着席</span>
+            <span class="s muted">配膳済</span>
+            <span class="s muted">食事中</span>
+            <span class="s muted">下膳済</span>
+          </div>
+        </div>
+      </summary>
+      <div class="card-body">
+        <div class="summary-row">
+          <span>担当卓 A-3</span>
+          <span class="right">下膳済で布団班へ自動通知</span>
+        </div>
+        <div class="body-row">
+          <div class="details-col">
+            <div class="detail-line"><strong>時間枠:</strong> 18:00 / <strong>コース:</strong> 会席 竹 / <strong>布団:</strong> 未敷</div>
+            <div class="detail-line"><strong>備考:</strong> 夕食時はご飯少なめ、子どもは先に水菓子を希望。</div>
+            <div class="status-buttons">
+              <button class="status-btn warn">未着席<span class="small">着席確認前</span></button>
+              <button class="status-btn ready">配膳済<span class="small">料理を置いた</span></button>
+              <button class="status-btn active">食事中<span class="small">召し上がり中</span></button>
+              <button class="status-btn done">下膳済<span class="small">布団班へ通知</span></button>
+            </div>
+            <div class="note-box"><strong>注記:</strong> 下膳済をタップすると布団班へ自動通知。布団未敷室がこの一覧に残る場合は先に回収。</div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="meal-card">
+      <summary>
+        <div class="card-top">
+          <div class="alert-strip" style="background:var(--navy);"><span class="tag">アレルギー</span> 海老 / 乳 補足あり。赤帯を最上部固定。</div>
+          <div class="main-row">
+            <div>
+              <div class="room">405号室</div>
+              <div class="party">代表者 S.M 様 / 大2 子0</div>
+            </div>
+            <div class="time-course">
+              <span class="chip time">18:30</span>
+              <span class="chip course">会席 竹</span>
+              <span class="chip state">配膳済</span>
+            </div>
+          </div>
+          <div class="status-strip">
+            <span class="s muted">未着席</span>
+            <span class="s active">配膳済</span>
+            <span class="s muted">食事中</span>
+            <span class="s muted">下膳済</span>
+          </div>
+        </div>
+      </summary>
+      <div class="card-body">
+        <div class="summary-row">
+          <span>担当卓 B-1</span>
+          <span class="right">着席後に食事中へ更新</span>
+        </div>
+        <div class="detail-line"><strong>時間枠:</strong> 18:30 / <strong>コース:</strong> 会席 竹 / <strong>布団:</strong> あり</div>
+        <div class="status-buttons">
+          <button class="status-btn warn">未着席<span class="small">未確認</span></button>
+          <button class="status-btn ready active">配膳済<span class="small">更新済</span></button>
+          <button class="status-btn active">食事中<span class="small">巡回対象</span></button>
+          <button class="status-btn done">下膳済<span class="small">布団班へ通知</span></button>
+        </div>
+      </div>
+    </details>
+
+    <details class="meal-card">
+      <summary>
+        <div class="card-top">
+          <div class="alert-strip"><span class="tag">アレルギー</span> そば / 落花生 あり。赤帯を最上部固定。</div>
+          <div class="main-row">
+            <div>
+              <div class="room">207号室</div>
+              <div class="party">代表者 T.K 様 / 大3 子1</div>
+            </div>
+            <div class="time-course">
+              <span class="chip time">19:00</span>
+              <span class="chip course">会席 竹</span>
+              <span class="chip state">食事中</span>
+            </div>
+          </div>
+          <div class="status-strip">
+            <span class="s muted">未着席</span>
+            <span class="s muted">配膳済</span>
+            <span class="s active">食事中</span>
+            <span class="s muted">下膳済</span>
+          </div>
+        </div>
+      </summary>
+      <div class="card-body">
+        <div class="summary-row">
+          <span>担当卓 C-4</span>
+          <span class="right">コース進行に合わせて巡回</span>
+        </div>
+        <div class="detail-line"><strong>時間枠:</strong> 19:00 / <strong>コース:</strong> 会席 竹 / <strong>布団:</strong> 未敷</div>
+        <div class="note-box">料理は進行中。下膳済へ進める前に、お子様の水菓子と大人の止肴を確認。</div>
+        <div class="status-buttons">
+          <button class="status-btn warn">未着席<span class="small">なし</span></button>
+          <button class="status-btn ready">配膳済<span class="small">再確認</span></button>
+          <button class="status-btn active">食事中<span class="small">見守り</span></button>
+          <button class="status-btn done">下膳済<span class="small">布団班へ通知</span></button>
+        </div>
+      </div>
+    </details>
+
+    <details class="meal-card">
+      <summary>
+        <div class="card-top">
+          <div class="alert-strip" style="background:var(--green);"><span class="tag">アレルギー</span> なし。固定帯を上部に保持。</div>
+          <div class="main-row">
+            <div>
+              <div class="room">118号室</div>
+              <div class="party">代表者 Y.H 様 / 大2 子2</div>
+            </div>
+            <div class="time-course">
+              <span class="chip time">19:30</span>
+              <span class="chip course">会席 竹</span>
+              <span class="chip state">下膳済</span>
+            </div>
+          </div>
+          <div class="status-strip">
+            <span class="s muted">未着席</span>
+            <span class="s muted">配膳済</span>
+            <span class="s muted">食事中</span>
+            <span class="s active">下膳済</span>
+          </div>
+        </div>
+      </summary>
+      <div class="card-body">
+        <div class="summary-row">
+          <span>担当卓 A-8</span>
+          <span class="right">布団班へ自動通知済</span>
+        </div>
+        <div class="detail-line"><strong>時間枠:</strong> 19:30 / <strong>コース:</strong> 会席 竹 / <strong>布団:</strong> 未敷 1</div>
+        <div class="note-box"><strong>通知:</strong> 下膳済タップ時の自動通知が発火済。布団敷き班の到着待ち。</div>
+        <div class="status-buttons">
+          <button class="status-btn warn">未着席<span class="small">過去</span></button>
+          <button class="status-btn ready">配膳済<span class="small">履歴</span></button>
+          <button class="status-btn active">食事中<span class="small">履歴</span></button>
+          <button class="status-btn done active">下膳済<span class="small">通知済</span></button>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="#" class="nav-tab">
+      <div class="icon">&#127859;</div>
+      <div class="label-text">配膳</div>
+    </a>
+    <a href="#" class="nav-tab">
+      <div class="icon">&#128716;</div>
+      <div class="label-text">客室</div>
+    </a>
+    <a href="#" class="nav-tab active">
+      <div class="icon">&#127834;</div>
+      <div class="label-text">食事</div>
+    </a>
+    <a href="#" class="nav-tab">
+      <div class="icon">&#128172;</div>
+      <div class="label-text">引継ぎ</div>
+    </a>
+  </div>
+</div>
+</body>
+</html>

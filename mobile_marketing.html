@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>集客・販促</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+    --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+    --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+    --navy:#1E3A5F;--navy-lite:#DCE5F0;
+    --amber:#D97706;--amber-lite:#FEF3C7;
+    --green:#15803D;--green-lite:#DCFCE7;
+    --purple:#7C3AED;--purple-lite:#EDE9FE;
+    --teal:#0E7490;--teal-lite:#CFFAFE;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+    background:#F0F0F0;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:20px 0;
+    -webkit-font-smoothing:antialiased;
+  }
+  a { color:inherit; text-decoration:none; }
+  button { font:inherit; }
+
+  .phone-frame {
+    width:375px;
+    min-height:812px;
+    background:var(--bg);
+    border-radius:40px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow:hidden;
+    position:relative;
+  }
+  .status-bar {
+    height:44px;
+    background:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+  }
+  .status-bar .time { font-size:14px; font-weight:700; }
+  .status-bar .carrier { font-size:11px; opacity:0.85; letter-spacing:0.3px; }
+  .status-bar .icons { font-size:12px; letter-spacing:2px; }
+
+  .app-header {
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    border-bottom:1px solid var(--rule-soft);
+    background:var(--bg);
+  }
+  .app-header .logo { display:flex; align-items:center; gap:6px; font-weight:700; font-size:15px; color:var(--navy); }
+  .app-header .logo .dot { width:8px; height:8px; background:var(--brand); border-radius:50%; }
+  .app-header .title { font-size:17px; font-weight:700; color:var(--text); }
+  .app-header .bell { position:relative; font-size:20px; }
+  .app-header .bell .badge {
+    position:absolute; top:-4px; right:-6px;
+    background:var(--brand); color:#fff;
+    font-size:10px; font-weight:700;
+    width:16px; height:16px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  .content { padding-bottom:100px; overflow-y:auto; }
+
+  .hero {
+    margin:14px 16px 0;
+    border-radius:18px;
+    overflow:hidden;
+    background:linear-gradient(140deg, #1E3A5F 0%, #C8102E 100%);
+    color:#fff;
+    box-shadow:0 10px 30px rgba(30,58,95,.16);
+  }
+  .hero-top {
+    padding:14px 14px 10px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .hero-tag {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.4px;
+    background:rgba(255,255,255,.14);
+    padding:4px 8px;
+    border-radius:999px;
+  }
+  .hero-title {
+    font-size:18px;
+    line-height:1.35;
+    font-weight:800;
+    margin-top:8px;
+  }
+  .hero-sub {
+    margin-top:8px;
+    font-size:12px;
+    line-height:1.5;
+    color:rgba(255,255,255,.9);
+    max-width:240px;
+  }
+  .hero-note {
+    padding:0 14px 14px;
+    font-size:11px;
+    color:rgba(255,255,255,.84);
+    line-height:1.5;
+  }
+  .hero-pill {
+    align-self:flex-start;
+    background:rgba(255,255,255,.16);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.2);
+    font-size:10px;
+    font-weight:700;
+    padding:6px 8px;
+    border-radius:10px;
+    white-space:nowrap;
+  }
+
+  .section { padding:0 16px; margin-top:18px; }
+  .section-title {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:15px;
+    font-weight:800;
+    color:var(--text);
+    margin-bottom:10px;
+  }
+  .section-title .count {
+    background:var(--surface);
+    color:var(--text-mute);
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:999px;
+    font-weight:700;
+  }
+
+  .kpi-strip {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+  }
+  .kpi-card {
+    background:var(--bg);
+    border:1px solid var(--rule-soft);
+    border-radius:14px;
+    padding:11px 10px 10px;
+    min-height:92px;
+  }
+  .kpi-card .label {
+    font-size:10px;
+    color:var(--text-mute);
+    line-height:1.35;
+    min-height:26px;
+    margin-bottom:6px;
+    font-weight:600;
+  }
+  .kpi-card .value {
+    font-size:23px;
+    font-weight:800;
+    color:var(--text);
+    line-height:1;
+  }
+  .kpi-card .value.green { color:var(--green); }
+  .kpi-card .value.navy { color:var(--navy); }
+  .kpi-card .value.amber { color:var(--amber); }
+  .kpi-card .sub {
+    margin-top:6px;
+    font-size:10px;
+    color:var(--text-sub);
+    line-height:1.35;
+  }
+  .delta-up { color:var(--green); font-weight:700; }
+  .delta-dn { color:var(--brand); font-weight:700; }
+
+  .info-card {
+    background:var(--bg);
+    border:1px solid var(--rule-soft);
+    border-radius:16px;
+    padding:13px;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
+  }
+  .info-head {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .info-head .t {
+    font-size:14px;
+    font-weight:800;
+    color:var(--text);
+    line-height:1.35;
+  }
+  .chip {
+    font-size:10px;
+    font-weight:800;
+    padding:4px 7px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .chip-amber { background:var(--amber-lite); color:var(--amber); }
+  .chip-green { background:var(--green-lite); color:var(--green); }
+  .chip-purple { background:var(--purple-lite); color:var(--purple); }
+  .chip-navy { background:var(--navy-lite); color:var(--navy); }
+
+  .glance-grid {
+    display:grid;
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  .glance-row {
+    padding:10px 11px;
+    border-radius:12px;
+    background:var(--surface);
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .glance-row .l { min-width:0; }
+  .glance-row .k { font-size:11px; color:var(--text-mute); font-weight:700; }
+  .glance-row .v { font-size:15px; font-weight:800; color:var(--text); margin-top:2px; }
+  .glance-row .s { font-size:10px; color:var(--text-sub); margin-top:3px; line-height:1.35; }
+
+  .queue-card {
+    border:1px solid var(--purple-lite);
+    background:#fff;
+    border-radius:16px;
+    padding:12px;
+    margin-bottom:10px;
+    box-shadow:0 1px 3px rgba(0,0,0,.03);
+  }
+  .queue-card .top {
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    align-items:flex-start;
+    margin-bottom:6px;
+  }
+  .queue-card .title {
+    font-size:14px;
+    font-weight:800;
+    color:var(--text);
+    line-height:1.35;
+  }
+  .queue-card .meta {
+    font-size:10px;
+    color:var(--text-mute);
+    margin-top:3px;
+    line-height:1.4;
+  }
+  .queue-card .desc {
+    font-size:12px;
+    color:var(--text-sub);
+    line-height:1.5;
+    margin:8px 0 10px;
+  }
+  .swipe-hint {
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    font-size:10px;
+    color:var(--text-mute);
+  }
+  .swipe-hint span {
+    flex:1;
+    background:var(--surface);
+    border-radius:10px;
+    padding:7px 8px;
+    text-align:center;
+    border:1px dashed var(--rule-soft);
+  }
+
+  .risk-box {
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  .risk-meter {
+    flex:0 0 92px;
+    text-align:center;
+    padding:10px 8px;
+    border-radius:16px;
+    background:linear-gradient(180deg, #FFF8E8 0%, #FFF 100%);
+    border:1px solid #F3D9A1;
+  }
+  .risk-meter .num {
+    font-size:28px;
+    font-weight:900;
+    color:var(--amber);
+    line-height:1;
+  }
+  .risk-meter .lvl {
+    font-size:11px;
+    font-weight:800;
+    color:var(--amber);
+    margin-top:4px;
+    letter-spacing:.3px;
+  }
+  .risk-meter .sum {
+    font-size:10px;
+    color:var(--brand);
+    margin-top:4px;
+    font-weight:700;
+  }
+  .risk-copy {
+    font-size:12px;
+    color:var(--text-sub);
+    line-height:1.55;
+  }
+  .risk-copy b { color:var(--text); }
+
+  .signal-list { margin-top:8px; }
+  .signal {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:8px 0;
+    border-bottom:1px solid var(--rule-lite);
+    font-size:11px;
+    color:var(--text-sub);
+  }
+  .signal:last-child { border-bottom:none; padding-bottom:0; }
+  .signal .s-l { min-width:0; }
+  .signal .s-r { font-weight:800; color:var(--green); white-space:nowrap; }
+  .signal .s-r.dn { color:var(--brand); }
+  .signal .s-r.navy { color:var(--navy); }
+
+  .warn-box {
+    background:var(--brand-soft);
+    border:1px solid var(--brand-lite);
+    border-radius:14px;
+    padding:11px 12px;
+    font-size:12px;
+    line-height:1.5;
+    color:var(--text-sub);
+  }
+  .warn-box b { color:var(--brand); }
+
+  .note-box {
+    margin-top:10px;
+    font-size:10.5px;
+    color:var(--text-mute);
+    line-height:1.55;
+  }
+  .note-box b { color:var(--text); }
+
+  .bottom-nav {
+    position:sticky;
+    bottom:0;
+    left:0; right:0;
+    height:83px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--rule-soft);
+    display:flex;
+    padding-bottom:20px;
+  }
+  .nav-tab {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    text-decoration:none;
+    color:var(--text-mute);
+    font-size:10px;
+    font-weight:500;
+    cursor:pointer;
+    padding-top:6px;
+  }
+  .nav-tab .icon { font-size:22px; line-height:1; }
+  .nav-tab.active { color:var(--brand); }
+  .nav-tab.active .label-text { font-weight:700; }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="status-bar">
+    <span class="time">15:42</span>
+    <span class="carrier">&#9679;&#9679;&#9679; リゾート箱根</span>
+    <span class="icons">&#9632;&#9632;&#9632;&#9632;&#9632;</span>
+  </div>
+
+  <div class="app-header">
+    <div class="logo"><span class="dot"></span> 旅館運営システム</div>
+    <span class="title">集客・販促</span>
+    <div class="bell">&#128276;<span class="badge">4</span></div>
+  </div>
+
+  <div class="content">
+    <div class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="hero-tag">&#128221; 支配人向け / 閲覧 + 承認中心</div>
+          <div class="hero-title">営業日 2026/05/30<br>箱根の直販を取りこぼさない</div>
+          <div class="hero-sub">複雑な配分や細かな運用はパソコン誘導。スマホでは、判断・承認・例外の把握に絞る。</div>
+        </div>
+        <div class="hero-pill">予約・会計の元データを守る</div>
+      </div>
+      <div class="hero-note">AIは広告出稿や案内ページ生成を提案するが、基幹システムへの書き込み前は承認待ち。記録と変更点が先に見える設計。</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">&#128200; 主要指標 一覧 <span class="count">3</span></div>
+      <div class="kpi-strip">
+        <div class="kpi-card">
+          <div class="label">上乗せできた直販売上</div>
+          <div class="value green">¥3.2M</div>
+          <div class="sub delta-up">AI寄与の今月累計</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">集客費を引いた1室あたり売上</div>
+          <div class="value navy">¥21,400</div>
+          <div class="sub">直販比率の改善を反映</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">キャンセル調整後の広告費用対効果</div>
+          <div class="value green">6.2x</div>
+          <div class="sub delta-up">予算再配分後</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">&#129302; AI判断キュー <span class="count">承認待ち 2</span></div>
+      <div class="queue-card">
+        <div class="top">
+          <div>
+            <div class="title">紅葉木曜の予算再配分</div>
+            <div class="meta">週末満室日の広告を木曜へ移動。台湾・首都圏を中心に配信。</div>
+          </div>
+          <span class="chip chip-amber">承認待ち</span>
+        </div>
+        <div class="desc">土日から木曜へ広告費を振替え、直販の空きだけを埋める。複雑な調整はパソコンで確認。</div>
+        <div class="swipe-hint">
+          <span>左スワイプ: 却下</span>
+          <span>右スワイプ: 承認</span>
+        </div>
+      </div>
+      <div class="queue-card">
+        <div class="top">
+          <div>
+            <div class="title">繁体字 案内ページ 生成</div>
+            <div class="meta">繁体字流入 +41% を受けて、案内ページとSNS文言を自動生成。</div>
+          </div>
+          <span class="chip chip-purple">承認待ち</span>
+        </div>
+        <div class="desc">投稿文と案内ページ見出しを繁体字へ切替。配信前に文面の変更点を確認して承認。</div>
+        <div class="swipe-hint">
+          <span>左スワイプ: 却下</span>
+          <span>右スワイプ: 承認</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">&#9888;&#65039; インバウンド需要リスク <span class="count">42/100</span></div>
+      <div class="info-card">
+        <div class="risk-box">
+          <div class="risk-meter">
+            <div class="num">42</div>
+            <div class="lvl">中</div>
+            <div class="sum">台湾+中国 60%集中</div>
+          </div>
+          <div class="risk-copy">
+            市場集中、キャンセル、地政学、為替をまとめた簡易スコア。<b>台湾と中国に依存が偏るため、分散の余地あり。</b>
+          </div>
+        </div>
+        <div class="signal-list">
+          <div class="signal">
+            <span class="s-l">台湾+中国の構成比</span>
+            <span class="s-r dn">60%</span>
+          </div>
+          <div class="signal">
+            <span class="s-l">需要の振れ幅</span>
+            <span class="s-r">中</span>
+          </div>
+          <div class="signal">
+            <span class="s-l">キャンセル耐性</span>
+            <span class="s-r navy">要注意</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">&#128218; ニュース・記事量による需要の兆し <span class="count">簡易</span></div>
+      <div class="info-card">
+        <div class="warn-box">
+          箱根の記事量が上昇。繁体字メディアの露出が伸びており、<b>繁体字 +41%</b> を直販強化の根拠に利用。
+        </div>
+        <div class="signal-list">
+          <div class="signal">
+            <span class="s-l">箱根 記事量トレンド</span>
+            <span class="s-r">↑ 上昇</span>
+          </div>
+          <div class="signal">
+            <span class="s-l">繁体字メディア露出</span>
+            <span class="s-r">+41%</span>
+          </div>
+          <div class="signal">
+            <span class="s-l">予約先行性</span>
+            <span class="s-r navy">3-6ヶ月先行</span>
+          </div>
+        </div>
+        <div class="note-box">パソコン版では記事群・市場別の細かな比較を確認。スマホ版は「今すぐ承認が必要か」を見るための簡易表示。</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">&#9888;&#65039; 価格の足並み警告 <span class="count">Booking -8%</span></div>
+      <div class="info-card">
+        <div class="warn-box">
+          Booking.com が公式直販を <b>8%下回る</b> 価格の足並みの乱れ。価格修正より先に、直販誘導と配分見直しを優先。
+        </div>
+        <div class="signal-list">
+          <div class="signal">
+            <span class="s-l">公式直販</span>
+            <span class="s-r">基準</span>
+          </div>
+          <div class="signal">
+            <span class="s-l">Booking.com</span>
+            <span class="s-r dn">-8%</span>
+          </div>
+          <div class="signal">
+            <span class="s-l">対応</span>
+            <span class="s-r">価格是正 / 送客強化</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" style="margin-bottom:24px;">
+      <div class="section-title">&#8505;&#65039; 運用注記 <span class="count">パソコン誘導</span></div>
+      <div class="info-card">
+        <div class="warn-box">
+          予算の細かい配分、予約経路別の詳細分析、案内ページの分岐条件はパソコンで処理。スマホでは承認と例外確認に集中。
+        </div>
+        <div class="note-box">営業日 2026/05/30。基幹システムへの変更は承認の順番待ち経由のみ。AIは提案まで、最終判断は支配人。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-tab" href="mobile_today.html">
+      <span class="icon">&#128197;</span>
+      <span class="label-text">本日</span>
+    </a>
+    <a class="nav-tab" href="mobile_action.html">
+      <span class="icon">&#128295;</span>
+      <span class="label-text">アクション</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#9989;</span>
+      <span class="label-text">承認</span>
+    </a>
+    <a class="nav-tab active" href="mobile_marketing.html">
+      <span class="icon">&#128200;</span>
+      <span class="label-text">マーケ</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#8942;</span>
+      <span class="label-text">もっと</span>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>予約・到着</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+    --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+    --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+    --navy:#1E3A5F;--navy-lite:#DCE5F0;
+    --amber:#D97706;--amber-lite:#FEF3C7;
+    --green:#15803D;--green-lite:#DCFCE7;
+    --purple:#7C3AED;--purple-lite:#EDE9FE;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;
+    background:#F0F0F0;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:20px 0;
+    -webkit-font-smoothing:antialiased;
+  }
+  .phone-frame {
+    width:375px;
+    min-height:812px;
+    background:var(--bg);
+    border-radius:40px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow:hidden;
+    position:relative;
+  }
+  .status-bar {
+    height:44px;
+    background:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+  }
+  .status-bar .time { font-size:14px; font-weight:700; }
+  .status-bar .carrier { font-size:11px; opacity:0.85; letter-spacing:0.3px; }
+  .status-bar .icons { font-size:12px; letter-spacing:2px; }
+  .app-header {
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    border-bottom:1px solid var(--rule-soft);
+    background:var(--bg);
+  }
+  .app-header .logo {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-weight:700;
+    font-size:15px;
+    color:var(--navy);
+  }
+  .app-header .logo .dot { width:8px; height:8px; background:var(--brand); border-radius:50%; }
+  .app-header .title { font-size:17px; font-weight:700; color:var(--text); }
+  .app-header .mini { font-size:12px; color:var(--text-mute); font-weight:600; }
+  .content { padding-bottom:100px; overflow-y:auto; }
+
+  .hero {
+    margin:14px 16px 0;
+    padding:14px;
+    border-radius:16px;
+    background:linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+    color:#fff;
+  }
+  .hero .eyebrow { font-size:11px; font-weight:700; letter-spacing:0.4px; opacity:0.85; }
+  .hero .headline { margin-top:6px; font-size:18px; font-weight:800; line-height:1.3; }
+  .hero .sub { margin-top:6px; font-size:12px; opacity:0.92; line-height:1.5; }
+
+  .search-wrap { padding:12px 16px 0; }
+  .search-box {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--surface);
+    border:1px solid var(--rule-soft);
+    border-radius:14px;
+    padding:12px 12px;
+  }
+  .search-box .icon { font-size:16px; color:var(--text-mute); }
+  .search-box input {
+    border:none;
+    outline:none;
+    background:transparent;
+    width:100%;
+    font-size:14px;
+    color:var(--text);
+    font-family:inherit;
+  }
+  .search-box input::placeholder { color:var(--text-mute); }
+  .helper {
+    padding:8px 16px 0;
+    font-size:11px;
+    color:var(--text-mute);
+    line-height:1.5;
+  }
+
+  .summary-row {
+    display:flex;
+    gap:10px;
+    padding:14px 16px 0;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .summary-row::-webkit-scrollbar { display:none; }
+  .mini-card {
+    flex:0 0 auto;
+    min-width:104px;
+    background:var(--bg);
+    border:1px solid var(--rule-soft);
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .mini-card .num { font-size:20px; font-weight:800; color:var(--text); line-height:1.1; }
+  .mini-card .lbl { margin-top:4px; font-size:11px; color:var(--text-mute); font-weight:600; }
+
+  .section { padding:0 16px; margin-top:18px; }
+  .section-title {
+    font-size:15px;
+    font-weight:700;
+    color:var(--text);
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .section-title .count {
+    background:var(--surface);
+    color:var(--text-mute);
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:10px;
+    font-weight:600;
+  }
+  .note-box {
+    margin-top:10px;
+    background:var(--brand-soft);
+    border:1px solid #F7C7D0;
+    color:var(--brand-dark);
+    border-radius:12px;
+    padding:10px 12px;
+    font-size:12px;
+    line-height:1.55;
+    font-weight:600;
+  }
+
+  details.slot {
+    border:1px solid var(--rule-soft);
+    border-radius:14px;
+    overflow:hidden;
+    margin-bottom:10px;
+    background:var(--bg);
+  }
+  details.slot[open] { box-shadow:0 6px 18px rgba(0,0,0,0.04); }
+  summary.slot-head {
+    list-style:none;
+    padding:12px 12px 10px;
+    cursor:pointer;
+  }
+  summary.slot-head::-webkit-details-marker { display:none; }
+  .slot-top {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .slot-time {
+    min-width:62px;
+    font-size:17px;
+    font-weight:800;
+    color:var(--text);
+  }
+  .slot-name {
+    font-size:15px;
+    font-weight:700;
+    color:var(--text);
+    line-height:1.3;
+  }
+  .slot-sub {
+    margin-top:4px;
+    font-size:12px;
+    color:var(--text-sub);
+    line-height:1.45;
+  }
+  .badges { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .badge {
+    font-size:10px;
+    font-weight:700;
+    padding:3px 8px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .badge-vip { background:var(--amber-lite); color:var(--amber); }
+  .badge-group { background:var(--purple-lite); color:var(--purple); }
+  .badge-late { background:var(--brand-lite); color:var(--brand-dark); }
+  .badge-lang { background:var(--navy-lite); color:var(--navy); }
+  .badge-checkin { background:var(--green-lite); color:var(--green); }
+  .badge-duein { background:#E9EEF5; color:var(--navy); }
+
+  .slot-body {
+    border-top:1px solid var(--rule-lite);
+    padding:10px 12px 12px;
+    background:linear-gradient(180deg, #fff 0%, #FCFCFC 100%);
+  }
+  .row {
+    display:grid;
+    grid-template-columns:92px 1fr;
+    gap:8px;
+    padding:6px 0;
+    border-bottom:1px dashed var(--rule-lite);
+    font-size:12px;
+    line-height:1.45;
+  }
+  .row:last-child { border-bottom:none; }
+  .key { color:var(--text-mute); font-weight:600; }
+  .val { color:var(--text); font-weight:600; min-width:0; }
+  .val .muted { color:var(--text-sub); font-weight:500; }
+  .pill {
+    display:inline-block;
+    margin:2px 6px 0 0;
+    padding:2px 7px;
+    border-radius:999px;
+    background:var(--surface);
+    color:var(--text-sub);
+    font-size:10px;
+    font-weight:700;
+  }
+  .actions {
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+  }
+  .btn {
+    flex:1;
+    border:none;
+    border-radius:10px;
+    padding:10px 0;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .btn-primary { background:var(--brand); color:#fff; }
+  .btn-secondary { background:var(--navy); color:#fff; }
+  .btn-ghost {
+    background:#fff;
+    color:var(--text-sub);
+    border:1px solid var(--rule);
+  }
+  .btn:active { opacity:0.88; }
+
+  .desktop-note {
+    margin-top:10px;
+    border:1px solid var(--rule-soft);
+    background:var(--surface);
+    color:var(--text-sub);
+    border-radius:12px;
+    padding:10px 12px;
+    font-size:11px;
+    line-height:1.55;
+  }
+
+  .bottom-nav {
+    position:sticky;
+    bottom:0;
+    left:0; right:0;
+    height:83px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--rule-soft);
+    display:flex;
+    padding-bottom:20px;
+  }
+  .nav-tab {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    text-decoration:none;
+    color:var(--text-mute);
+    font-size:10px;
+    font-weight:500;
+    cursor:pointer;
+    padding-top:6px;
+  }
+  .nav-tab .icon { font-size:22px; line-height:1; }
+  .nav-tab.active { color:var(--brand); }
+  .nav-tab.active .label-text { font-weight:600; }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="status-bar">
+    <span class="time">15:42</span>
+    <span class="carrier">&#9679;&#9679;&#9679; リゾート箱根</span>
+    <span class="icons">&#9632;&#9632;&#9632;&#9632;&#9632;</span>
+  </div>
+
+  <div class="app-header">
+    <div class="logo"><span class="dot"></span> 旅館運営システム</div>
+    <span class="title">予約・到着</span>
+    <span class="mini">営業日 2026/05/30</span>
+  </div>
+
+  <div class="content">
+    <div class="hero">
+      <div class="eyebrow">フロント / スマートフォン</div>
+      <div class="headline">当日の到着を、氏名・部屋・予約番号で即検索</div>
+      <div class="sub">到着予定とチェックイン済みを同じ一覧で確認。車寄せでの受付と順番待ち登録は片手操作前提です。</div>
+    </div>
+
+    <div class="search-wrap">
+      <div class="search-box">
+        <span class="icon">&#128269;</span>
+        <input type="text" placeholder="氏名 / 室番 / 予約番号 / ネット予約サイト番号で検索">
+      </div>
+    </div>
+    <div class="helper">高速検索は 1 ボックスのみ。候補は氏名・室番・予約番号・ネット予約サイト番号に限定しています。</div>
+
+    <div class="summary-row">
+      <div class="mini-card"><div class="num">14</div><div class="lbl">当日 到着予定</div></div>
+      <div class="mini-card"><div class="num">6</div><div class="lbl">チェックイン済</div></div>
+      <div class="mini-card"><div class="num">3</div><div class="lbl">VIP</div></div>
+      <div class="mini-card"><div class="num">1</div><div class="lbl">団体</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">&#128197; 当日 到着予定 / 到着一覧 <span class="count">14件</span></div>
+
+      <details class="slot" open>
+        <summary class="slot-head">
+          <div class="slot-top">
+            <div>
+              <div class="slot-time">15:00</div>
+            </div>
+            <div style="flex:1;">
+              <div class="slot-name">J.W 様 <span style="font-size:12px;color:var(--navy);font-weight:700;">🇬🇧</span></div>
+              <div class="slot-sub">512号室 / ツインA / 2泊</div>
+            </div>
+            <span class="badge badge-duein">到着予定</span>
+          </div>
+          <div class="badges">
+            <span class="badge badge-vip">VIP</span>
+            <span class="badge badge-lang">英語</span>
+            <span class="badge badge-late">遅着</span>
+          </div>
+        </summary>
+        <div class="slot-body">
+          <div class="row"><div class="key">人泊</div><div class="val">大2 子1 <span class="muted">/ 添い寝1</span></div></div>
+          <div class="row"><div class="key">食事</div><div class="val">1泊2食 <span class="pill">夕食 18:00</span> <span class="pill">アレルギー: 甲殻類</span></div></div>
+          <div class="row"><div class="key">支払</div><div class="val">前受あり / カード保証</div></div>
+          <div class="row"><div class="key">状態</div><div class="val">到着予定 / チェックイン前 / 送迎待ち</div></div>
+          <div class="actions">
+            <button class="btn btn-primary">車寄せで受付</button>
+            <button class="btn btn-secondary">順番待ち登録</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="slot">
+        <summary class="slot-head">
+          <div class="slot-top">
+            <div>
+              <div class="slot-time">15:30</div>
+            </div>
+            <div style="flex:1;">
+              <div class="slot-name">E.C 様 <span style="font-size:12px;color:var(--navy);font-weight:700;">🇬🇧</span></div>
+              <div class="slot-sub">218号室 / 和洋室 / 1泊</div>
+            </div>
+            <span class="badge badge-checkin">チェックイン済</span>
+          </div>
+          <div class="badges">
+            <span class="badge badge-lang">英語</span>
+            <span class="badge badge-late">遅着</span>
+          </div>
+        </summary>
+        <div class="slot-body">
+          <div class="row"><div class="key">人泊</div><div class="val">大1 子0</div></div>
+          <div class="row"><div class="key">食事</div><div class="val">素泊まり <span class="pill">朝食追加希望</span> <span class="pill">アレルギー: 乳製品</span></div></div>
+          <div class="row"><div class="key">支払</div><div class="val">事前決済 / 会計明細(精算書)確認済</div></div>
+          <div class="row"><div class="key">状態</div><div class="val">チェックイン済 / 荷物預かり済</div></div>
+          <div class="actions">
+            <button class="btn btn-primary">車寄せで受付</button>
+            <button class="btn btn-secondary">順番待ち登録</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="slot">
+        <summary class="slot-head">
+          <div class="slot-top">
+            <div>
+              <div class="slot-time">16:00</div>
+            </div>
+            <div style="flex:1;">
+              <div class="slot-name">W.J 様 <span style="font-size:12px;color:var(--navy);font-weight:700;">🇹🇼</span></div>
+              <div class="slot-sub">704号室 / 特別室 / 3泊</div>
+            </div>
+            <span class="badge badge-duein">到着予定</span>
+          </div>
+          <div class="badges">
+            <span class="badge badge-vip">VIP</span>
+            <span class="badge badge-lang">繁中</span>
+          </div>
+        </summary>
+        <div class="slot-body">
+          <div class="row"><div class="key">人泊</div><div class="val">大2 子1</div></div>
+          <div class="row"><div class="key">食事</div><div class="val">1泊2食 <span class="pill">夕食 19:00</span> <span class="pill">アレルギー: 落花生</span></div></div>
+          <div class="row"><div class="key">支払</div><div class="val">前受あり / 現地精算あり</div></div>
+          <div class="row"><div class="key">状態</div><div class="val">到着予定 / 送迎調整中</div></div>
+          <div class="actions">
+            <button class="btn btn-primary">車寄せで受付</button>
+            <button class="btn btn-secondary">順番待ち登録</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="slot">
+        <summary class="slot-head">
+          <div class="slot-top">
+            <div>
+              <div class="slot-time">17:10</div>
+            </div>
+            <div style="flex:1;">
+              <div class="slot-name">青葉商事 団体 <span style="font-size:12px;color:var(--navy);font-weight:700;">🇯🇵</span></div>
+              <div class="slot-sub">38名 / 10室ブロック / 団体受付</div>
+            </div>
+            <span class="badge badge-duein">到着予定</span>
+          </div>
+          <div class="badges">
+            <span class="badge badge-group">団体</span>
+            <span class="badge badge-late">遅着</span>
+          </div>
+        </summary>
+        <div class="slot-body">
+          <div class="row"><div class="key">人泊</div><div class="val">大34 子4</div></div>
+          <div class="row"><div class="key">食事</div><div class="val">1泊2食 <span class="pill">会食 18:30</span> <span class="pill">アレルギー 2件</span></div></div>
+          <div class="row"><div class="key">支払</div><div class="val">請求書払い / 与信確認済</div></div>
+          <div class="row"><div class="key">状態</div><div class="val">到着予定 / バス到着待ち</div></div>
+          <div class="actions">
+            <button class="btn btn-primary">車寄せで受付</button>
+            <button class="btn btn-secondary">順番待ち登録</button>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="section" style="margin-bottom:18px;">
+      <div class="section-title">&#9888; 運用メモ</div>
+      <div class="desktop-note">料金変更・売止の一括変更は、誤操作防止のためパソコン画面へ誘導します。スマートフォンでは到着処理と順番待ち登録に集中してください。</div>
+      <div class="note-box">常連メモ: 512号室 J.W 様 / E.C 様、W.J 様、団体 青葉商事 38名を優先表示しています。</div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-tab active" href="mobile_reservations.html">
+      <span class="icon">&#128197;</span>
+      <span class="label-text">到着出発</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#128221;</span>
+      <span class="label-text">予約</span>
+    </a>
+    <a class="nav-tab" href="mobile_today.html">
+      <span class="icon">&#127968;</span>
+      <span class="label-text">客室</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#128100;</span>
+      <span class="label-text">ゲスト</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#8942;</span>
+      <span class="label-text">もっと</span>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

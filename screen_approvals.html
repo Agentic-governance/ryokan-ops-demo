@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>承認待ち一覧</title>
+<style>
+:root {
+  --bg: #FFFFFF; --text: #1A1A1A; --text-sub: #4A4A4A; --text-mute: #8C8C8C;
+  --rule: #D0D0D0; --rule-soft: #E5E5E5; --rule-lite: #F0F0F0; --surface: #F7F7F7;
+  --brand: #C8102E; --brand-lite: #FCE5E8; --brand-soft: #FFF0F2; --brand-dark: #8B0F1F;
+  --navy: #1E3A5F; --navy-lite: #DCE5F0;
+  --amber: #D97706; --amber-lite: #FEF3C7;
+  --green: #15803D; --green-lite: #DCFCE7;
+  --purple: #7C3AED; --purple-lite: #EDE9FE;
+  --teal: #0E7490; --teal-lite: #CFFAFE;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif; color: var(--text); background: var(--bg); width: 1440px; min-height: 900px; font-size: 13px; line-height: 1.5; }
+a { text-decoration: none; color: inherit; }
+button, input, textarea { font: inherit; }
+
+.header { position: fixed; top: 0; left: 0; width: 1440px; height: 56px; background: var(--bg); border-bottom: 1px solid var(--rule-soft); z-index: 100; display: flex; align-items: center; padding: 0 20px; gap: 16px; }
+.header-logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.header-logo .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--brand); }
+.header-logo span { font-size: 16px; font-weight: 700; }
+.header-facility { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--rule); border-radius: 4px; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.header-search { flex: 1; max-width: 360px; margin: 0 auto; position: relative; }
+.header-search input { width: 100%; height: 34px; border: 1px solid var(--rule); border-radius: 4px; padding: 0 12px 0 34px; font-size: 13px; background: var(--surface); outline: none; font-family: inherit; }
+.header-search::before { content: '\1F50D'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; }
+.header-right { display: flex; align-items: center; gap: 14px; margin-left: auto; flex-shrink: 0; }
+.header-limit { background: var(--navy-lite); color: var(--navy); padding: 5px 10px; border-radius: 5px; font-size: 11px; font-weight: 700; }
+.header-bell { position: relative; font-size: 18px; cursor: pointer; }
+.badge-notif { position: absolute; top: -6px; right: -8px; background: var(--brand); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 5px; border-radius: 8px; }
+.header-user { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.header-user-info { text-align: right; }
+.header-user-info .name { font-size: 13px; font-weight: 600; }
+.header-user-info .role { font-size: 11px; color: var(--text-mute); }
+.header-user .arrow { font-size: 10px; color: var(--text-mute); }
+
+.sidebar { position: fixed; top: 56px; left: 0; width: 200px; height: calc(100vh - 56px); background: var(--bg); border-right: 1px solid var(--rule-soft); padding: 12px 0; z-index: 90; overflow-y: auto; }
+.sidebar-item { display: block; padding: 10px 16px; font-size: 13px; color: var(--text-sub); border-left: 3px solid transparent; transition: all .15s; }
+.sidebar-item:hover { background: var(--surface); color: var(--text); }
+.sidebar-item.active { border-left-color: var(--brand); background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+.sidebar-sub { font-size: 10px; color: var(--text-mute); padding: 12px 16px 4px; text-transform: uppercase; letter-spacing: .5px; }
+
+.main { margin-top: 56px; margin-left: 200px; padding: 20px 24px; width: 1240px; }
+.page-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+.page-title { font-size: 19px; font-weight: 700; }
+.page-title .ai-badge { font-size: 11px; font-weight: 700; color: var(--navy); background: var(--navy-lite); padding: 2px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+.page-sub { font-size: 12px; color: var(--text-mute); margin-bottom: 16px; }
+.seg { display:inline-flex; border:1px solid var(--rule); border-radius:5px; overflow:hidden; }
+.seg button { border:none; background:var(--bg); padding:6px 12px; font-size:12px; font-family:inherit; cursor:pointer; color:var(--text-sub); border-right:1px solid var(--rule); }
+.seg button:last-child{border-right:none;}
+.seg button.on { background:var(--navy); color:#fff; font-weight:600; }
+
+.kpi-strip { display: flex; gap: 12px; margin-bottom: 18px; }
+.kpi-card { flex: 1; padding: 13px 14px; border-radius: 6px; background: var(--bg); border: 1px solid var(--rule-soft); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.kpi-card .label { font-size: 10px; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; min-height:26px; line-height:1.3; }
+.kpi-card .value { font-size: 20px; font-weight: 700; }
+.kpi-card .unit { font-size: 11px; font-weight: 400; }
+.kpi-card .sub { font-size: 10px; margin-top: 2px; }
+.delta-up{color:var(--green);} .delta-dn{color:var(--brand);}
+
+.card { border:1px solid var(--rule-soft); border-radius:8px; background:var(--bg); box-shadow:0 1px 3px rgba(0,0,0,.04); margin-bottom:18px; overflow:hidden; }
+.card-h { padding:11px 16px; border-bottom:1px solid var(--rule-soft); display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.card-h .t { font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px; }
+.card-h .src { font-size:9.5px; color:var(--text-mute); font-weight:400; background:var(--surface); padding:2px 7px; border-radius:10px; white-space:nowrap; }
+.card-b { padding:14px 16px; }
+.card-b.nopad{padding:0;}
+.cols { display:flex; gap:18px; align-items:flex-start; }
+.col-l { flex:0 0 24%; min-width:0; }
+.col-c { flex:0 0 34%; min-width:0; }
+.col-r { flex:1; min-width:0; }
+
+.filter-list { display:flex; flex-direction:column; gap:8px; }
+.filter-item { border:1px solid var(--rule-soft); border-radius:7px; padding:10px 10px; background:#fff; display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; }
+.filter-item.on { border-color: var(--navy-lite); background: var(--navy-lite); }
+.filter-left { display:flex; align-items:center; gap:8px; min-width:0; }
+.filter-ico { width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; background: var(--surface); flex:0 0 auto; }
+.filter-item.on .filter-ico { background:#fff; }
+.filter-name { font-size:11.5px; font-weight:700; line-height:1.35; }
+.filter-badge { min-width: 28px; text-align:center; font-size:10px; font-weight:700; padding:2px 6px; border-radius:10px; background:var(--brand-lite); color:var(--brand); }
+.filter-item.on .filter-badge { background:#fff; }
+.filter-note { font-size:9.5px; color:var(--text-mute); margin-top:2px; }
+
+.queue-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.queue-head .hint { font-size:10px; color:var(--text-mute); }
+.bulk-bar { display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+.btn-sm { padding: 6px 13px; border-radius: 5px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; border: none; }
+.btn-red { background: var(--brand); color: #fff; } .btn-red:hover{background:var(--brand-dark);}
+.btn-navy { background: var(--navy); color: #fff; } .btn-navy:hover{background:#152d4a;}
+.btn-out { background: var(--bg); color: var(--text-sub); border: 1px solid var(--rule); } .btn-out:hover{background:var(--surface);}
+.btn-disabled, .btn-sm:disabled { opacity:.45; cursor:not-allowed; }
+
+.approval-list { display:flex; flex-direction:column; gap:8px; }
+.approval-card { border:1px solid var(--rule-soft); border-radius:8px; background:#fff; padding:10px 12px; cursor:pointer; }
+.approval-card.active { border-color: var(--brand-lite); box-shadow:0 0 0 2px rgba(200,16,46,.06); }
+.approval-top { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
+.approval-title { font-size:12px; font-weight:700; display:flex; align-items:center; gap:6px; }
+.approval-meta { font-size:9.5px; color:var(--text-mute); margin-top:2px; }
+.meta-line { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; align-items:center; }
+.chip { font-size:9px; font-weight:700; padding:2px 6px; border-radius:8px; }
+.chip-green{ background:var(--green-lite); color:var(--green); }
+.chip-amber{ background:var(--amber-lite); color:var(--amber); }
+.chip-red{ background:var(--brand-lite); color:var(--brand); }
+.chip-gray{ background:var(--surface); color:var(--text-sub); }
+.amount { font-size:14px; font-weight:800; color:var(--navy); }
+.amount small { font-size:10px; font-weight:600; color:var(--text-mute); }
+.impact-bar { height:6px; border-radius:999px; background:var(--rule-lite); overflow:hidden; margin-top:8px; }
+.impact-bar > span { display:block; height:100%; border-radius:999px; }
+.impact-bar.green > span { background: var(--green); }
+.impact-bar.amber > span { background: var(--amber); }
+.impact-bar.red > span { background: var(--brand); }
+.approval-foot { display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:10px; color:var(--text-mute); }
+
+.detail-panel { display:flex; flex-direction:column; gap:12px; }
+.detail-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:8px; }
+.detail-title { font-size:13px; font-weight:700; }
+.detail-sub { font-size:10px; color:var(--text-mute); margin-top:2px; }
+.detail-grid { display:grid; grid-template-columns:1fr; gap:8px; }
+.diff-box { background:var(--surface); border-radius:7px; padding:10px 12px; border:1px solid var(--rule-lite); }
+.diff-row { display:grid; grid-template-columns:74px 1fr; gap:8px; padding:5px 0; border-bottom:1px solid var(--rule-lite); font-size:11px; }
+.diff-row:last-child{border-bottom:none;}
+.diff-k { color:var(--text-mute); font-size:10px; }
+.old { text-decoration:line-through; color:var(--text-mute); }
+.new { color:var(--green); font-weight:700; }
+.delta { color:var(--navy); font-weight:700; }
+.amount-note { font-size:10px; color:var(--text-mute); margin-top:6px; }
+.policy-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.policy-card { background:#fff; border:1px solid var(--rule-soft); border-radius:7px; padding:9px 10px; }
+.policy-card .k { font-size:9px; color:var(--text-mute); text-transform:uppercase; letter-spacing:.3px; }
+.policy-card .v { font-size:12px; font-weight:700; margin-top:2px; }
+.timeline { margin-top:2px; }
+.tl-row { display:grid; grid-template-columns:96px 72px 1fr 120px; gap:8px; padding:7px 0; border-bottom:1px solid var(--rule-lite); font-size:10.5px; align-items:start; }
+.tl-row:last-child{border-bottom:none;}
+.tl-h { font-size:9px; color:var(--text-mute); text-transform:uppercase; letter-spacing:.3px; margin-bottom:2px; }
+.tl-desc { color:var(--text-sub); }
+.tl-ip { color:var(--text-mute); text-align:right; }
+
+.action-box { display:flex; gap:8px; margin-top:10px; }
+.reject-wrap { margin-top:8px; border-top:1px solid var(--rule-lite); padding-top:10px; }
+.reject-wrap label { display:block; font-size:10px; color:var(--text-mute); margin-bottom:6px; }
+.reject-wrap select, .reject-wrap textarea { width:100%; border:1px solid var(--rule); border-radius:5px; padding:8px 10px; font-family:inherit; font-size:12px; background:#fff; }
+.reject-wrap textarea { resize:vertical; min-height:62px; margin-top:8px; }
+.reject-wrap .small { font-size:10px; color:var(--text-mute); margin-top:4px; }
+.reject-wrap .req { color:var(--brand); font-weight:700; }
+.note { font-size:10px; color:var(--text-mute); line-height:1.6; }
+.kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:10px; background:var(--surface); border:1px solid var(--rule-lite); padding:1px 4px; border-radius:4px; }
+
+.sticky-box { position: sticky; top: 68px; }
+.right-perm { font-size:10px; color:var(--text-mute); margin-top:6px; }
+
+.nudge-wrap { display:flex; flex-direction:column; gap:10px; margin-bottom:18px; }
+.nudge { position:relative; background:#fff; border:1px solid var(--rule-soft); border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,.04); padding:12px 16px 12px 18px; overflow:hidden; }
+.nudge::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; }
+.nudge.n-red::before { background:var(--brand); }
+.nudge.n-amber::before { background:var(--amber); }
+.nudge.n-blue::before { background:var(--navy); }
+.nudge.n-green::before { background:var(--green); }
+.nudge-head { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
+.nudge-ai { font-size:10px; font-weight:700; color:var(--navy); background:var(--navy-lite); padding:2px 8px; border-radius:4px; }
+.nudge-pri { font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; }
+.nudge-pri.p-red { background:var(--brand-lite); color:var(--brand); }
+.nudge-pri.p-amber { background:var(--amber-lite); color:var(--amber); }
+.nudge-pri.p-blue { background:var(--navy-lite); color:var(--navy); }
+.nudge-pri.p-green { background:var(--green-lite); color:var(--green); }
+.nudge-l1 { font-size:14px; font-weight:700; color:var(--text); }
+.nudge-l2 { font-size:11.5px; color:var(--text-sub); margin-top:3px; }
+.nudge-l3 { font-size:11.5px; color:var(--text); margin-top:4px; }
+.nudge-meta { font-size:10px; color:var(--text-mute); margin-top:5px; }
+.nudge-act { display:flex; gap:8px; margin-top:10px; }
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="screen1_dashboard.html" class="header-logo"><div class="dot"></div><span>旅館運営システム</span></a>
+  <div class="header-facility">○○リゾート箱根 — 全施設横断ビュー <span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
+  <div class="header-search"><input type="text" placeholder="承認種別・予約番号・会計明細・申請者を検索"></div>
+  <div class="header-right">
+    <div class="header-limit">自分の承認上限: 支配人 ¥100,000</div>
+    <div class="header-bell">&#x1F514;<span class="badge-notif">8</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item" href="screen8_reports.html">レポート</a>
+  <div class="sidebar-sub">管理ビュー</div>
+  <a class="sidebar-item active" href="screen_approvals.html">承認待ち一覧</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約・会計明細</a>
+  <a class="sidebar-item" href="screen2_action_detail.html">AIアクション</a>
+</nav>
+
+<div class="main">
+  <div class="page-head">
+    <div class="page-title">承認待ち一覧 <span class="ai-badge">&#128737; 基幹システムに書き込む前の確認</span></div>
+    <div class="seg">
+      <button class="on">承認待ち</button>
+      <button>却下済</button>
+      <button>履歴</button>
+      <button>監査</button>
+    </div>
+  </div>
+  <div class="page-sub">予約・会計など元データの正しさを守るため、金額・在庫・顧客データの変更は必ずここを通す。営業日 <b>2026/05/30</b>。権限のない操作は自動で無効化され、却下には理由の入力が必須。</div>
+
+  <div class="nudge-wrap">
+    <div class="nudge n-red">
+      <div class="nudge-head"><span class="nudge-ai">&#128737; AI確認</span><span class="nudge-pri p-red">至急</span></div>
+      <div class="nudge-l1">対応期限を過ぎた承認が 2 件あります</div>
+      <div class="nudge-l2">夜勤からの伝票取消(¥28,400)が支配人の上限を超えたまま 42分 止まっています。長く保留するとお客様の請求確定が遅れます。</div>
+      <div class="nudge-l3">上限超の 1 件は総支配人へ上位者送りにし、残り 1 件をこの場で確認するとよさそうです。</div>
+      <div class="nudge-meta">期限超過 2件 / 最長 42分 / うち上限超 1件</div>
+      <div class="nudge-act">
+        <button class="btn-sm btn-red">期限超過の 2 件を開く</button>
+        <button class="btn-sm btn-out">上位者送り</button>
+      </div>
+    </div>
+    <div class="nudge n-amber">
+      <div class="nudge-head"><span class="nudge-ai">&#128737; AI確認</span><span class="nudge-pri p-amber">今日中</span></div>
+      <div class="nudge-l1">本日中に確認したい承認が 5 件たまっています</div>
+      <div class="nudge-l2">上限の80%に達した申請が 2 件含まれます。締め処理までに片付かないと、明日への持ち越しになります。</div>
+      <div class="nudge-l3">影響額の大きい順に並べた 5 件を、上から確認していくとよさそうです。</div>
+      <div class="nudge-meta">本日中対応 5件 / 上限の80%到達 2件 / 締めまで 残り 3時間</div>
+      <div class="nudge-act">
+        <button class="btn-sm btn-navy">優先順で確認</button>
+      </div>
+    </div>
+    <div class="nudge n-blue">
+      <div class="nudge-head"><span class="nudge-ai">&#128737; AI確認</span><span class="nudge-pri p-blue">確認推奨</span></div>
+      <div class="nudge-l1">同じ種類の低リスクな割引 3 件はまとめて承認できます</div>
+      <div class="nudge-l2">いずれも上限内・理由ありの料金変更です。1件ずつ開く手間を省けます。候補を表示しますので、最終確認は支配人が行います。</div>
+      <div class="nudge-l3">3 件の内容をまとめて見比べ、問題なければ一括で承認するとよさそうです。</div>
+      <div class="nudge-meta">まとめ承認の候補 3件 / すべて上限の65%以下 / 合計 -¥16,800</div>
+      <div class="nudge-act">
+        <button class="btn-sm btn-out">3 件をまとめて確認</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="label">本日 承認件数</div><div class="value" style="color:var(--green);">14</div><div class="sub delta-up">+3 vs 昨日</div></div>
+    <div class="kpi-card"><div class="label">本日 却下件数</div><div class="value" style="color:var(--brand);">3</div><div class="sub">証憑不足 / 規定外</div></div>
+    <div class="kpi-card"><div class="label">承認金額合計</div><div class="value">¥382,000</div><div class="sub">締め後修正 1件含む</div></div>
+    <div class="kpi-card"><div class="label">未処理の上位者送り</div><div class="value" style="color:var(--amber);">5</div><div class="sub delta-up">上限の80%到達 2件</div></div>
+    <div class="kpi-card"><div class="label">対応期限の超過</div><div class="value" style="color:var(--brand);">2</div><div class="sub">最長 42分経過</div></div>
+  </div>
+
+  <div class="cols">
+    <div class="col-l">
+      <div class="card sticky-box">
+        <div class="card-h">
+          <div class="t">&#128203; 種別で絞り込み</div>
+          <span class="src">未処理の件数を表示</span>
+        </div>
+        <div class="card-b">
+          <div class="filter-list">
+            <div class="filter-item on"><div class="filter-left"><div class="filter-ico">💴</div><div><div class="filter-name">料金の個別変更</div><div class="filter-note">平均客室単価 / 割引率の変更</div></div></div><div class="filter-badge">6</div></div>
+            <div class="filter-item"><div class="filter-left"><div class="filter-ico">🏷️</div><div><div class="filter-name">無料・優待割引</div><div class="filter-note">無料宿泊 / 招待</div></div></div><div class="filter-badge">4</div></div>
+            <div class="filter-item"><div class="filter-left"><div class="filter-ico">↩️</div><div><div class="filter-name">返金</div><div class="filter-note">返金 / 取消返金</div></div></div><div class="filter-badge">2</div></div>
+            <div class="filter-item"><div class="filter-left"><div class="filter-ico">⛔</div><div><div class="filter-name">伝票取消</div><div class="filter-note">会計明細の取消 / 伝票取消</div></div></div><div class="filter-badge">1</div></div>
+            <div class="filter-item"><div class="filter-left"><div class="filter-ico">🛎️</div><div><div class="filter-name">無断不泊の課金</div><div class="filter-note">全泊分 / 予約金のみ</div></div></div><div class="filter-badge">3</div></div>
+            <div class="filter-item"><div class="filter-left"><div class="filter-ico">⬆️</div><div><div class="filter-name">無料の客室格上げ</div><div class="filter-note">客室タイプの変更</div></div></div><div class="filter-badge">2</div></div>
+            <div class="filter-item"><div class="filter-left"><div class="filter-ico">👥</div><div><div class="filter-name">団体料金</div><div class="filter-note">団体枠 / 申込締切</div></div></div><div class="filter-badge">5</div></div>
+            <div class="filter-item"><div class="filter-left"><div class="filter-ico">💳</div><div><div class="filter-name">与信限度超過</div><div class="filter-note">限度額超過分の支払い</div></div></div><div class="filter-badge">4</div></div>
+            <div class="filter-item"><div class="filter-left"><div class="filter-ico">🤖</div><div><div class="filter-name">元データ修正・AIアクション</div><div class="filter-note">AI提案の書き込み前の確認</div></div></div><div class="filter-badge">7</div></div>
+          </div>
+          <div class="note" style="margin-top:10px;">承認権限: 会計担当 ¥10,000 / 主任 ¥30,000 / 支配人 ¥100,000 / 総支配人 上限なし。自分の申請は自分で承認できない。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-c">
+      <div class="card">
+        <div class="card-h">
+          <div class="t">&#128220; 申請カード</div>
+          <span class="src">J/K 移動・A 承認・R 却下・E 上位者送り</span>
+        </div>
+        <div class="card-b">
+          <div class="queue-head">
+            <div class="hint">同じ種類で上限内の低リスクはまとめて承認可。選択中の申請は右側に詳細表示。</div>
+            <div class="hint">現在位置: 2/18</div>
+          </div>
+          <div class="bulk-bar">
+            <button class="btn-sm btn-navy">一括承認</button>
+            <button class="btn-sm btn-out">選択解除</button>
+            <button class="btn-sm btn-out">承認の決まり</button>
+          </div>
+          <div class="approval-list">
+            <div class="approval-card active">
+              <div class="approval-top">
+                <div>
+                  <div class="approval-title">💴 料金の個別変更 <span class="chip chip-amber">理由あり</span></div>
+                  <div class="approval-meta">対象: 1208 / 会計明細 45781 / 申請者: フロント 鈴木 / 経過 12分</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="amount">-¥6,000 <small>/泊</small></div>
+                  <div class="meta-line" style="justify-content:flex-end;">
+                    <span class="chip chip-green">上限の65%</span>
+                    <span class="chip chip-gray">客室単価 ¥42,000→¥36,000</span>
+                  </div>
+                </div>
+              </div>
+              <div class="impact-bar green"><span style="width:65%"></span></div>
+              <div class="approval-foot"><span>影響度: 上限内</span><span>営業日 2026/05/30</span></div>
+            </div>
+            <div class="approval-card">
+              <div class="approval-top">
+                <div>
+                  <div class="approval-title">🏷️ 無料・優待割引 <span class="chip chip-red">理由なし</span></div>
+                  <div class="approval-meta">対象: 905 / 会計明細 45810 / 申請者: 支配人代理 佐藤 / 経過 27分</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="amount">-¥18,000 <small>/滞在</small></div>
+                  <div class="meta-line" style="justify-content:flex-end;">
+                    <span class="chip chip-amber">上限の80%</span>
+                    <span class="chip chip-gray">3泊無料招待</span>
+                  </div>
+                </div>
+              </div>
+              <div class="impact-bar amber"><span style="width:82%"></span></div>
+              <div class="approval-foot"><span>影響度: 上限の80%超</span><span>理由入力待ち</span></div>
+            </div>
+            <div class="approval-card">
+              <div class="approval-top">
+                <div>
+                  <div class="approval-title">↩️ 返金 <span class="chip chip-amber">証憑確認済</span></div>
+                  <div class="approval-meta">対象: 0712 / 会計明細 45718 / 申請者: 会計 中村 / 経過 4分</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="amount">¥9,800 <small>返金</small></div>
+                  <div class="meta-line" style="justify-content:flex-end;">
+                    <span class="chip chip-green">上限の32%</span>
+                    <span class="chip chip-gray">二重請求調整</span>
+                  </div>
+                </div>
+              </div>
+              <div class="impact-bar green"><span style="width:32%"></span></div>
+              <div class="approval-foot"><span>影響度: 低</span><span>会計例外</span></div>
+            </div>
+            <div class="approval-card">
+              <div class="approval-top">
+                <div>
+                  <div class="approval-title">⛔ 伝票取消 <span class="chip chip-red">上限超</span></div>
+                  <div class="approval-meta">対象: 304 / 会計明細 45688 / 申請者: 夜勤 結城 / 経過 41分</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="amount">¥28,400 <small>取消</small></div>
+                  <div class="meta-line" style="justify-content:flex-end;">
+                    <span class="chip chip-red">上限超</span>
+                    <span class="chip chip-gray">無断不泊の後処理</span>
+                  </div>
+                </div>
+              </div>
+              <div class="impact-bar red"><span style="width:96%"></span></div>
+              <div class="approval-foot"><span>影響度: 高</span><span>すぐ上位者送り候補</span></div>
+            </div>
+            <div class="approval-card">
+              <div class="approval-top">
+                <div>
+                  <div class="approval-title">🤖 元データ修正・AIアクション <span class="chip chip-green">理由あり</span></div>
+                  <div class="approval-meta">対象: 1503 / 会計明細 45842 / 申請者: AI提案 / 経過 19分</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="amount">¥0 <small>実行前</small></div>
+                  <div class="meta-line" style="justify-content:flex-end;">
+                    <span class="chip chip-amber">上限内</span>
+                    <span class="chip chip-gray">部屋替え連動</span>
+                  </div>
+                </div>
+              </div>
+              <div class="impact-bar green"><span style="width:45%"></span></div>
+              <div class="approval-foot"><span>影響度: 低</span><span>承認前は書き込み禁止</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-r">
+      <div class="card">
+        <div class="card-h">
+          <div class="t">&#128269; 詳細</div>
+          <span class="src">変更前→変更後 / 変更履歴 / 承認・却下</span>
+        </div>
+        <div class="card-b">
+          <div class="detail-panel">
+            <div>
+              <div class="detail-head">
+                <div>
+                  <div class="detail-title">料金の個別変更 - 宿泊 1208</div>
+                  <div class="detail-sub">対象予約 / 会計明細 45781 / 申請者 フロント 鈴木 / 申請日時 2026/05/30 09:42 / 理由: <b>常連優遇</b></div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="amount">-14.3%</div>
+                  <div class="detail-sub">上限: 支配人 ¥100,000</div>
+                </div>
+              </div>
+              <div class="diff-box">
+                <div class="diff-row"><div class="diff-k">客室単価</div><div><span class="old">¥42,000</span> → <span class="new">¥36,000</span> <span class="delta">(-¥6,000)</span></div></div>
+                <div class="diff-row"><div class="diff-k">割引率</div><div><span class="old">0%</span> → <span class="new">14.3%</span></div></div>
+                <div class="diff-row"><div class="diff-k">適用先</div><div>1泊2食 / 3名 / 夕食18:30 / 連泊2泊目</div></div>
+                <div class="diff-row"><div class="diff-k">元データ反映</div><div><span class="new">承認後のみ反映</span> / 締め後は再承認必要</div></div>
+              </div>
+              <div class="amount-note">差額と割引率を同時表示し、元データ(予約・会計)に書く前の判断材料を固定化する。</div>
+            </div>
+
+            <div class="policy-grid">
+              <div class="policy-card"><div class="k">承認の上限額</div><div class="v">支配人 ¥100,000</div></div>
+              <div class="policy-card"><div class="k">役割別の権限管理</div><div class="v">権限のないボタンは押せない</div></div>
+              <div class="policy-card"><div class="k">却下理由</div><div class="v">証憑不足 / 規定外 / 二重計上 / 期限切れ / キャンセル規定外</div></div>
+              <div class="policy-card"><div class="k">対象の会計明細</div><div class="v">45781</div></div>
+            </div>
+
+            <div>
+              <div class="card-h" style="padding-left:0;padding-right:0;border-bottom:none;">
+                <div class="t">変更履歴</div>
+                <span class="src">担当者 / 日付・時刻 / 操作種別 / 内容 / 端末IPアドレス</span>
+              </div>
+              <div class="timeline">
+                <div class="tl-row">
+                  <div><div class="tl-h">担当者</div>鈴木</div>
+                  <div><div class="tl-h">日付・時刻</div>2026/05/30 09:42</div>
+                  <div><div class="tl-h">操作種別</div>料金変更の申請</div>
+                  <div><div class="tl-h">内容</div><span class="tl-desc">客室単価を ¥42,000→¥36,000 に変更。常連優遇の理由を付与。</span><div class="tl-ip">IPアドレス 10.2.18.44</div></div>
+                </div>
+                <div class="tl-row">
+                  <div><div class="tl-h">担当者</div>中村</div>
+                  <div><div class="tl-h">日付・時刻</div>2026/05/30 09:46</div>
+                  <div><div class="tl-h">操作種別</div>内容確認</div>
+                  <div><div class="tl-h">内容</div><span class="tl-desc">対象予約の与信と会計明細の残高を確認。締め後ではないことを判定。</span><div class="tl-ip">IPアドレス 10.2.18.17</div></div>
+                </div>
+                <div class="tl-row">
+                  <div><div class="tl-h">担当者</div>山田</div>
+                  <div><div class="tl-h">日付・時刻</div>2026/05/30 09:51</div>
+                  <div><div class="tl-h">操作種別</div>支配人の判断</div>
+                  <div><div class="tl-h">内容</div><span class="tl-desc">支配人承認待ち。上限内だが、同じ種類の割引が同日 3 件あるためまとめて承認の候補。</span><div class="tl-ip">IPアドレス 10.2.18.3</div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="reject-wrap">
+              <label>却下理由 <span class="req">必須</span></label>
+              <select>
+                <option>証憑不足</option>
+                <option>標準枠超過</option>
+                <option>二重計上</option>
+                <option>期限切れ</option>
+                <option>キャンセル規定外</option>
+              </select>
+              <textarea placeholder="却下時は理由の追記が必須。例: 署名未回収、請求根拠の添付不足、規定上不可。"></textarea>
+              <div class="small">却下は理由コード未入力のまま実行できない。</div>
+            </div>
+
+            <div class="action-box">
+              <button class="btn-sm btn-navy">承認</button>
+              <button class="btn-sm btn-red">却下</button>
+            </div>
+            <div class="note">キーボード操作: <span class="kbd">J</span>/<span class="kbd">K</span> 移動, <span class="kbd">A</span> 承認, <span class="kbd">R</span> 却下, <span class="kbd">E</span> 上位者送り。権限のない操作は自動で無効化。</div>
+            <div class="right-perm">自分の承認上限: <b>支配人 ¥100,000</b> / 低リスク・同じ種類のみまとめて承認可</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

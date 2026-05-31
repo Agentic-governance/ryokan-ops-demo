@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>マーケティング (AIマーケティング自動運用)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #FFFFFF; --text: #1A1A1A; --text-sub: #4A4A4A; --text-mute: #8C8C8C;
+  --rule: #D0D0D0; --rule-soft: #E5E5E5; --rule-lite: #F0F0F0; --surface: #F7F7F7;
+  --brand: #C8102E; --brand-lite: #FCE5E8; --brand-soft: #FFF0F2; --brand-dark: #8B0F1F;
+  --navy: #1E3A5F; --navy-lite: #DCE5F0;
+  --amber: #D97706; --amber-lite: #FEF3C7;
+  --green: #15803D; --green-lite: #DCFCE7;
+  --purple: #7C3AED; --purple-lite: #EDE9FE;
+  --teal: #0E7490; --teal-lite: #CFFAFE; --pink:#DB2777;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif; color: var(--text); background: var(--bg); width: 1440px; min-height: 900px; font-size: 13px; line-height: 1.5; }
+a { text-decoration: none; color: inherit; }
+
+/* Header */
+.header { position: fixed; top: 0; left: 0; width: 1440px; height: 56px; background: var(--bg); border-bottom: 1px solid var(--rule-soft); z-index: 100; display: flex; align-items: center; padding: 0 20px; gap: 16px; }
+.header-logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.header-logo .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--brand); }
+.header-logo span { font-size: 16px; font-weight: 700; }
+.header-facility { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--rule); border-radius: 4px; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.header-search { flex: 1; max-width: 360px; margin: 0 auto; position: relative; }
+.header-search input { width: 100%; height: 34px; border: 1px solid var(--rule); border-radius: 4px; padding: 0 12px 0 34px; font-size: 13px; background: var(--surface); outline: none; font-family: inherit; }
+.header-search::before { content: '\1F50D'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; }
+.header-right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+.header-bell { position: relative; font-size: 18px; cursor: pointer; }
+.header-bell .badge-notif { position: absolute; top: -6px; right: -8px; background: var(--brand); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 5px; border-radius: 8px; }
+.header-user { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.header-user-info { text-align: right; }
+.header-user-info .name { font-size: 13px; font-weight: 600; }
+.header-user-info .role { font-size: 11px; color: var(--text-mute); }
+.header-user .arrow { font-size: 10px; color: var(--text-mute); }
+
+/* Sidebar */
+.sidebar { position: fixed; top: 56px; left: 0; width: 200px; height: calc(100vh - 56px); background: var(--bg); border-right: 1px solid var(--rule-soft); padding: 12px 0; z-index: 90; overflow-y: auto; }
+.sidebar-item { display: block; padding: 10px 16px; font-size: 13px; color: var(--text-sub); border-left: 3px solid transparent; transition: all .15s; }
+.sidebar-item:hover { background: var(--surface); color: var(--text); }
+.sidebar-item.active { border-left-color: var(--brand); background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+.sidebar-sub { font-size: 10px; color: var(--text-mute); padding: 12px 16px 4px; text-transform: uppercase; letter-spacing: .5px; }
+
+/* Main */
+.main { margin-top: 56px; margin-left: 200px; padding: 20px 24px; width: 1240px; }
+.page-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+.page-title { font-size: 19px; font-weight: 700; }
+.page-title .ai-badge { font-size: 11px; font-weight: 700; color: var(--purple); background: var(--purple-lite); padding: 2px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+.page-sub { font-size: 12px; color: var(--text-mute); margin-bottom: 16px; }
+.seg { display:inline-flex; border:1px solid var(--rule); border-radius:5px; overflow:hidden; }
+.seg button { border:none; background:var(--bg); padding:6px 12px; font-size:12px; font-family:inherit; cursor:pointer; color:var(--text-sub); border-right:1px solid var(--rule); }
+.seg button:last-child{border-right:none;}
+.seg button.on { background:var(--purple); color:#fff; font-weight:600; }
+
+/* KPI */
+.kpi-strip { display: flex; gap: 12px; margin-bottom: 18px; }
+.kpi-card { flex: 1; padding: 13px 14px; border-radius: 6px; background: var(--bg); border: 1px solid var(--rule-soft); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.kpi-card .label { font-size: 10px; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; min-height:26px; line-height:1.3; }
+.kpi-card .value { font-size: 20px; font-weight: 700; }
+.kpi-card .unit { font-size: 11px; font-weight: 400; }
+.kpi-card .sub { font-size: 10px; margin-top: 2px; }
+.delta-up{color:var(--green);} .delta-dn{color:var(--brand);}
+
+/* generic card */
+.card { border:1px solid var(--rule-soft); border-radius:8px; background:var(--bg); box-shadow:0 1px 3px rgba(0,0,0,.04); margin-bottom:18px; overflow:hidden; }
+.card-h { padding:11px 16px; border-bottom:1px solid var(--rule-soft); display:flex; align-items:center; justify-content:space-between; }
+.card-h .t { font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px; }
+.card-h .src { font-size:9.5px; color:var(--text-mute); font-weight:400; background:var(--surface); padding:2px 7px; border-radius:10px; }
+.card-b { padding:14px 16px; }
+.card-b.nopad{padding:0;}
+.cols { display:flex; gap:18px; }
+
+/* AI Autopilot hero */
+.autopilot { background:linear-gradient(135deg,#faf5ff,#fff 60%); border:1px solid var(--purple-lite); border-radius:10px; padding:0; margin-bottom:18px; overflow:hidden; }
+.ap-bar { background:linear-gradient(135deg,#6d28d9,#7C3AED); color:#fff; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; }
+.ap-bar .l { display:flex; align-items:center; gap:10px; }
+.ap-bar .l .tag { font-size:10px; font-weight:700; background:rgba(255,255,255,.2); padding:3px 9px; border-radius:10px; letter-spacing:.3px; }
+.ap-bar .l .ti { font-size:14px; font-weight:700; }
+.ap-bar .r { font-size:10.5px; display:flex; align-items:center; gap:14px; }
+.ap-bar .r .perm { background:rgba(255,255,255,.15); padding:3px 9px; border-radius:5px; }
+.ap-body { display:flex; gap:0; }
+.ap-col { padding:14px 16px; }
+.ap-col.c1 { flex:0 0 30%; border-right:1px solid var(--purple-lite); }
+.ap-col.c2 { flex:0 0 32%; border-right:1px solid var(--purple-lite); }
+.ap-col.c3 { flex:1; }
+.ap-col .ch { font-size:10px; font-weight:700; color:var(--purple); text-transform:uppercase; letter-spacing:.4px; margin-bottom:10px; }
+
+/* demand calendar */
+.dcal { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.dcal .d { text-align:center; padding:6px 2px; border-radius:5px; font-size:10px; position:relative; }
+.dcal .d .dn{ font-size:9px; color:var(--text-mute); }
+.dcal .d .occ{ font-size:12px; font-weight:700; }
+.dcal .lo{ background:var(--brand-soft); border:1px solid var(--brand-lite); }
+.dcal .lo .occ{ color:var(--brand); }
+.dcal .mid{ background:var(--amber-lite); }
+.dcal .hi{ background:var(--green-lite); }
+.dcal .d .flag{ position:absolute; top:-7px; right:-3px; font-size:10px; }
+.dem-note{ font-size:10px; color:var(--text-sub); margin-top:10px; line-height:1.5; }
+.dem-note b{ color:var(--brand); }
+.signal{ display:flex; justify-content:space-between; font-size:10.5px; padding:4px 0; border-top:1px dashed var(--rule-lite); }
+.signal b{ color:var(--purple); }
+
+/* AI decision queue */
+.dq-item{ border:1px solid var(--purple-lite); border-radius:7px; padding:9px 10px; margin-bottom:8px; background:#fff; }
+.dq-item .dq-t{ font-size:11.5px; font-weight:700; display:flex; align-items:center; gap:5px; }
+.dq-item .dq-d{ font-size:10px; color:var(--text-sub); margin:3px 0 6px; line-height:1.5; }
+.dq-item .dq-f{ display:flex; align-items:center; justify-content:space-between; }
+.dq-conf{ font-size:9px; color:var(--text-mute); }
+.dq-conf b{ color:var(--green); }
+.chip{ font-size:9px; font-weight:700; padding:2px 6px; border-radius:8px; }
+.chip-auto{ background:var(--green-lite); color:var(--green); }
+.chip-app{ background:var(--amber-lite); color:var(--amber); }
+
+/* exec diff */
+.diff-row{ display:grid; grid-template-columns:78px 1fr; gap:8px; padding:6px 0; border-bottom:1px solid var(--rule-lite); font-size:11px; align-items:start; }
+.diff-row:last-child{border-bottom:none;}
+.diff-k{ color:var(--text-mute); font-size:10px; }
+.diff-v .old{ color:var(--text-mute); text-decoration:line-through; font-size:10.5px; }
+.diff-v .new{ color:var(--green); font-weight:600; }
+.diff-v .add{ color:var(--navy); }
+.btn-sm { padding: 6px 13px; border-radius: 5px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; border: none; }
+.btn-purple{ background:var(--purple); color:#fff; } .btn-purple:hover{ background:#6d28d9; }
+.btn-out { background: var(--bg); color: var(--text-sub); border: 1px solid var(--rule); } .btn-out:hover{background:var(--surface);}
+
+/* channel table */
+table.tbl{ width:100%; border-collapse:collapse; font-size:11.5px; }
+table.tbl th{ text-align:left; font-size:9.5px; color:var(--text-mute); text-transform:uppercase; padding:7px 8px; border-bottom:1px solid var(--rule-soft); }
+table.tbl td{ padding:8px; border-bottom:1px solid var(--rule-lite); }
+table.tbl tr:last-child td{border-bottom:none;}
+.tag-up{ color:var(--green); font-weight:600; } .tag-dn{ color:var(--brand); font-weight:600; }
+
+/* funnel */
+.fn{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+.fn .fl{ flex:0 0 96px; font-size:10.5px; color:var(--text-sub); text-align:right; }
+.fn .fb{ flex:1; height:24px; border-radius:4px; display:flex; align-items:center; padding:0 8px; color:#fff; font-size:11px; font-weight:700; }
+.fn .fv{ flex:0 0 110px; font-size:10px; color:var(--text-mute); }
+
+/* sentiment / listening */
+.lang-row{ display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--rule-lite); font-size:11px; }
+.lang-row:last-child{border-bottom:none;}
+.lang-row .fl{ flex:0 0 72px; font-weight:600; }
+.senti{ flex:1; height:14px; border-radius:7px; display:flex; overflow:hidden; }
+.senti .pos{ background:var(--green); } .senti .neu{ background:var(--rule); } .senti .neg{ background:var(--brand); }
+.lang-row .vol{ flex:0 0 56px; text-align:right; color:var(--text-mute); font-size:10px; }
+
+/* social scheduler */
+.post{ display:flex; gap:8px; padding:8px 0; border-bottom:1px solid var(--rule-lite); }
+.post:last-child{border-bottom:none;}
+.post .ico{ flex:0 0 28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff; }
+.ico-ig{ background:linear-gradient(45deg,#f09433,#dc2743,#bc1888); }
+.ico-x{ background:#111; } .ico-fb{ background:#1877f2; }
+.post .px{ flex:1; }
+.post .pt{ font-size:11px; font-weight:600; }
+.post .pm{ font-size:9.5px; color:var(--text-mute); }
+.ai-gen{ font-size:8.5px; color:var(--purple); font-weight:700; background:var(--purple-lite); padding:1px 5px; border-radius:6px; }
+
+/* reputation */
+.rev{ padding:9px 0; border-bottom:1px solid var(--rule-lite); }
+.rev:last-child{border-bottom:none;}
+.rev-h{ display:flex; align-items:center; justify-content:space-between; }
+.rev-src{ font-size:9.5px; font-weight:700; padding:1px 6px; border-radius:4px; }
+.src-google{ background:#e8f0fe; color:#1a73e8; } .src-booking{ background:#e7f0ff; color:#003580; }
+.src-jalan{ background:#fff0e6; color:#e8590c; }
+.rev-txt{ font-size:10.5px; color:var(--text-sub); margin:4px 0; line-height:1.5; }
+.rev-ai{ font-size:10px; background:var(--purple-lite); color:var(--purple); padding:6px 8px; border-radius:5px; line-height:1.5; }
+.stars{ color:var(--amber); font-size:10px; }
+
+/* rate intel */
+.comp-row{ display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--rule-lite); font-size:11.5px; }
+.comp-row:last-child{border-bottom:none;}
+.comp-row .cp{ font-weight:700; }
+.parity-ok{ color:var(--green); font-size:10px; font-weight:700; }
+.parity-bad{ color:var(--brand); font-size:10px; font-weight:700; }
+.pace{ display:flex; gap:10px; margin-top:8px; }
+.pace .pc{ flex:1; text-align:center; background:var(--surface); border-radius:6px; padding:8px 4px; }
+.pace .pc .pk{ font-size:9px; color:var(--text-mute); } .pace .pc .pv{ font-size:15px; font-weight:700; }
+
+.foot-note{ font-size:10px; color:var(--text-mute); margin-top:8px; line-height:1.6; }
+.mini-kpi{ display:flex; gap:10px; }
+.mini-kpi .mk{ flex:1; text-align:center; }
+.mini-kpi .mk .mv{ font-size:16px; font-weight:700; } .mini-kpi .mk .ml{ font-size:9px; color:var(--text-mute); }
+
+/* chart wrappers (fixed-height relative containers for Chart.js responsive) */
+.chart-wrap{ position:relative; width:100%; }
+canvas{ max-width:100%; }
+.chart-wrap.donut{ height:150px; }
+.chart-wrap.bars{ height:180px; }
+
+/* tech-touch nudge cards (1 situation + 1 action + 1 primary button) */
+.nudges{ display:flex; flex-direction:column; gap:10px; }
+.nudge{ position:relative; background:#fff; border:1px solid var(--rule-soft); border-radius:8px; padding:12px 14px 12px 18px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.nudge::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:8px 0 0 8px; }
+.nudge.urgent::before{ background:var(--brand); }
+.nudge.today::before{ background:var(--amber); }
+.nudge.improve::before{ background:var(--navy); }
+.nudge.good::before{ background:var(--green); }
+.nudge-top{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.nudge-ai{ font-size:9px; font-weight:700; color:var(--purple); background:var(--purple-lite); padding:2px 7px; border-radius:9px; letter-spacing:.2px; }
+.nudge-pri{ font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:9px; }
+.pri-urgent{ color:var(--brand); background:var(--brand-lite); }
+.pri-today{ color:var(--amber); background:var(--amber-lite); }
+.pri-improve{ color:var(--navy); background:var(--navy-lite); }
+.pri-good{ color:var(--green); background:var(--green-lite); }
+.nudge-line1{ font-size:13.5px; font-weight:700; color:var(--text); line-height:1.45; }
+.nudge-line2{ font-size:11px; color:var(--text-sub); margin-top:4px; line-height:1.5; }
+.nudge-line3{ font-size:11px; color:var(--text); margin-top:5px; line-height:1.5; }
+.nudge-meta{ font-size:10px; color:var(--text-mute); margin-top:6px; }
+.nudge-act{ display:flex; gap:8px; margin-top:10px; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <a href="screen1_dashboard.html" class="header-logo"><div class="dot"></div><span>旅館運営システム</span></a>
+  <div class="header-facility">○○リゾート箱根 — 全施設横断ビュー <span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
+  <div class="header-search"><input type="text" placeholder="キャンペーン・キーワード・チャネルを検索"></div>
+  <div class="header-right">
+    <div class="header-bell">&#x1F514;<span class="badge-notif">7</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
+  </div>
+</header>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item active" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item" href="screen8_reports.html">レポート</a>
+  <div class="sidebar-sub">マーケティング表示</div>
+  <a class="sidebar-item active" href="screen7_marketing.html">AI自動運用</a>
+  <a class="sidebar-item" href="screen7_marketing.html">Web分析 (GA4)</a>
+  <a class="sidebar-item" href="screen7_marketing.html">広告 (Google/Meta)</a>
+  <a class="sidebar-item" href="screen7_marketing.html">ソーシャル/SNS</a>
+  <a class="sidebar-item" href="screen7_marketing.html">評判管理</a>
+  <a class="sidebar-item" href="screen7_marketing.html">料金/収益管理</a>
+</nav>
+
+<!-- Main -->
+<div class="main">
+  <div class="page-head">
+    <div class="page-title">マーケティング <span class="ai-badge">&#x1F916; AIマーケティング自動運用</span></div>
+    <div class="seg">
+      <button class="on">AI運用</button><button>Web分析</button><button>広告</button><button>SNS</button><button>評判</button><button>料金</button>
+    </div>
+  </div>
+  <div class="page-sub">GA4 / Meta / Hootsuite / Sprout / Lighthouse / TrustYou 級の全機能を統合 — さらにAIが「分析」でなく「判断して実行」する。経営の主要指標は"いいね数"でなく"手数料を払わず何室埋めたか"。</div>
+
+  <!-- KPI strip: revenue-focused, not vanity -->
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="label">上積み直販売上<br>(AI寄与・今月)</div><div class="value" style="color:var(--green);">&#165;3.2<span class="unit">M</span></div><div class="sub delta-up">&#9650; +18% vs 前月</div></div>
+    <div class="kpi-card"><div class="label">集客費控除後の<br>1室あたり売上</div><div class="value" style="color:var(--navy);">&#165;21,400</div><div class="sub delta-up">&#9650; +6.2%</div></div>
+    <div class="kpi-card"><div class="label">予約サイト手数料控除後<br>平均客室単価</div><div class="value">&#165;24,800</div><div class="sub">直販 &#165;31,200 / 予約サイト &#165;26,100</div></div>
+    <div class="kpi-card"><div class="label">予約完了率<br>(公式サイトの成約率)</div><div class="value" style="color:var(--purple);">4.8<span class="unit">%</span></div><div class="sub delta-up">&#9650; +0.9pt (多言語ページ)</div></div>
+    <div class="kpi-card"><div class="label">キャンセル調整後<br>広告費用対効果</div><div class="value" style="color:var(--green);">6.2<span class="unit">x</span></div><div class="sub delta-up">&#9650; 予算再配分後</div></div>
+    <div class="kpi-card"><div class="label">SNS問合せ<br>&rarr;予約化率</div><div class="value">11.3<span class="unit">%</span></div><div class="sub">統合受信箱 / 多言語</div></div>
+  </div>
+
+  <!-- ===== Tech-touch nudges: situation + action + 1 button (max 3) ===== -->
+  <div class="nudges" style="margin-bottom:18px;">
+    <!-- Nudge 1: underbooked Thursday — show sales candidates (today's action) -->
+    <div class="nudge today">
+      <div class="nudge-top">
+        <span class="nudge-ai">&#x1F916; AI確認</span>
+        <span class="nudge-pri pri-today">今日中</span>
+      </div>
+      <div class="nudge-line1">木曜21日だけ空きが目立ちます (直販 52%)</div>
+      <div class="nudge-line2">前後は満室なのに木曜だけ埋まっておらず、紅葉の人出を取りこぼしています。</div>
+      <div class="nudge-line3">週末向けの広告予算を木曜に回す案を用意しました。台湾・首都圏のお客様に向けると、木曜 +9室・直販売上 +&#165;225,000 が見込めます。</div>
+      <div class="nudge-meta">根拠: 木曜 直販52% / 前後の週末 99〜100% / 紅葉の地域需要 +32%</div>
+      <div class="nudge-act">
+        <button class="btn-sm btn-purple">販売の候補を見る</button>
+        <button class="btn-sm btn-out">後で</button>
+      </div>
+    </div>
+
+    <!-- Nudge 2: Booking.com price below direct — needs same-day fix (urgent) -->
+    <div class="nudge urgent">
+      <div class="nudge-top">
+        <span class="nudge-ai">&#x1F916; AI確認</span>
+        <span class="nudge-pri pri-urgent">至急</span>
+      </div>
+      <div class="nudge-line1">Booking.com の表示価格が公式サイトより安くなっています</div>
+      <div class="nudge-line2">公式直販を 8% 下回っており、このままだと手数料の高い予約サイトへお客様が流れます。</div>
+      <div class="nudge-line3">同額にそろえる候補を表示します。最終確認は支配人が行ってください (木曜21日 &#165;23,000 → &#165;25,000)。</div>
+      <div class="nudge-meta">根拠: 公式 &#165;25,000 / Booking.com &#165;23,000 (-8%)</div>
+      <div class="nudge-act">
+        <button class="btn-sm btn-purple">価格をそろえる候補を見る</button>
+        <button class="btn-sm btn-out">価格を確認</button>
+      </div>
+    </div>
+
+    <!-- Nudge 3: Traditional Chinese demand rising — improvement suggestion -->
+    <div class="nudge improve">
+      <div class="nudge-top">
+        <span class="nudge-ai">&#x1F916; AI確認</span>
+        <span class="nudge-pri pri-improve">確認推奨</span>
+      </div>
+      <div class="nudge-line1">台湾からの関心が高まっています (検索流入 +41%)</div>
+      <div class="nudge-line2">繁体字の紅葉記事が増え、SNSの評判も好意的です。今が直販を伸ばす好機です。</div>
+      <div class="nudge-line3">繁体字の案内ページとSNS投稿の下書きを用意しました。木曜の空きと合わせてご案内すると成約率 +0.6pt が見込めます。</div>
+      <div class="nudge-meta">根拠: 繁体字 検索流入 +41% / SNS感情 好意的 82%</div>
+      <div class="nudge-act">
+        <button class="btn-sm btn-purple">下書きを見る</button>
+        <button class="btn-sm btn-out">後で</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Row: Inbound Demand-Risk + CCDM Tourism Signals (creative) ===== -->
+  <div style="display:flex;align-items:baseline;gap:10px;margin:2px 0 10px;">
+    <div style="font-size:14px;font-weight:800;">&#x1F30F; インバウンド需要・リスク インテリジェンス</div>
+    <div style="font-size:10.5px;color:var(--text-mute);">外部データ連携(標準接続)で束ねた観光メディアの記事群(17カ国・SNS・予約サイト・1,946万件)とマクロ経済データを、AIが日次で先読み</div>
+  </div>
+  <div class="cols">
+    <!-- Inbound Risk -->
+    <div style="flex:0 0 50%;min-width:0;">
+      <div class="card">
+        <div class="card-h"><div class="t">&#x26A0;&#xFE0F; インバウンド需要リスク (市場別)</div><span class="src">インバウンド需要分析 (外部データ連携)</span></div>
+        <div class="card-b">
+          <div style="display:flex;gap:14px;align-items:center;margin-bottom:10px;">
+            <div style="flex:0 0 auto;text-align:center;">
+              <div style="font-size:30px;font-weight:800;color:var(--amber);line-height:1;">42<span style="font-size:13px;color:var(--text-mute);">/100</span></div>
+              <div style="font-size:10px;font-weight:700;color:var(--amber);">中リスク</div>
+              <div style="font-size:9.5px;color:var(--brand);">&#9650; +5 今週</div>
+            </div>
+            <div style="flex:1;font-size:10.5px;color:var(--text-sub);line-height:1.5;">需要の振れ幅・特定市場への偏り・キャンセル・国際情勢・為替をまとめてスコア化。<b>台湾+中国で60%集中</b>→分散が課題。</div>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>市場</th><th>構成比</th><th>変動性</th><th>ｷｬﾝｾﾙ</th><th>ｽｺｱ</th><th>30日予測室</th></tr></thead>
+            <tbody>
+              <tr><td>&#x1F1F9;&#x1F1FC; 台湾</td><td>32%</td><td><span style="display:inline-block;width:42px;height:6px;border-radius:3px;background:var(--rule-lite);vertical-align:middle;"><span style="display:block;width:18%;height:6px;border-radius:3px;background:var(--green);"></span></span> 18</td><td>12</td><td>38</td><td>45&plusmn;7</td></tr>
+              <tr><td>&#x1F1E8;&#x1F1F3; 中国</td><td>28%</td><td><span style="display:inline-block;width:42px;height:6px;border-radius:3px;background:var(--rule-lite);vertical-align:middle;"><span style="display:block;width:35%;height:6px;border-radius:3px;background:var(--brand);"></span></span> <span class="tag-dn">35&#9888;</span></td><td>22</td><td style="color:var(--brand);font-weight:700;">62</td><td>32&plusmn;11</td></tr>
+              <tr><td>&#x1F1E6;&#x1F1FA; 豪州</td><td>13%</td><td><span style="display:inline-block;width:42px;height:6px;border-radius:3px;background:var(--rule-lite);vertical-align:middle;"><span style="display:block;width:12%;height:6px;border-radius:3px;background:var(--green);"></span></span> 12</td><td>10</td><td>28</td><td>18&plusmn;4</td></tr>
+              <tr><td>&#x1F1EC;&#x1F1E7; 英国</td><td>12%</td><td><span style="display:inline-block;width:42px;height:6px;border-radius:3px;background:var(--rule-lite);vertical-align:middle;"><span style="display:block;width:14%;height:6px;border-radius:3px;background:var(--green);"></span></span> 14</td><td>11</td><td>30</td><td>16&plusmn;3</td></tr>
+              <tr><td>&#x1F1F0;&#x1F1F7; 韓国</td><td>9%</td><td><span style="display:inline-block;width:42px;height:6px;border-radius:3px;background:var(--rule-lite);vertical-align:middle;"><span style="display:block;width:22%;height:6px;border-radius:3px;background:var(--amber);"></span></span> 22</td><td>16</td><td>40</td><td>13&plusmn;5</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:10px;font-size:10.5px;line-height:1.7;">
+            <div>&#x1F7E0; <b>市場集中:</b> 台湾+中国=60% → 豪/英へ広告分散を推奨</div>
+            <div>&#x1F7E1; <b>季節転換:</b> 6-7月 需要 -18% 見込 → 連休パッケージ前倒し/卸料金の確保</div>
+            <div>&#x1F7E2; <b>為替:</b> 円安 +3% vs USD → 価格優位、欧米向け訴求好機</div>
+          </div>
+          <div class="foot-note">&#x1F916; AIは市場別リスクを需要予測に織り込み、予算配分(中国依存を抑え豪/英へ)とキャンセル耐性の高いチャネルを提案。</div>
+        </div>
+      </div>
+    </div>
+    <!-- CCDM tourism media signals -->
+    <div style="flex:1;min-width:0;">
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F4DA; 観光メディア需要シグナル</div><span class="src">記事群(外部データ連携)：17カ国・SNS4・予約サイト8・日次 / 1,946万件</span></div>
+        <div class="card-b">
+          <div class="foot-note" style="margin:0 0 10px;font-size:10.5px;color:var(--navy);"><b>記事量 → 予約は3〜6ヶ月先行。</b> 世界の観光メディア/予約サイトのレビュー/SNS/ガイドブックから箱根の需要を先読み(記事増加から予約までの先行期間)。</div>
+          <div style="font-size:10px;font-weight:700;color:var(--text-sub);margin-bottom:5px;">箱根 記事量トレンド(過去12ヶ月) <span style="color:var(--green);">&#9650; 上昇</span></div>
+          <div style="display:flex;align-items:flex-end;gap:3px;height:46px;margin-bottom:4px;">
+            <div style="flex:1;height:38%;background:var(--navy-lite);border-radius:2px;"></div>
+            <div style="flex:1;height:42%;background:var(--navy-lite);border-radius:2px;"></div>
+            <div style="flex:1;height:40%;background:var(--navy-lite);border-radius:2px;"></div>
+            <div style="flex:1;height:48%;background:var(--navy-lite);border-radius:2px;"></div>
+            <div style="flex:1;height:55%;background:var(--navy-lite);border-radius:2px;"></div>
+            <div style="flex:1;height:52%;background:var(--navy-lite);border-radius:2px;"></div>
+            <div style="flex:1;height:60%;background:var(--navy-lite);border-radius:2px;"></div>
+            <div style="flex:1;height:68%;background:var(--navy);border-radius:2px;"></div>
+            <div style="flex:1;height:72%;background:var(--navy);border-radius:2px;"></div>
+            <div style="flex:1;height:80%;background:var(--navy);border-radius:2px;"></div>
+            <div style="flex:1;height:88%;background:var(--brand);border-radius:2px;"></div>
+            <div style="flex:1;height:100%;background:var(--brand);border-radius:2px;"></div>
+          </div>
+          <div style="font-size:9px;color:var(--text-mute);margin-bottom:10px;">繁体字メディアの紅葉記事が直近3ヶ月で急増(赤)</div>
+
+          <div style="font-size:10px;font-weight:700;color:var(--text-sub);margin-bottom:5px;">語られ方の構成(箱根を語る切り口)</div>
+          <div style="display:flex;height:18px;border-radius:5px;overflow:hidden;font-size:8.5px;font-weight:700;color:#fff;margin-bottom:4px;">
+            <div style="width:31%;background:#1E3A5F;display:flex;align-items:center;justify-content:center;">旅行ガイド31</div>
+            <div style="width:22%;background:#0E7490;display:flex;align-items:center;justify-content:center;">文化歴史22</div>
+            <div style="width:19%;background:#15803D;display:flex;align-items:center;justify-content:center;">食19</div>
+            <div style="width:14%;background:#D97706;display:flex;align-items:center;justify-content:center;">自然14</div>
+            <div style="width:8%;background:#7C3AED;"></div>
+            <div style="width:6%;background:#C8102E;"></div>
+          </div>
+          <div style="font-size:9px;color:var(--text-mute);margin-bottom:10px;">弱い兆し: 高級志向6%・暮らし8%は露出薄 → 未開拓の立ち位置に余地</div>
+
+          <div style="font-size:10px;font-weight:700;color:var(--text-sub);margin-bottom:5px;">競合 メディアシェア(温泉地)</div>
+          <table class="tbl">
+            <tbody>
+              <tr><td>箱根</td><td style="text-align:right;"><span style="display:inline-block;width:90px;height:7px;background:var(--rule-lite);border-radius:3px;vertical-align:middle;"><span style="display:block;width:62%;height:7px;background:var(--brand);border-radius:3px;"></span></span> 38%</td></tr>
+              <tr><td>草津</td><td style="text-align:right;"><span style="display:inline-block;width:90px;height:7px;background:var(--rule-lite);border-radius:3px;vertical-align:middle;"><span style="display:block;width:42%;height:7px;background:var(--navy);border-radius:3px;"></span></span> 26%</td></tr>
+              <tr><td>由布院</td><td style="text-align:right;"><span style="display:inline-block;width:90px;height:7px;background:var(--rule-lite);border-radius:3px;vertical-align:middle;"><span style="display:block;width:33%;height:7px;background:var(--navy);border-radius:3px;"></span></span> 20%</td></tr>
+            </tbody>
+          </table>
+          <div class="foot-note">&#x1F916; 繁体字で箱根の紅葉記事 <b>+41%</b>(過去90日) → AI自動運用が木曜キャンペーンの台湾向け配信の根拠に使用。媒体露出は高いが予約につながりにくい市場=直販強化の好機。観光メディアの記事群も同じ仕組み(外部データ連携)で接続。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Row: Web Analytics + Paid Ads ===== -->
+  <div class="cols">
+    <div style="flex:0 0 56%;min-width:0;">
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F4CA; Web分析 — 流入経路 &amp; 売上への貢献度</div><span class="src">GA4 / Looker 相当</span></div>
+        <div class="card-b">
+          <div class="cols" style="gap:16px;">
+            <div style="flex:0 0 150px;">
+              <div class="chart-wrap donut"><canvas id="chChart"></canvas></div>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <table class="tbl">
+                <thead><tr><th>流入経路</th><th>訪問数</th><th>予約</th><th>成約率</th><th>寄与売上</th></tr></thead>
+                <tbody>
+                  <tr><td>公式直販</td><td>8,420</td><td>404</td><td><span class="tag-up">4.8%</span></td><td>&#165;12.6M</td></tr>
+                  <tr><td>楽天トラベル</td><td>—</td><td>312</td><td>—</td><td>&#165;8.1M</td></tr>
+                  <tr><td>じゃらんnet</td><td>—</td><td>268</td><td>—</td><td>&#165;6.9M</td></tr>
+                  <tr><td>一休.com</td><td>—</td><td>96</td><td>—</td><td>&#165;3.4M</td></tr>
+                  <tr><td>Google Hotel Ads</td><td>3,120</td><td>112</td><td>3.6%</td><td>&#165;3.5M</td></tr>
+                  <tr><td>Meta広告</td><td>5,640</td><td>148</td><td><span class="tag-up">2.6%</span></td><td>&#165;3.8M</td></tr>
+                  <tr><td>SNS(広告以外)</td><td>4,210</td><td>62</td><td>1.5%</td><td>&#165;1.6M</td></tr>
+                </tbody>
+              </table>
+              <div class="foot-note">売上への貢献度: データに基づく配分(GA4) — Meta広告は予約完了の<b>34%</b>に間接的に寄与(最後のクリックだけで見ると過小評価)。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Funnel -->
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F500; 予約までの流れ (公式サイト)</div><span class="src">GA4 経路分析</span></div>
+        <div class="card-b">
+          <div class="fn"><div class="fl">サイト閲覧</div><div class="fb" style="width:100%;background:var(--navy);">100%</div><div class="fv">21,390</div></div>
+          <div class="fn"><div class="fl">空室検索</div><div class="fb" style="width:62%;background:#2c5078;">62%</div><div class="fv">13,260 <span class="tag-dn">-38%</span></div></div>
+          <div class="fn"><div class="fl">料金確認</div><div class="fb" style="width:34%;background:#3a6595;">34%</div><div class="fv">7,270 <span class="tag-dn">-28%</span></div></div>
+          <div class="fn"><div class="fl">予約開始</div><div class="fb" style="width:18%;background:var(--purple);">18%</div><div class="fv">3,850 <span class="tag-dn">-16%</span></div></div>
+          <div class="fn"><div class="fl">予約完了</div><div class="fb" style="width:10%;background:var(--green);min-width:48px;">9.6%</div><div class="fv">2,060</div></div>
+          <div class="foot-note">&#x1F916; AI診断: 「料金確認&rarr;予約開始」の離脱28%が最大。<b>多言語決済と予約サイト価格の比較表示</b>の追加で +0.6pt見込み (要因分析)。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paid ads + rate -->
+    <div style="flex:1;min-width:0;">
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F3AF; 有料広告 — 広告費用対効果 / 予算消化ペース</div><span class="src">Google Ads / Meta</span></div>
+        <div class="card-b">
+          <div class="chart-wrap bars"><canvas id="roasChart"></canvas></div>
+          <div class="mini-kpi" style="margin-top:12px;">
+            <div class="mk"><div class="mv">2.1%</div><div class="ml">クリック率</div></div>
+            <div class="mk"><div class="mv">&#165;94</div><div class="ml">1クリック単価</div></div>
+            <div class="mk"><div class="mv">&#165;6,800</div><div class="ml">1予約あたり広告費</div></div>
+            <div class="mk"><div class="mv">6.2x</div><div class="ml">広告費用対効果</div></div>
+            <div class="mk"><div class="mv">78%</div><div class="ml">予算消化</div></div>
+          </div>
+          <div class="foot-note">&#x1F916; 自動入札(費用対効果の目標値)で運用中。2案の比較: 紅葉の広告素材B案がクリック率 +0.7pt勝利 &rarr; 自動配分。</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F4C8; 料金/収益管理 分析</div><span class="src">Lighthouse 相当</span></div>
+        <div class="card-b">
+          <div style="font-size:10px;color:var(--text-mute);margin-bottom:6px;">競合宿の料金比較 (木曜21日 / 1泊2食 2名1室)</div>
+          <div class="comp-row"><span>当館 (公式直販)</span><span class="cp">&#165;25,000</span><span class="parity-ok">基準</span></div>
+          <div class="comp-row"><span>当館 (Booking.com)</span><span class="cp" style="color:var(--brand);">&#165;23,000</span><span class="parity-bad">&#9660; 価格の足並みの乱れ -8%</span></div>
+          <div class="comp-row"><span>競合A 強羅温泉</span><span class="cp">&#165;28,400</span><span>+14%</span></div>
+          <div class="comp-row"><span>競合B 仙石原</span><span class="cp">&#165;26,800</span><span>+7%</span></div>
+          <div class="comp-row"><span>競合C 湯本</span><span class="cp">&#165;22,500</span><span>-10%</span></div>
+          <div class="pace">
+            <div class="pc"><div class="pk">予約の伸び</div><div class="pv">+12%</div></div>
+            <div class="pc"><div class="pk">直近7日の予約数</div><div class="pv">86室</div></div>
+            <div class="pc"><div class="pk">需要指数(事前)</div><div class="pv" style="color:var(--green);">高</div></div>
+          </div>
+          <div class="foot-note">&#x1F916; 木曜は競合比で割安余地。AIは値上げでなく<b>直販への誘導</b>を選択(価格の足並みを整える+平日訴求)。早めの予約の兆し(航空券/検索量)で需要を先読み。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Row: Social + Reputation + SEO ===== -->
+  <div class="cols">
+    <!-- Social -->
+    <div style="flex:0 0 38%;min-width:0;">
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F4AC; ソーシャル / SNS</div><span class="src">Hootsuite / Sprout 相当</span></div>
+        <div class="card-b">
+          <div style="font-size:10px;font-weight:700;color:var(--text-sub);margin-bottom:6px;">SNSの声の収集 — 感情分析 (多言語)</div>
+          <div class="lang-row"><span class="fl">&#x1F1EF;&#x1F1F5; 日本語</span><div class="senti"><span class="pos" style="width:78%;"></span><span class="neu" style="width:15%;"></span><span class="neg" style="width:7%;"></span></div><span class="vol">1,240</span></div>
+          <div class="lang-row"><span class="fl">&#x1F1EC;&#x1F1E7; 英語</span><div class="senti"><span class="pos" style="width:71%;"></span><span class="neu" style="width:20%;"></span><span class="neg" style="width:9%;"></span></div><span class="vol">486</span></div>
+          <div class="lang-row"><span class="fl">&#x1F1F9;&#x1F1FC; 繁体字</span><div class="senti"><span class="pos" style="width:82%;"></span><span class="neu" style="width:13%;"></span><span class="neg" style="width:5%;"></span></div><span class="vol">312 &#9650;</span></div>
+          <div class="lang-row"><span class="fl">&#x1F1F0;&#x1F1F7; 韓国語</span><div class="senti"><span class="pos" style="width:69%;"></span><span class="neu" style="width:22%;"></span><span class="neg" style="width:9%;"></span></div><span class="vol">198</span></div>
+
+          <div style="font-size:10px;font-weight:700;color:var(--text-sub);margin:14px 0 4px;">投稿スケジュール (AI最適時刻)</div>
+          <div class="post"><div class="ico ico-ig">&#x1F4F7;</div><div class="px"><div class="pt">紅葉ライトアップ 木曜特集 <span class="ai-gen">AI生成</span></div><div class="pm">Instagram · 木 20:00 予約 · 日英繁中</div></div></div>
+          <div class="post"><div class="ico ico-x">&#x1D54F;</div><div class="px"><div class="pt">貸切露天 空き枠のお知らせ</div><div class="pm">X · 水 12:00 予約</div></div></div>
+          <div class="post"><div class="ico ico-fb">f</div><div class="px"><div class="pt">秋の懐石 献立公開</div><div class="pm">Facebook · 金 18:00 予約</div></div></div>
+          <div class="mini-kpi" style="margin-top:10px;">
+            <div class="mk"><div class="mv">+1,840</div><div class="ml">フォロワー増/月</div></div>
+            <div class="mk"><div class="mv">5.2%</div><div class="ml">反応率</div></div>
+            <div class="mk"><div class="mv">142万</div><div class="ml">表示回数</div></div>
+          </div>
+          <div class="foot-note">統合受信箱: 未返信 14件 (対応の重複検知/感情タグ/自動振り分け)。&#x1F916; AIが返信の下書き作成・多言語対応。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reputation + SEO -->
+    <div style="flex:1;min-width:0;">
+      <div class="card">
+        <div class="card-h"><div class="t">&#x2B50; 評判管理 — レビュー集約 &amp; AI返信</div><span class="src">TrustYou / Revinate 相当</span></div>
+        <div class="card-b">
+          <div class="nudge today" style="margin-bottom:12px;">
+            <div class="nudge-top">
+              <span class="nudge-ai">&#x1F916; AI確認</span>
+              <span class="nudge-pri pri-today">今日中</span>
+            </div>
+            <div class="nudge-line1">じゃらんの低評価レビュー (★3.0) に未返信です</div>
+            <div class="nudge-line2">「待ち時間」「朝食会場の混雑」へのご不満。放置するとお客様の印象が下がります。</div>
+            <div class="nudge-line3">丁寧な返信の下書きを用意しました。内容を確認のうえ送信するとよさそうです (高評価への返信は自動、低評価は支配人の承認が必須)。</div>
+            <div class="nudge-meta">根拠: 未返信 低評価 1件 / 返信率 94% / 平均返信 12時間</div>
+            <div class="nudge-act">
+              <button class="btn-sm btn-purple">返信の下書きを見る</button>
+              <button class="btn-sm btn-out">後で</button>
+            </div>
+          </div>
+          <div class="mini-kpi" style="margin-bottom:10px;">
+            <div class="mk"><div class="mv" style="color:var(--green);">4.6</div><div class="ml">総合 (200+ソース)</div></div>
+            <div class="mk"><div class="mv">87</div><div class="ml">総合評価スコア</div></div>
+            <div class="mk"><div class="mv">94%</div><div class="ml">返信率</div></div>
+            <div class="mk"><div class="mv">12h</div><div class="ml">平均返信</div></div>
+          </div>
+          <div class="rev">
+            <div class="rev-h"><span class="rev-src src-booking">Booking.com</span><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733; 9.2</span></div>
+            <div class="rev-txt">「温泉が素晴らしく、夕食の懐石も最高でした。」(英語/自動翻訳)</div>
+            <div class="rev-ai">&#x1F916; AI返信案 (口調:丁寧): "Thank you for your wonderful review! We're delighted you enjoyed our onsen and kaiseki..." <span style="color:var(--text-mute);">— 感情:好意的 / 要承認</span></div>
+          </div>
+          <div class="rev">
+            <div class="rev-h"><span class="rev-src src-jalan">じゃらん</span><span class="stars">&#9733;&#9733;&#9733;&#9734;&#9734; 3.0</span></div>
+            <div class="rev-txt">「チェックイン時に待たされた。部屋は良かったが朝食会場が混雑。」</div>
+            <div class="rev-ai">&#x1F916; 内容の読み取り: 不満の論点=[待ち時間, 朝食混雑]。対応依頼を自動起票&rarr;現場へ連携。返信案(丁寧+改善約束)を生成。</div>
+          </div>
+          <div class="rev">
+            <div class="rev-h"><span class="rev-src src-google">Google</span><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733; 5.0</span></div>
+            <div class="rev-txt">「紅葉の時期に最高。また来ます。」(繁体字/自動翻訳)</div>
+            <div class="rev-ai">&#x1F916; 自動返信送信済 (繁体字, 口調:カジュアル) — 高評価は自動、低評価は人による承認を必須に。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F50E; 検索対策 / 記事コンテンツ</div><span class="src">Semrush / Google Search Console 相当</span></div>
+        <div class="card-b nopad">
+          <table class="tbl">
+            <thead><tr><th style="padding-left:16px;">キーワード</th><th>順位</th><th>変動</th><th style="padding-right:16px;">月間検索</th></tr></thead>
+            <tbody>
+              <tr><td style="padding-left:16px;">箱根 温泉 旅館</td><td><b>4</b></td><td><span class="tag-up">&#9650;2</span></td><td>33,000</td></tr>
+              <tr><td style="padding-left:16px;">箱根 紅葉 宿</td><td><b>2</b></td><td><span class="tag-up">&#9650;5</span></td><td>8,100</td></tr>
+              <tr><td style="padding-left:16px;">箱根 貸切風呂 旅館</td><td><b>7</b></td><td>—</td><td>4,400</td></tr>
+              <tr><td style="padding-left:16px;">箱根 露天風呂付き客室</td><td><b>11</b></td><td><span class="tag-dn">&#9660;3</span></td><td>6,600</td></tr>
+            </tbody>
+          </table>
+          <div class="foot-note" style="padding:0 16px 12px;">&#x1F916; 未対応の検索ニーズ: 競合上位の「箱根 子連れ 旅館」「箱根 記念日 宿」で未獲得 &rarr; AIが記事の下書き生成済(承認待ち2本)。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+Chart.defaults.font.family = "'Inter','Hiragino Sans','Yu Gothic UI',sans-serif";
+Chart.defaults.font.size = 10;
+Chart.defaults.color = '#8C8C8C';
+
+new Chart(document.getElementById('chChart'),{
+  type:'doughnut',
+  data:{ labels:['公式直販','楽天','じゃらん','一休','Google Hotel Ads','Meta広告','SNS'],
+    datasets:[{ data:[404,312,268,96,112,148,62],
+      backgroundColor:['#15803D','#C8102E','#D97706','#7C3AED','#1a73e8','#1877f2','#DB2777'], borderWidth:0 }]},
+  options:{ responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{ legend:{ display:false } } }
+});
+
+new Chart(document.getElementById('roasChart'),{
+  type:'bar',
+  data:{ labels:['紅葉(木)','繁体字圏インバウンド','貸切風呂','記念日','再訪促進'],
+    datasets:[{ label:'広告費用対効果', data:[5.8,7.1,4.2,6.6,9.3],
+      backgroundColor:['#7C3AED','#0E7490','#D97706','#15803D','#1E3A5F'], borderRadius:4, barThickness:24 }]},
+  options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{ legend:{display:false} },
+    scales:{ x:{ grid:{color:'#F0F0F0'}, ticks:{callback:v=>v+'x'} }, y:{ grid:{display:false} } } }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本日の状況</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+    --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+    --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+    --navy:#1E3A5F;--navy-lite:#DCE5F0;
+    --amber:#D97706;--amber-lite:#FEF3C7;
+    --green:#15803D;--green-lite:#DCFCE7;
+    --purple:#7C3AED;--purple-lite:#EDE9FE;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;
+    background:#F0F0F0;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:20px 0;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .phone-frame {
+    width:375px;
+    min-height:812px;
+    background:var(--bg);
+    border-radius:40px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow:hidden;
+    position:relative;
+  }
+
+  /* Status Bar */
+  .status-bar {
+    height:44px;
+    background:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+  }
+  .status-bar .time { font-size:14px; font-weight:700; }
+  .status-bar .carrier { font-size:11px; opacity:0.85; letter-spacing:0.3px; }
+  .status-bar .icons { font-size:12px; letter-spacing:2px; }
+
+  /* App Header */
+  .app-header {
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    border-bottom:1px solid var(--rule-soft);
+    background:var(--bg);
+  }
+  .app-header .logo {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-weight:700;
+    font-size:15px;
+    color:var(--navy);
+  }
+  .app-header .logo .dot {
+    width:8px; height:8px;
+    background:var(--brand);
+    border-radius:50%;
+  }
+  .app-header .title {
+    font-size:17px;
+    font-weight:700;
+    color:var(--text);
+  }
+  .app-header .bell {
+    position:relative;
+    font-size:20px;
+    cursor:pointer;
+  }
+  .app-header .bell .badge {
+    position:absolute;
+    top:-4px; right:-6px;
+    background:var(--brand);
+    color:#fff;
+    font-size:10px;
+    font-weight:700;
+    width:16px; height:16px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+  }
+
+  /* Scrollable content */
+  .content {
+    padding-bottom:100px;
+    overflow-y:auto;
+  }
+
+  /* Alert Banner */
+  .alert-banner {
+    background:linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+    color:#fff;
+    padding:12px 16px;
+    font-size:13px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    text-decoration:none;
+  }
+  .alert-banner:hover { opacity:0.95; }
+  .alert-banner .chevron { margin-left:auto; font-size:16px; }
+
+  /* Quick Stats */
+  .quick-stats {
+    display:flex;
+    gap:10px;
+    padding:16px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .quick-stats::-webkit-scrollbar { display:none; }
+  .stat-card {
+    flex:0 0 calc(33.33% - 7px);
+    min-width:105px;
+    background:var(--surface);
+    border-radius:12px;
+    padding:12px;
+    text-align:center;
+  }
+  .stat-card .value {
+    font-size:28px;
+    font-weight:700;
+    color:var(--text);
+    line-height:1.1;
+  }
+  .stat-card .value.red { color:var(--brand); }
+  .stat-card .label {
+    font-size:11px;
+    color:var(--text-mute);
+    margin-top:4px;
+    font-weight:500;
+  }
+  .stat-card .delta {
+    font-size:11px;
+    color:var(--green);
+    font-weight:600;
+    margin-top:2px;
+  }
+
+  /* Section */
+  .section {
+    padding:0 16px;
+    margin-top:20px;
+  }
+  .section-title {
+    font-size:15px;
+    font-weight:700;
+    color:var(--text);
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .section-title .count {
+    background:var(--surface);
+    color:var(--text-mute);
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:10px;
+    font-weight:600;
+  }
+
+  /* VIP Cards */
+  .vip-card {
+    background:var(--bg);
+    border:1px solid var(--rule-soft);
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:10px;
+  }
+  .vip-card .header-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:6px;
+  }
+  .vip-card .name {
+    font-size:15px;
+    font-weight:700;
+    color:var(--text);
+  }
+  .vip-card .badge {
+    font-size:10px;
+    font-weight:600;
+    padding:3px 8px;
+    border-radius:6px;
+    white-space:nowrap;
+  }
+  .badge-upsell { background:var(--purple-lite); color:var(--purple); }
+  .badge-en { background:var(--navy-lite); color:var(--navy); }
+  .badge-cn { background:var(--amber-lite); color:var(--amber); }
+  .vip-card .meta {
+    font-size:12px;
+    color:var(--text-mute);
+    margin-bottom:4px;
+    line-height:1.6;
+  }
+  .vip-card .meta span {
+    display:inline-block;
+    margin-right:8px;
+  }
+  .vip-card .note {
+    font-size:12px;
+    color:var(--text-sub);
+    background:var(--surface);
+    padding:6px 10px;
+    border-radius:8px;
+    margin-top:6px;
+    line-height:1.5;
+  }
+  .star { color:var(--amber); }
+
+  /* Action List */
+  .action-card {
+    display:flex;
+    border:1px solid var(--rule-soft);
+    border-radius:12px;
+    margin-bottom:10px;
+    overflow:hidden;
+    cursor:pointer;
+    text-decoration:none;
+    color:inherit;
+    transition:background 0.15s;
+  }
+  .action-card:hover { background:var(--surface); }
+  .action-card:active { background:var(--rule-lite); }
+  .action-card .color-bar {
+    width:4px;
+    flex-shrink:0;
+  }
+  .color-bar.red { background:var(--brand); }
+  .color-bar.amber { background:var(--amber); }
+  .action-card .body {
+    padding:12px 14px;
+    flex:1;
+    min-width:0;
+  }
+  .action-card .title-row {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:4px;
+  }
+  .action-card .priority {
+    font-size:11px;
+  }
+  .action-card .title-text {
+    font-size:14px;
+    font-weight:600;
+    color:var(--text);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .action-card .detail {
+    font-size:12px;
+    color:var(--text-sub);
+    line-height:1.5;
+    margin-bottom:4px;
+  }
+  .action-card .footer {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:11px;
+    color:var(--text-mute);
+  }
+  .action-card .footer .deadline {
+    color:var(--brand);
+    font-weight:600;
+  }
+
+  /* Approval Cards */
+  .approval-card {
+    border:1px solid var(--rule-soft);
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:10px;
+  }
+  .approval-card .label {
+    font-size:14px;
+    font-weight:600;
+    color:var(--text);
+    margin-bottom:4px;
+  }
+  .approval-card .desc {
+    font-size:12px;
+    color:var(--text-mute);
+    margin-bottom:10px;
+  }
+  .approval-card .btns {
+    display:flex;
+    gap:8px;
+  }
+  .btn-approve {
+    flex:1;
+    padding:10px 0;
+    border:none;
+    border-radius:10px;
+    background:var(--green);
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .btn-approve:active { opacity:0.85; }
+  .btn-reject {
+    flex:1;
+    padding:10px 0;
+    border:1.5px solid var(--rule);
+    border-radius:10px;
+    background:var(--bg);
+    color:var(--text-sub);
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .btn-reject:active { background:var(--surface); }
+
+  /* AI Nudge Cards (tech-touch) */
+  .nudge-card {
+    position:relative;
+    background:var(--bg);
+    border:1px solid var(--rule-soft);
+    border-radius:12px;
+    padding:13px 14px 13px 16px;
+    margin-bottom:10px;
+    overflow:hidden;
+  }
+  .nudge-card .nudge-bar {
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:4px;
+  }
+  .nudge-bar.red { background:var(--brand); }
+  .nudge-bar.amber { background:var(--amber); }
+  .nudge-bar.blue { background:var(--navy); }
+  .nudge-bar.green { background:var(--green); }
+  .nudge-card .nudge-top {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:7px;
+  }
+  .nudge-card .ai-badge {
+    font-size:10px;
+    font-weight:600;
+    color:var(--text-mute);
+    background:var(--surface);
+    border:1px solid var(--rule-soft);
+    padding:2px 7px;
+    border-radius:6px;
+    white-space:nowrap;
+  }
+  .nudge-card .prio {
+    font-size:10px;
+    font-weight:700;
+    padding:2px 7px;
+    border-radius:6px;
+    white-space:nowrap;
+  }
+  .prio.urgent { background:var(--brand-lite); color:var(--brand); }
+  .prio.today { background:var(--amber-lite); color:var(--amber); }
+  .prio.suggest { background:var(--navy-lite); color:var(--navy); }
+  .nudge-card .nudge-status {
+    font-size:14px;
+    font-weight:700;
+    color:var(--text);
+    line-height:1.4;
+    margin-bottom:4px;
+  }
+  .nudge-card .nudge-why {
+    font-size:12px;
+    color:var(--text-sub);
+    line-height:1.5;
+    margin-bottom:4px;
+  }
+  .nudge-card .nudge-rec {
+    font-size:12px;
+    color:var(--text);
+    line-height:1.5;
+    margin-bottom:6px;
+  }
+  .nudge-card .nudge-basis {
+    font-size:11px;
+    color:var(--text-mute);
+    margin-bottom:10px;
+  }
+  .nudge-card .nudge-btns {
+    display:flex;
+    gap:8px;
+  }
+  .nudge-card .btn-main {
+    flex:1;
+    padding:10px 0;
+    border:none;
+    border-radius:10px;
+    background:var(--navy);
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .nudge-card .btn-main:active { opacity:0.85; }
+  .nudge-card .btn-sub {
+    flex:0 0 auto;
+    padding:10px 16px;
+    border:1.5px solid var(--rule);
+    border-radius:10px;
+    background:var(--bg);
+    color:var(--text-sub);
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .nudge-card .btn-sub:active { background:var(--surface); }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    position:sticky;
+    bottom:0;
+    left:0; right:0;
+    height:83px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--rule-soft);
+    display:flex;
+    padding-bottom:20px;
+  }
+  .nav-tab {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    text-decoration:none;
+    color:var(--text-mute);
+    font-size:10px;
+    font-weight:500;
+    cursor:pointer;
+    padding-top:6px;
+    transition:color 0.15s;
+  }
+  .nav-tab .icon { font-size:22px; line-height:1; }
+  .nav-tab.active { color:var(--brand); }
+  .nav-tab.active .label-text { font-weight:600; }
+  .nav-tab:not(.active):hover { color:var(--text-sub); }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span class="time">15:42</span>
+    <span class="carrier">&#9679;&#9679;&#9679; リゾート箱根</span>
+    <span class="icons">&#9632;&#9632;&#9632;&#9632;&#9632;</span>
+  </div>
+
+  <!-- App Header -->
+  <div class="app-header">
+    <div class="logo"><span class="dot"></span> 旅館運営システム</div>
+    <span class="title">本日</span>
+    <div class="bell">
+      &#128276;
+      <span class="badge">7</span>
+    </div>
+  </div>
+
+  <!-- Scrollable Content -->
+  <div class="content">
+
+    <!-- Alert Banner -->
+    <a href="mobile_action.html" class="alert-banner">
+      <span>&#128308; 重大案件 2件 &mdash; 512号室クレーム / 302号室空調故障</span>
+      <span class="chevron">&#8250;</span>
+    </a>
+
+    <!-- Quick Stats -->
+    <div class="quick-stats">
+      <div class="stat-card">
+        <div class="value">82%</div>
+        <div class="label">稼働率</div>
+        <div class="delta">&#9650; +2%</div>
+      </div>
+      <div class="stat-card">
+        <div class="value red">7</div>
+        <div class="label">未処理</div>
+        <div class="delta" style="color:var(--brand);">要対応</div>
+      </div>
+      <div class="stat-card">
+        <div class="value">3</div>
+        <div class="label">承認待ち</div>
+        <div class="delta" style="color:var(--amber);">確認待</div>
+      </div>
+    </div>
+
+    <!-- VIP到着 -->
+    <div class="section">
+      <div class="section-title">&#11088; 本日VIP到着 <span class="count">3名</span></div>
+
+      <div class="vip-card">
+        <div class="header-row">
+          <div>
+            <div class="name">T.I 様</div>
+            <div class="meta"><span class="star">&#9733;</span> リピーター5回 &nbsp;|&nbsp; スイートB &nbsp;|&nbsp; 18:00到着予定</div>
+          </div>
+          <span class="badge badge-upsell">アップセル候補</span>
+        </div>
+        <div class="note">好み: 高層階・朝食付き</div>
+      </div>
+
+      <div class="vip-card">
+        <div class="header-row">
+          <div>
+            <div class="name">E.C 様</div>
+            <div class="meta">Booking.com &nbsp;|&nbsp; ツインA &nbsp;|&nbsp; 22:30到着 <span style="color:var(--amber);font-weight:600;">(遅着)</span></div>
+          </div>
+          <span class="badge badge-en">&#127760; English</span>
+        </div>
+        <div class="note">vegetarian dinner requested</div>
+      </div>
+
+      <div class="vip-card">
+        <div class="header-row">
+          <div>
+            <div class="name">W.J 様</div>
+            <div class="meta">公式サイト &nbsp;|&nbsp; 和室特別室 &nbsp;|&nbsp; 16:00到着</div>
+          </div>
+          <span class="badge badge-cn">&#127760; 中文</span>
+        </div>
+        <div class="note">高齢者同伴・送迎希望</div>
+      </div>
+    </div>
+
+    <!-- 未対応アクション -->
+    <div class="section">
+      <div class="section-title">&#128203; 未対応 <span class="count">7件</span></div>
+
+      <a href="mobile_action.html" class="action-card">
+        <div class="color-bar red"></div>
+        <div class="body">
+          <div class="title-row">
+            <span class="priority">&#128308;</span>
+            <span class="title-text">512号室クレーム</span>
+          </div>
+          <div class="detail">"隣室騒音で眠れず" &mdash; Expedia経由</div>
+          <div class="footer">
+            <span class="deadline">期限: 11:00</span>
+            <span>|</span>
+            <span>フロント主任</span>
+          </div>
+        </div>
+      </a>
+
+      <div class="action-card">
+        <div class="color-bar red"></div>
+        <div class="body">
+          <div class="title-row">
+            <span class="priority">&#128308;</span>
+            <span class="title-text">302号室空調</span>
+          </div>
+          <div class="detail">"異音・販売停止中" &mdash; 収益影響: &yen;96,000/週</div>
+          <div class="footer">
+            <span>保全チーム</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <div class="color-bar amber"></div>
+        <div class="body">
+          <div class="title-row">
+            <span class="priority">&#128993;</span>
+            <span class="title-text">英語メール &mdash; E.C 様</span>
+          </div>
+          <div class="detail">"Late check-in + vegetarian" &mdash; 要AI翻訳返信</div>
+          <div class="footer">
+            <span>未割当</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <div class="color-bar amber"></div>
+        <div class="body">
+          <div class="title-row">
+            <span class="priority">&#128993;</span>
+            <span class="title-text">中国語メール &mdash; W.J 様</span>
+          </div>
+          <div class="detail">"接送服务咨询" &mdash; 要AI翻訳返信</div>
+          <div class="footer">
+            <span>未割当</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <div class="color-bar amber"></div>
+        <div class="body">
+          <div class="title-row">
+            <span class="priority">&#128993;</span>
+            <span class="title-text">団体予約調整 &mdash; 青葉商事 38名</span>
+          </div>
+          <div class="detail">未確定: 3名到着時間、飲み放題</div>
+          <div class="footer">
+            <span>予約課</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <div class="color-bar amber"></div>
+        <div class="body">
+          <div class="title-row">
+            <span class="priority">&#128993;</span>
+            <span class="title-text">韓国語メール &mdash; K.M 様</span>
+          </div>
+          <div class="detail">"온천 이용 문의" (温泉タトゥー問い合わせ) &mdash; 要AI翻訳返信</div>
+          <div class="footer">
+            <span>未割当</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <div class="color-bar amber"></div>
+        <div class="body">
+          <div class="title-row">
+            <span class="priority">&#128993;</span>
+            <span class="title-text">仮押さえ期限 &mdash; T.K 様</span>
+          </div>
+          <div class="detail">18:00まで &mdash; スイートA &yen;56,000</div>
+          <div class="footer">
+            <span class="deadline">期限: 18:00</span>
+            <span>|</span>
+            <span>予約課</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI確認・推奨 -->
+    <div class="section" style="margin-bottom:24px;">
+      <div class="section-title">&#10024; 確認・推奨 <span class="count">3件</span></div>
+
+      <div class="nudge-card">
+        <div class="nudge-bar red"></div>
+        <div class="nudge-top">
+          <span class="ai-badge">AI確認</span>
+          <span class="prio urgent">至急</span>
+        </div>
+        <div class="nudge-status">T.I 様の予約変更に返信案を用意しました</div>
+        <div class="nudge-why">本日18:00到着のリピーター様。返信が遅れると到着前の準備に間に合いません。</div>
+        <div class="nudge-rec">内容をご確認のうえ、15:00までに送信されるとよさそうです。</div>
+        <div class="nudge-basis">対象: 1件 / 到着まで約2時間</div>
+        <div class="nudge-btns">
+          <button class="btn-main">返信案を確認</button>
+          <button class="btn-sub">後で</button>
+        </div>
+      </div>
+
+      <div class="nudge-card">
+        <div class="nudge-bar blue"></div>
+        <div class="nudge-top">
+          <span class="ai-badge">AI確認</span>
+          <span class="prio suggest">確認推奨</span>
+        </div>
+        <div class="nudge-status">12/24-26 の料金を+12%に上げる候補があります</div>
+        <div class="nudge-why">周辺の予約が混み合う3日間です。今の料金のままだと売上の機会を逃す可能性があります。</div>
+        <div class="nudge-rec">候補を表示します。最終確認は支配人が行ってください。</div>
+        <div class="nudge-basis">対象: 12/24-26 / 現在の予約 残室わずか</div>
+        <div class="nudge-btns">
+          <button class="btn-main">料金案を確認</button>
+          <button class="btn-sub">見送る</button>
+        </div>
+      </div>
+
+      <div class="nudge-card">
+        <div class="nudge-bar amber"></div>
+        <div class="nudge-top">
+          <span class="ai-badge">AI確認</span>
+          <span class="prio today">今日中</span>
+        </div>
+        <div class="nudge-status">しばらくご利用のないお客様128名へ案内を送れます</div>
+        <div class="nudge-why">再来館につながりやすい時期です。本日中に送ると週末の予約に間に合います。</div>
+        <div class="nudge-rec">配信内容をご確認のうえ、本日中に送信されるとよさそうです。</div>
+        <div class="nudge-basis">対象: 128名 / 配信は1回のみ</div>
+        <div class="nudge-btns">
+          <button class="btn-main">配信内容を確認</button>
+          <button class="btn-sub">後で</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <a class="nav-tab active" href="mobile_today.html">
+      <span class="icon">&#128202;</span>
+      <span class="label-text">本日</span>
+    </a>
+    <a class="nav-tab" href="mobile_action.html">
+      <span class="icon">&#128203;</span>
+      <span class="label-text">対応事項</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#127968;</span>
+      <span class="label-text">客室</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#128100;</span>
+      <span class="label-text">お客様</span>
+    </a>
+  </div>
+
+</div><!-- /phone-frame -->
+
+</body>
+</html>

@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>承認キュー</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+    --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+    --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+    --navy:#1E3A5F;--navy-lite:#DCE5F0;
+    --amber:#D97706;--amber-lite:#FEF3C7;
+    --green:#15803D;--green-lite:#DCFCE7;
+    --purple:#7C3AED;--purple-lite:#EDE9FE;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;
+    background:#F0F0F0;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:20px 0;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .phone-frame {
+    width:375px;
+    min-height:812px;
+    background:var(--bg);
+    border-radius:40px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow:hidden;
+    position:relative;
+  }
+
+  .status-bar {
+    height:44px;
+    background:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+  }
+  .status-bar .time { font-size:14px; font-weight:700; }
+  .status-bar .carrier { font-size:11px; opacity:0.85; letter-spacing:0.3px; }
+  .status-bar .icons { font-size:12px; letter-spacing:2px; }
+
+  .app-header {
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    border-bottom:1px solid var(--rule-soft);
+    background:var(--bg);
+  }
+  .app-header .logo {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-weight:700;
+    font-size:15px;
+    color:var(--navy);
+  }
+  .app-header .logo .dot {
+    width:8px; height:8px;
+    background:var(--brand);
+    border-radius:50%;
+  }
+  .app-header .title {
+    font-size:17px;
+    font-weight:700;
+    color:var(--text);
+  }
+  .app-header .bell {
+    position:relative;
+    font-size:20px;
+  }
+  .app-header .bell .badge {
+    position:absolute;
+    top:-4px; right:-6px;
+    background:var(--brand);
+    color:#fff;
+    font-size:10px;
+    font-weight:700;
+    width:16px; height:16px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+  }
+
+  .content {
+    padding-bottom:100px;
+    overflow-y:auto;
+  }
+
+  .date-strip {
+    background:linear-gradient(135deg, var(--navy) 0%, #243f64 100%);
+    color:#fff;
+    padding:12px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  }
+  .date-strip .label { font-size:12px; opacity:0.8; }
+  .date-strip .value { font-size:14px; font-weight:700; }
+  .date-strip .badge {
+    font-size:10px;
+    font-weight:700;
+    background:rgba(255,255,255,0.14);
+    padding:4px 8px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  .kpi-grid {
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
+    padding:16px;
+  }
+  .kpi-card {
+    background:var(--surface);
+    border-radius:14px;
+    padding:12px 10px;
+    border:1px solid var(--rule-soft);
+    min-height:84px;
+  }
+  .kpi-card .value {
+    font-size:26px;
+    font-weight:800;
+    color:var(--text);
+    line-height:1;
+    margin-bottom:6px;
+  }
+  .kpi-card .value.red { color:var(--brand); }
+  .kpi-card .value.amber { color:var(--amber); }
+  .kpi-card .label {
+    font-size:11px;
+    color:var(--text-mute);
+    font-weight:600;
+    line-height:1.35;
+  }
+
+  .section {
+    padding:0 16px;
+    margin-top:8px;
+  }
+  .section-title {
+    font-size:15px;
+    font-weight:800;
+    color:var(--text);
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-title .count {
+    background:var(--surface);
+    color:var(--text-mute);
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:10px;
+    font-weight:700;
+  }
+
+  .note-banner {
+    margin:0 16px 14px;
+    background:var(--brand-soft);
+    border:1px solid var(--brand-lite);
+    color:var(--brand-dark);
+    border-radius:14px;
+    padding:10px 12px;
+    font-size:12px;
+    line-height:1.55;
+  }
+  .note-banner strong { font-weight:800; }
+
+  .approval-card {
+    border:1px solid var(--rule-soft);
+    border-radius:16px;
+    padding:14px;
+    margin-bottom:12px;
+    background:var(--bg);
+    box-shadow:0 1px 0 rgba(0,0,0,0.02);
+  }
+  .approval-card .top {
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:10px;
+  }
+  .approval-card .left {
+    min-width:0;
+    flex:1;
+  }
+  .approval-card .type-row {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:4px;
+    flex-wrap:wrap;
+  }
+  .approval-card .icon {
+    width:26px;
+    height:26px;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:15px;
+    background:var(--surface);
+    flex:0 0 auto;
+  }
+  .approval-card .type {
+    font-size:15px;
+    font-weight:800;
+    color:var(--text);
+  }
+  .approval-card .amount {
+    font-size:13px;
+    font-weight:800;
+    color:var(--brand);
+  }
+  .approval-card .meta {
+    font-size:12px;
+    color:var(--text-sub);
+    line-height:1.55;
+  }
+  .approval-card .badge-row {
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:6px;
+    flex:0 0 auto;
+  }
+  .pill {
+    font-size:10px;
+    font-weight:800;
+    border-radius:999px;
+    padding:4px 8px;
+    white-space:nowrap;
+  }
+  .pill.green { background:var(--green-lite); color:var(--green); }
+  .pill.amber { background:var(--amber-lite); color:var(--amber); }
+  .pill.navy { background:var(--navy-lite); color:var(--navy); }
+
+  .diff-box {
+    border:1px solid var(--rule-soft);
+    background:var(--surface);
+    border-radius:12px;
+    padding:10px 12px;
+    margin-bottom:10px;
+  }
+  .diff-box .label {
+    font-size:11px;
+    color:var(--text-mute);
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .diff-box .row {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    font-size:13px;
+    line-height:1.5;
+  }
+  .diff-box .before { color:var(--text-sub); }
+  .diff-box .after { color:var(--brand-dark); font-weight:700; }
+  .diff-box .delta { color:var(--brand); font-weight:800; }
+
+  .example-box {
+    border-left:4px solid var(--navy);
+    background:#F5F8FC;
+    border-radius:10px;
+    padding:10px 12px;
+    margin-bottom:10px;
+  }
+  .example-box .small {
+    font-size:11px;
+    font-weight:800;
+    color:var(--navy);
+    margin-bottom:6px;
+  }
+  .example-box .text {
+    font-size:12px;
+    line-height:1.55;
+    color:var(--text-sub);
+  }
+  .example-box .lang {
+    display:inline-block;
+    margin-right:6px;
+    font-weight:800;
+    color:var(--text);
+  }
+
+  .gesture-note {
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .gesture-chip {
+    font-size:10px;
+    font-weight:800;
+    padding:5px 8px;
+    border-radius:999px;
+    background:var(--surface);
+    color:var(--text-sub);
+    border:1px solid var(--rule-soft);
+  }
+
+  .button-row {
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+  }
+  .btn {
+    flex:1;
+    height:42px;
+    border-radius:12px;
+    border:none;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:800;
+  }
+  .btn.primary {
+    background:var(--green);
+    color:#fff;
+  }
+  .btn.secondary {
+    background:#fff;
+    border:1.5px solid var(--rule);
+    color:var(--text-sub);
+  }
+
+  .audit-box {
+    margin-top:10px;
+    background:#FAFAFA;
+    border:1px dashed var(--rule);
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .audit-box .label {
+    font-size:11px;
+    font-weight:800;
+    color:var(--text-mute);
+    margin-bottom:6px;
+  }
+  .audit-box .row {
+    font-size:12px;
+    line-height:1.55;
+    color:var(--text-sub);
+  }
+  .audit-box strong { color:var(--text); }
+
+  .bottom-nav {
+    position:sticky;
+    bottom:0;
+    left:0; right:0;
+    height:83px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--rule-soft);
+    display:flex;
+    padding-bottom:20px;
+  }
+  .nav-tab {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    text-decoration:none;
+    color:var(--text-mute);
+    font-size:10px;
+    font-weight:500;
+    cursor:pointer;
+    padding-top:6px;
+  }
+  .nav-tab .icon { font-size:22px; line-height:1; }
+  .nav-tab.active { color:var(--brand); }
+  .nav-tab.active .label-text { font-weight:700; }
+
+  .modal {
+    margin:0 16px 16px;
+    border-radius:16px;
+    border:1px solid var(--rule-soft);
+    background:linear-gradient(180deg, #FFFFFF 0%, #FAFBFD 100%);
+    padding:12px;
+  }
+  .modal .title {
+    font-size:13px;
+    font-weight:800;
+    color:var(--text);
+    margin-bottom:6px;
+  }
+  .modal .body {
+    font-size:12px;
+    color:var(--text-sub);
+    line-height:1.55;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="status-bar">
+    <span class="time">15:42</span>
+    <span class="carrier">&#9679;&#9679;&#9679; リゾート箱根</span>
+    <span class="icons">&#9632;&#9632;&#9632;&#9632;&#9632;</span>
+  </div>
+
+  <div class="app-header">
+    <div class="logo"><span class="dot"></span> 旅館運営システム</div>
+    <span class="title">承認キュー</span>
+    <div class="bell">
+      &#128276;
+      <span class="badge">5</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="date-strip">
+      <div>
+        <div class="label">営業日</div>
+        <div class="value">2026/05/30</div>
+      </div>
+      <div class="badge">Face ID確定 + 監査ログ記録</div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="value">8</div>
+        <div class="label">本日承認<br>支配人即決</div>
+      </div>
+      <div class="kpi-card">
+        <div class="value red">2</div>
+        <div class="label">本日却下<br>却下理由入力済</div>
+      </div>
+      <div class="kpi-card">
+        <div class="value amber">1</div>
+        <div class="label">対応期限超過<br>パソコンで詳細確認</div>
+      </div>
+    </div>
+
+    <div class="note-banner">
+      <strong>操作メモ</strong><br>
+      右スワイプで承認、左スワイプで却下。上限内はモバイルで即決、上限超過は <strong>パソコンで詳細確認</strong> バッジを表示。Face IDで確定し、<strong>利用者 / 日時 / 端末</strong> を監査ログに記録。
+    </div>
+
+    <div class="section">
+      <div class="section-title">承認カード <span class="count">6件</span></div>
+
+      <div class="approval-card">
+        <div class="top">
+          <div class="left">
+            <div class="type-row">
+              <div class="icon">💴</div>
+              <div class="type">料金の特別変更</div>
+              <div class="amount">-14.3%</div>
+            </div>
+            <div class="meta">対象: 予約 #HK-250530-018 / 会計10482<br>申請者: フロント主任 佐藤<br>理由: 競合価格に対する即応値引き</div>
+          </div>
+          <div class="badge-row">
+            <span class="pill green">上限内</span>
+            <span class="pill navy">モバイル即決</span>
+          </div>
+        </div>
+        <div class="diff-box">
+          <div class="label">変更前 → 変更後</div>
+          <div class="row">
+            <span class="before">客室単価 ¥42,000 → ¥36,000</span>
+            <span class="delta">-14.3%</span>
+          </div>
+        </div>
+        <div class="gesture-note">
+          <span class="gesture-chip">右スワイプ = 承認</span>
+          <span class="gesture-chip">左スワイプ = 却下</span>
+          <span class="gesture-chip">Face IDで確定</span>
+        </div>
+        <div class="audit-box">
+          <div class="label">監査ログ</div>
+          <div class="row"><strong>利用者:</strong> 支配人ID 0152 / <strong>日時:</strong> 2026/05/30 15:42 / <strong>端末:</strong> 10.18.4.21</div>
+        </div>
+      </div>
+
+      <div class="approval-card">
+        <div class="top">
+          <div class="left">
+            <div class="type-row">
+              <div class="icon">🧾</div>
+              <div class="type">会計締め後の修正</div>
+              <div class="amount">+¥8,400</div>
+            </div>
+            <div class="meta">対象: 予約 #HK-250530-011 / 会計10411<br>申請者: 経理担当 鈴木<br>理由: 夕食ドリンクの部屋付け漏れ補正</div>
+          </div>
+          <div class="badge-row">
+            <span class="pill green">上限内</span>
+            <span class="pill navy">モバイル即決</span>
+          </div>
+        </div>
+        <div class="diff-box">
+          <div class="label">変更前 → 変更後</div>
+          <div class="row">
+            <span class="before">部屋付け ¥189,200 → ¥197,600</span>
+            <span class="delta">+¥8,400</span>
+          </div>
+        </div>
+        <div class="button-row">
+          <button class="btn primary">Face IDで承認</button>
+          <button class="btn secondary">却下理由</button>
+        </div>
+        <div class="audit-box">
+          <div class="label">監査ログ</div>
+          <div class="row"><strong>利用者:</strong> 支配人ID 0152 / <strong>日時:</strong> 2026/05/30 15:42 / <strong>端末:</strong> 10.18.4.21</div>
+        </div>
+      </div>
+
+      <div class="approval-card">
+        <div class="top">
+          <div class="left">
+            <div class="type-row">
+              <div class="icon">🛏️</div>
+              <div class="type">部屋タイプ変更</div>
+              <div class="amount">-¥12,000</div>
+            </div>
+            <div class="meta">対象: 予約 #HK-250530-027 / 会計10439<br>申請者: 客室主任 田中<br>理由: 和室からツインへ変更、眺望差額調整</div>
+          </div>
+          <div class="badge-row">
+            <span class="pill amber">上限超</span>
+            <span class="pill navy">パソコンで詳細確認</span>
+          </div>
+        </div>
+        <div class="diff-box">
+          <div class="label">変更前 → 変更後</div>
+          <div class="row">
+            <span class="before">宿泊単価 ¥58,000 → ¥46,000</span>
+            <span class="delta">-¥12,000</span>
+          </div>
+        </div>
+        <div class="gesture-note">
+          <span class="gesture-chip">上限超過のためパソコン確認</span>
+          <span class="gesture-chip">承認待ちキューへ送る</span>
+        </div>
+        <div class="audit-box">
+          <div class="label">監査ログ</div>
+          <div class="row"><strong>利用者:</strong> 支配人ID 0152 / <strong>日時:</strong> 2026/05/30 15:42 / <strong>端末:</strong> 10.18.4.21</div>
+        </div>
+      </div>
+
+      <div class="approval-card">
+        <div class="top">
+          <div class="left">
+            <div class="type-row">
+              <div class="icon">⚠️</div>
+              <div class="type">返金承認</div>
+              <div class="amount">+¥21,600</div>
+            </div>
+            <div class="meta">対象: 予約 #HK-250530-033 / 会計10458<br>申請者: フロント主任 佐藤<br>理由: 早着遅延に伴う補償、クレーム収束済</div>
+          </div>
+          <div class="badge-row">
+            <span class="pill amber">却下候補あり</span>
+            <span class="pill navy">理由必須</span>
+          </div>
+        </div>
+        <div class="diff-box">
+          <div class="label">変更前 → 変更後</div>
+          <div class="row">
+            <span class="before">返金額 ¥0 → ¥21,600</span>
+            <span class="delta">+¥21,600</span>
+          </div>
+        </div>
+        <div class="modal">
+          <div class="title">左スワイプ時の却下理由モーダル</div>
+          <div class="body">証憑不足 / 金額根拠不足 / 締め後のため会計確認要 / 代替案提示済 を選択。却下時は理由を必須化し、監査ログへ残す。</div>
+        </div>
+      </div>
+
+      <div class="approval-card">
+        <div class="top">
+          <div class="left">
+            <div class="type-row">
+              <div class="icon">💬</div>
+              <div class="type">クレーム返信訳文承認</div>
+              <div class="amount">AI訳併記</div>
+            </div>
+            <div class="meta">対象: ゲスト #HK-250530-041 / 会計10473<br>申請者: ゲストリレーション 山本<br>理由: 元クレーム文の多言語返信案を確認</div>
+          </div>
+          <div class="badge-row">
+            <span class="pill green">上限内</span>
+            <span class="pill navy">モバイル即決</span>
+          </div>
+        </div>
+        <div class="example-box">
+          <div class="small">原文 + AI訳</div>
+          <div class="text"><span class="lang">英語:</span>"The room was too noisy at night."<br><span class="lang">AI訳:</span>「夜間の騒音によりご不便をおかけしました。」</div>
+          <div class="text" style="margin-top:6px;"><span class="lang">中文:</span>"房间晚上太吵了。"<br><span class="lang">AI訳:</span>「客室の夜間騒音でご迷惑をおかけしました。」</div>
+          <div class="text" style="margin-top:6px;"><span class="lang">한국어:</span>"밤에 방이 너무 시끄러웠습니다."<br><span class="lang">AI訳:</span>「夜間の客室騒音でご不便をおかけしました。」</div>
+        </div>
+        <div class="gesture-note">
+          <span class="gesture-chip">右スワイプ = 承認</span>
+          <span class="gesture-chip">左スワイプ = 却下</span>
+          <span class="gesture-chip">利用者/日時/端末 記録</span>
+        </div>
+      </div>
+
+      <div class="approval-card">
+        <div class="top">
+          <div class="left">
+            <div class="type-row">
+              <div class="icon">📈</div>
+              <div class="type">AI料金変更</div>
+              <div class="amount">+¥4,200</div>
+            </div>
+            <div class="meta">対象: 予約 #HK-250530-045 / 会計10488<br>申請者: 料金管理担当<br>理由: 需要上振れに伴う自動提案</div>
+          </div>
+          <div class="badge-row">
+            <span class="pill green">上限内</span>
+            <span class="pill navy">モバイル即決</span>
+          </div>
+        </div>
+        <div class="diff-box">
+          <div class="label">変更前 → 変更後</div>
+          <div class="row">
+            <span class="before">宿泊プラン ¥126,000 → ¥130,200</span>
+            <span class="delta">+3.3%</span>
+          </div>
+        </div>
+        <div class="audit-box">
+          <div class="label">監査ログ</div>
+          <div class="row"><strong>利用者:</strong> 支配人ID 0152 / <strong>日時:</strong> 2026/05/30 15:42 / <strong>端末:</strong> 10.18.4.21</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /content -->
+
+  <div class="bottom-nav">
+    <a class="nav-tab" href="mobile_today.html">
+      <span class="icon">&#128202;</span>
+      <span class="label-text">今日</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#128260;</span>
+      <span class="label-text">アクション</span>
+    </a>
+    <a class="nav-tab active" href="mobile_approvals.html">
+      <span class="icon">&#9989;</span>
+      <span class="label-text">承認</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#127968;</span>
+      <span class="label-text">客室</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#8942;</span>
+      <span class="label-text">もっと</span>
+    </a>
+  </div>
+</div><!-- /phone-frame -->
+
+</body>
+</html>

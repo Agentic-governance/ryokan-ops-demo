@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>室の状態</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+    --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+    --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+    --navy:#1E3A5F;--navy-lite:#DCE5F0;
+    --green:#15803D;--green-lite:#DCFCE7;
+    --amber:#D97706;--amber-lite:#FEF3C7;
+    --red:#DC2626;--red-lite:#FEE2E2;
+    --gray:#6B7280;--gray-lite:#E5E7EB;
+    --black:#111827;--black-lite:#E5E7EB;
+    --cyan:#0284C7;--cyan-lite:#E0F2FE;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic',sans-serif;
+    background:#F0F0F0;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:20px 0;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .phone-frame {
+    width:375px;
+    min-height:812px;
+    background:var(--bg);
+    border-radius:40px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow:hidden;
+    position:relative;
+  }
+
+  .status-bar {
+    height:44px;
+    background:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+  }
+  .status-bar .time { font-size:14px; font-weight:700; }
+  .status-bar .carrier { font-size:11px; opacity:0.85; letter-spacing:0.3px; }
+  .status-bar .icons { font-size:12px; letter-spacing:2px; }
+
+  .app-header {
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    border-bottom:1px solid var(--rule-soft);
+    background:var(--bg);
+  }
+  .app-header .left,
+  .app-header .right {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:76px;
+  }
+  .app-header .logo {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-weight:800;
+    font-size:15px;
+    color:var(--navy);
+    letter-spacing:0.2px;
+  }
+  .app-header .logo .dot {
+    width:8px; height:8px;
+    background:var(--brand);
+    border-radius:50%;
+  }
+  .app-header .title {
+    font-size:16px;
+    font-weight:700;
+    color:var(--text);
+    line-height:1;
+  }
+  .app-header .mini {
+    font-size:11px;
+    font-weight:700;
+    color:var(--cyan);
+    background:var(--cyan-lite);
+    padding:4px 8px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .app-header .bell {
+    position:relative;
+    font-size:20px;
+    line-height:1;
+    color:var(--text);
+  }
+  .app-header .bell .badge {
+    position:absolute;
+    top:-4px; right:-6px;
+    background:var(--brand);
+    color:#fff;
+    font-size:10px;
+    font-weight:700;
+    width:16px; height:16px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+  }
+
+  .content {
+    padding-bottom:110px;
+    overflow-y:auto;
+  }
+
+  .hero {
+    padding:14px 16px 12px;
+    background:linear-gradient(180deg, #F8FBFF 0%, #FFFFFF 100%);
+    border-bottom:1px solid var(--rule-soft);
+  }
+  .date-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .date-row .date {
+    font-size:12px;
+    color:var(--text-sub);
+    font-weight:600;
+  }
+  .date-row .synced {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:11px;
+    color:var(--text-sub);
+    background:var(--surface);
+    border:1px solid var(--rule-soft);
+    padding:5px 8px;
+    border-radius:999px;
+  }
+  .date-row .synced .dot {
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 0 3px var(--amber-lite);
+  }
+  .hero h1 {
+    font-size:19px;
+    line-height:1.2;
+    color:var(--text);
+    margin-bottom:6px;
+    letter-spacing:-0.2px;
+  }
+  .hero p {
+    font-size:12px;
+    line-height:1.55;
+    color:var(--text-sub);
+  }
+  .hero .helper {
+    margin-top:10px;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .hero .pill {
+    font-size:11px;
+    font-weight:700;
+    padding:5px 8px;
+    border-radius:999px;
+    border:1px solid var(--rule-soft);
+    background:#fff;
+    color:var(--text-sub);
+  }
+
+  .counters {
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:12px 16px 8px;
+  }
+  .counters::-webkit-scrollbar { display:none; }
+  .counter {
+    flex:0 0 74px;
+    min-width:74px;
+    border-radius:14px;
+    padding:10px 0 9px;
+    text-align:center;
+    background:var(--surface);
+    border:1px solid var(--rule-soft);
+  }
+  .counter .num {
+    font-size:18px;
+    font-weight:800;
+    line-height:1.05;
+    color:var(--text);
+  }
+  .counter .label {
+    font-size:10px;
+    margin-top:4px;
+    color:var(--text-mute);
+    font-weight:700;
+    letter-spacing:0.2px;
+  }
+  .counter.ip { background:#F0F7FF; border-color:#D6E7FF; }
+  .counter.cl { background:#F0FBF2; border-color:#D7F2DE; }
+  .counter.pu { background:#FFF8E6; border-color:#F8E1A4; }
+  .counter.di { background:#FFF0F0; border-color:#F6CDCD; }
+  .counter.os { background:#F3F4F6; border-color:#E5E7EB; }
+  .counter.oo { background:#ECEFF1; border-color:#D6DADF; }
+
+  .section {
+    padding:0 16px;
+    margin-top:14px;
+  }
+  .section-title {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .section-title .label {
+    font-size:15px;
+    font-weight:800;
+    color:var(--text);
+  }
+  .section-title .sub {
+    font-size:11px;
+    color:var(--text-mute);
+    font-weight:600;
+  }
+
+  .room-card {
+    border:1px solid var(--rule-soft);
+    border-radius:16px;
+    background:#fff;
+    padding:12px;
+    margin-bottom:10px;
+    box-shadow:0 1px 0 rgba(17,24,39,0.02);
+  }
+  .room-card .top {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .room-card .room {
+    font-size:18px;
+    font-weight:800;
+    color:var(--text);
+    letter-spacing:0.2px;
+  }
+  .room-card .meta {
+    margin-top:4px;
+    font-size:12px;
+    color:var(--text-sub);
+    line-height:1.45;
+  }
+  .room-card .chips {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+    gap:6px;
+  }
+  .chip {
+    font-size:10px;
+    font-weight:800;
+    padding:4px 7px;
+    border-radius:999px;
+    letter-spacing:0.3px;
+    border:1px solid transparent;
+    white-space:nowrap;
+  }
+  .chip.ip { color:#0C4A6E; background:#E0F2FE; border-color:#BAE6FD; }
+  .chip.cl { color:#14532D; background:#DCFCE7; border-color:#BBF7D0; }
+  .chip.pu { color:#92400E; background:#FEF3C7; border-color:#FDE68A; }
+  .chip.di { color:#991B1B; background:#FEE2E2; border-color:#FECACA; }
+  .chip.os { color:#4B5563; background:#F3F4F6; border-color:#E5E7EB; }
+  .chip.oo { color:#111827; background:#E5E7EB; border-color:#D1D5DB; }
+  .chip.vacant { color:#0F766E; background:#CCFBF1; border-color:#99F6E4; }
+  .chip.occupied { color:#7C2D12; background:#FFEDD5; border-color:#FDBA74; }
+  .chip.assigned { color:#1F2937; background:#EEF2FF; border-color:#C7D2FE; }
+
+  .room-card .middle {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:flex-start;
+    margin-bottom:10px;
+  }
+  .occupancy {
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .occupancy .row {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  .occupancy .label {
+    font-size:11px;
+    color:var(--text-mute);
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+  }
+  .occupancy .value {
+    font-size:13px;
+    color:var(--text);
+    font-weight:700;
+  }
+  .assigned-nurse {
+    font-size:12px;
+    color:var(--text-sub);
+    text-align:right;
+    max-width:138px;
+    line-height:1.45;
+  }
+  .assigned-nurse strong { color:var(--text); }
+
+  .micro-icons {
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    margin-top:8px;
+  }
+  .micro-icon {
+    flex:1;
+    min-width:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    font-size:11px;
+    font-weight:700;
+    color:var(--text-sub);
+    background:var(--surface);
+    border:1px solid var(--rule-soft);
+    border-radius:12px;
+    padding:8px 4px;
+    min-height:44px;
+  }
+  .micro-icon.on { color:var(--text); }
+  .micro-icon .ico { font-size:14px; line-height:1; }
+  .micro-icon.makeup.on { background:#E0F2FE; border-color:#BAE6FD; }
+  .micro-icon.linen.on { background:#DCFCE7; border-color:#BBF7D0; }
+  .micro-icon.turndown.on { background:#FEF3C7; border-color:#FDE68A; }
+  .micro-icon.note { background:#F8FAFC; color:var(--text-sub); }
+
+  .gestures {
+    margin-top:10px;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .gesture {
+    font-size:11px;
+    line-height:1.45;
+    color:var(--text-sub);
+    background:var(--surface);
+    border-left:3px solid var(--navy);
+    border-radius:10px;
+    padding:8px 10px;
+    flex:1 1 100%;
+  }
+  .gesture strong { color:var(--text); }
+  .gesture .inline {
+    display:inline-block;
+    font-weight:800;
+    color:var(--navy);
+  }
+
+  .sync-banner {
+    margin:12px 16px 0;
+    border-radius:14px;
+    background:linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%);
+    color:#fff;
+    padding:12px;
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    align-items:center;
+  }
+  .sync-banner .left {
+    min-width:0;
+  }
+  .sync-banner .title {
+    font-size:13px;
+    font-weight:800;
+    margin-bottom:2px;
+  }
+  .sync-banner .desc {
+    font-size:11px;
+    opacity:0.88;
+    line-height:1.45;
+  }
+  .sync-banner .count {
+    font-size:24px;
+    font-weight:900;
+    line-height:1;
+  }
+
+  .bottom-nav {
+    position:sticky;
+    bottom:0;
+    left:0; right:0;
+    height:83px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--rule-soft);
+    display:flex;
+    padding-bottom:20px;
+    z-index:20;
+  }
+  .nav-tab {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    text-decoration:none;
+    color:var(--text-mute);
+    font-size:10px;
+    font-weight:500;
+    cursor:pointer;
+    padding-top:6px;
+  }
+  .nav-tab .icon { font-size:22px; line-height:1; }
+  .nav-tab.active { color:var(--navy); }
+  .nav-tab.active .label-text { font-weight:700; }
+
+  .fab {
+    position:absolute;
+    right:16px;
+    bottom:94px;
+    width:56px;
+    height:56px;
+    border-radius:18px;
+    background:linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 12px 24px rgba(200,16,46,0.28);
+    border:none;
+    text-decoration:none;
+    font-size:24px;
+    z-index:21;
+  }
+
+  .empty-spacer { height:8px; }
+</style>
+</head>
+<body>
+<div class="phone-frame">
+  <div class="status-bar">
+    <span class="time">15:42</span>
+    <span class="carrier">&#9679;&#9679;&#9679; リゾート箱根</span>
+    <span class="icons">&#9632;&#9632;&#9632;&#9632;&#9632;</span>
+  </div>
+
+  <div class="app-header">
+    <div class="left">
+      <div class="logo"><span class="dot"></span> 旅館運営システム</div>
+    </div>
+    <div class="title">室の状態</div>
+    <div class="right">
+      <div class="mini">オフライン 2件</div>
+      <div class="bell">&#128276;<span class="badge">4</span></div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="hero">
+      <div class="date-row">
+        <div class="date">営業日 2026/05/30</div>
+        <div class="synced"><span class="dot"></span> 同期待ち 2件</div>
+      </div>
+      <h1>客室係・フロント向け 室の状態</h1>
+      <p>右→左スワイプで <strong>清掃開始</strong>、<strong>この部屋を完了</strong> で次室へ自動前進。1タップで <strong>客室状態の不一致</strong> を登録、下部メニューは親指で届く作業導線に合わせています。</p>
+      <div class="helper">
+        <span class="pill">大きめのタップ領域</span>
+        <span class="pill">親指で届く配置に最適化</span>
+        <span class="pill">表示の開閉一致</span>
+      </div>
+    </div>
+
+    <div class="sync-banner">
+      <div class="left">
+        <div class="title">オフライン時の未送信件数</div>
+        <div class="desc">客室階の電波が弱い前提で、未送信の更新を端末内にためておき、電波が戻ったら自動送信します。</div>
+      </div>
+      <div class="count">2</div>
+    </div>
+
+    <div class="counters" aria-label="状態別の件数">
+      <div class="counter ip"><div class="num">6</div><div class="label">清掃中</div></div>
+      <div class="counter cl"><div class="num">14</div><div class="label">清掃済</div></div>
+      <div class="counter pu"><div class="num">5</div><div class="label">片付け待ち</div></div>
+      <div class="counter di"><div class="num">3</div><div class="label">不一致</div></div>
+      <div class="counter os"><div class="num">1</div><div class="label">販売停止</div></div>
+      <div class="counter oo"><div class="num">1</div><div class="label">故障停止</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <div class="label">担当室リスト</div>
+        <div class="sub">右→左で清掃開始 / 完了で次室へ</div>
+      </div>
+
+      <div class="room-card">
+        <div class="top">
+          <div>
+            <div class="room">302</div>
+            <div class="meta">ツイン / 2名 / 眺望側 / 清掃優先</div>
+          </div>
+          <div class="chips">
+            <span class="chip cl">清掃済</span>
+            <span class="chip vacant">空室</span>
+            <span class="chip assigned">担当: 仲居A</span>
+          </div>
+        </div>
+        <div class="middle">
+          <div class="occupancy">
+            <div class="row"><span class="label">清掃</span><span class="value">清掃済</span></div>
+            <div class="row"><span class="label">フロント</span><span class="value">空室</span></div>
+          </div>
+          <div class="assigned-nurse">
+            <strong>担当仲居</strong><br>山田 さくら<br>遅番フォロー対象
+          </div>
+        </div>
+        <div class="micro-icons">
+          <div class="micro-icon makeup on"><span class="ico">🧼</span>清掃</div>
+          <div class="micro-icon linen on"><span class="ico">🛏️</span>リネン交換</div>
+          <div class="micro-icon turndown"><span class="ico">🌙</span>夜の客室整え</div>
+        </div>
+        <div class="gestures">
+          <div class="gesture"><strong>スワイプ</strong> <span class="inline">清掃開始</span> で清掃を始めます。右→左に払うと作業開始を即記録します。</div>
+          <div class="gesture"><strong>1タップ</strong> 客室状態の不一致は <span class="inline">客在・清掃未済</span> / <span class="inline">空室・清掃済</span> をその場で登録。</div>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="top">
+          <div>
+            <div class="room">405</div>
+            <div class="meta">和室 / 3名 / 布団敷き要 / 夕方ターンダウン</div>
+          </div>
+          <div class="chips">
+            <span class="chip pu">片付け待ち</span>
+            <span class="chip occupied">客在</span>
+            <span class="chip assigned">担当: 仲居C</span>
+          </div>
+        </div>
+        <div class="middle">
+          <div class="occupancy">
+            <div class="row"><span class="label">清掃</span><span class="value">片付け待ち</span></div>
+            <div class="row"><span class="label">フロント</span><span class="value">客在</span></div>
+          </div>
+          <div class="assigned-nurse">
+            <strong>担当仲居</strong><br>鈴木 ひとみ<br>布団・茶器補充
+          </div>
+        </div>
+        <div class="micro-icons">
+          <div class="micro-icon note"><span class="ico">⚑</span> 起こさないで</div>
+          <div class="micro-icon makeup"><span class="ico">🧴</span>清掃</div>
+          <div class="micro-icon turndown on"><span class="ico">🌙</span>夜の客室整え</div>
+        </div>
+        <div class="gestures">
+          <div class="gesture"><strong>この部屋を完了</strong> で完了後に次室へ自動前進。戻る操作をなくして片手で進める導線を保ちます。</div>
+          <div class="gesture"><strong>注記</strong> 清掃完了後の次室自動遷移は、巡回中の迷いを減らす前提です。</div>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="top">
+          <div>
+            <div class="room">512</div>
+            <div class="meta">特別室 / 4名 / 点検待ち / 応援要請済</div>
+          </div>
+          <div class="chips">
+            <span class="chip ip">清掃中</span>
+            <span class="chip vacant">空室</span>
+            <span class="chip assigned">担当: 仲居B</span>
+          </div>
+        </div>
+        <div class="middle">
+          <div class="occupancy">
+            <div class="row"><span class="label">清掃</span><span class="value">点検済</span></div>
+            <div class="row"><span class="label">フロント</span><span class="value">空室</span></div>
+          </div>
+          <div class="assigned-nurse">
+            <strong>担当仲居</strong><br>伊藤 まい<br>応援: 1名呼出済
+          </div>
+        </div>
+        <div class="micro-icons">
+          <div class="micro-icon makeup on"><span class="ico">🧼</span>清掃</div>
+          <div class="micro-icon linen"><span class="ico">🧺</span>リネン交換</div>
+          <div class="micro-icon turndown"><span class="ico">🌙</span>夜の客室整え</div>
+        </div>
+        <div class="gestures">
+          <div class="gesture"><strong>客室状態の不一致</strong> は 1タップで送信。<span class="inline">客在・清掃未済</span> はフロント=客在 / 清掃=未清掃、<span class="inline">空室・清掃済</span> はフロント=空室 / 清掃=客在扱い。</div>
+          <div class="gesture"><strong>注意</strong> 販売停止／故障停止は客室販売と切り分け、清掃中まで上げないと割り当て対象に入りません。</div>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="top">
+          <div>
+            <div class="room">601</div>
+            <div class="meta">角部屋 / 2名 / 保全対応中 / 販売停止</div>
+          </div>
+          <div class="chips">
+            <span class="chip os">販売停止</span>
+            <span class="chip occupied">客在</span>
+            <span class="chip assigned">担当: 仲居D</span>
+          </div>
+        </div>
+        <div class="middle">
+          <div class="occupancy">
+            <div class="row"><span class="label">清掃</span><span class="value">販売停止</span></div>
+            <div class="row"><span class="label">フロント</span><span class="value">客在</span></div>
+          </div>
+          <div class="assigned-nurse">
+            <strong>担当仲居</strong><br>高橋 ゆう<br>保全引継ぎ待ち
+          </div>
+        </div>
+        <div class="micro-icons">
+          <div class="micro-icon note"><span class="ico">⚠</span> 起こさないで</div>
+          <div class="micro-icon note"><span class="ico">🧾</span> 申し送り</div>
+          <div class="micro-icon turndown"><span class="ico">🌙</span>夜の客室整え</div>
+        </div>
+        <div class="gestures">
+          <div class="gesture"><strong>応援</strong> は下部ナビから呼出。室番と物件コードを自動付与して、迷わず現場へ送ります。</div>
+          <div class="gesture"><strong>同期</strong> 復帰時に未同期件数を明示し、更新の取りこぼしを防ぎます。</div>
+        </div>
+      </div>
+
+      <div class="empty-spacer"></div>
+    </div>
+  </div>
+
+  <a class="fab" href="#" aria-label="QRスキャン">⌁</a>
+
+  <div class="bottom-nav">
+    <a class="nav-tab" href="#">
+      <div class="icon">📝</div>
+      <div class="label-text">タスク</div>
+    </a>
+    <a class="nav-tab active" href="#">
+      <div class="icon">🏨</div>
+      <div class="label-text">室の状態</div>
+    </a>
+    <a class="nav-tab" href="#">
+      <div class="icon">📣</div>
+      <div class="label-text">応援</div>
+    </a>
+    <a class="nav-tab" href="#">
+      <div class="icon">↩</div>
+      <div class="label-text">引継ぎ</div>
+    </a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>予約管理</title>
+<style>
+:root {
+  --bg: #FFFFFF; --text: #1A1A1A; --text-sub: #4A4A4A; --text-mute: #8C8C8C;
+  --rule: #D0D0D0; --rule-soft: #E5E5E5; --rule-lite: #F0F0F0; --surface: #F7F7F7;
+  --brand: #C8102E; --brand-lite: #FCE5E8; --brand-soft: #FFF0F2; --brand-dark: #8B0F1F;
+  --navy: #1E3A5F; --navy-lite: #DCE5F0;
+  --amber: #D97706; --amber-lite: #FEF3C7;
+  --green: #15803D; --green-lite: #DCFCE7;
+  --purple: #7C3AED; --purple-lite: #EDE9FE;
+  --teal: #0E7490; --teal-lite: #CFFAFE;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;color:var(--text);background:var(--bg);width:1440px;min-height:900px;font-size:13px;line-height:1.5}
+a{text-decoration:none;color:inherit}
+.header{position:fixed;top:0;left:0;width:1440px;height:56px;background:var(--bg);border-bottom:1px solid var(--rule-soft);z-index:100;display:flex;align-items:center;padding:0 20px;gap:16px}
+.header-logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.header-logo .dot{width:12px;height:12px;border-radius:50%;background:var(--brand)}
+.header-logo span{font-size:16px;font-weight:700}
+.header-facility{display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--rule);border-radius:4px;font-size:13px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.header-search{flex:1;max-width:360px;margin:0 auto;position:relative}
+.header-search input{width:100%;height:34px;border:1px solid var(--rule);border-radius:4px;padding:0 12px 0 34px;font-size:13px;background:var(--surface);outline:none;font-family:inherit}
+.header-search::before{content:'\1F50D';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none}
+.header-right{display:flex;align-items:center;gap:16px;flex-shrink:0;margin-left:auto}
+.header-bell{position:relative;font-size:18px;cursor:pointer}
+.header-bell .badge-notif{position:absolute;top:-6px;right:-8px;background:var(--brand);color:#fff;font-size:10px;font-weight:600;padding:1px 5px;border-radius:8px;line-height:1.3}
+.header-user{display:flex;align-items:center;gap:8px;cursor:pointer}
+.header-user-info{text-align:right}
+.header-user-info .name{font-size:13px;font-weight:600}
+.header-user-info .role{font-size:11px;color:var(--text-mute)}
+.header-user .arrow{font-size:10px;color:var(--text-mute)}
+.sidebar{position:fixed;top:56px;left:0;width:200px;height:calc(100vh - 56px);background:var(--bg);border-right:1px solid var(--rule-soft);padding:12px 0;z-index:90;overflow-y:auto}
+.sidebar-item{display:block;padding:10px 16px;font-size:13px;color:var(--text-sub);border-left:3px solid transparent;transition:all .15s}
+.sidebar-item:hover{background:var(--surface);color:var(--text)}
+.sidebar-item.active{border-left-color:var(--brand);background:var(--brand-soft);color:var(--brand);font-weight:600}
+.sidebar-sub{font-size:10px;color:var(--text-mute);padding:12px 16px 4px;text-transform:uppercase;letter-spacing:.5px}
+.main{margin-top:56px;margin-left:200px;padding:20px 24px;width:1240px}
+.page-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
+.page-title{font-size:19px;font-weight:700}
+.page-title .badge{font-size:11px;font-weight:700;color:var(--navy);background:var(--navy-lite);padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
+.page-sub{font-size:12px;color:var(--text-mute);margin-bottom:16px;line-height:1.6}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden}
+.seg button{border:none;background:var(--bg);padding:6px 12px;font-size:12px;font-family:inherit;cursor:pointer;color:var(--text-sub);border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:none}
+.seg button.on{background:var(--navy);color:#fff;font-weight:600}
+.kpi-strip{display:flex;gap:12px;margin-bottom:18px}
+.kpi-card{flex:1;padding:13px 14px;border-radius:6px;background:var(--bg);border:1px solid var(--rule-soft);box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.kpi-card .label{font-size:10px;color:var(--text-mute);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px;line-height:1.3;min-height:26px}
+.kpi-card .value{font-size:21px;font-weight:700}
+.kpi-card .unit{font-size:12px;font-weight:400}
+.kpi-card .sub{font-size:10px;color:var(--text-mute);margin-top:2px}
+.delta-up{color:var(--green)} .delta-dn{color:var(--brand)}
+.card{border:1px solid var(--rule-soft);border-radius:8px;background:var(--bg);box-shadow:0 1px 3px rgba(0,0,0,.04);margin-bottom:18px;overflow:hidden}
+.card-h{padding:11px 16px;border-bottom:1px solid var(--rule-soft);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.card-h .t{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.card-h .hint{font-size:10px;color:var(--text-mute);font-weight:400}
+.card-b{padding:14px 16px}
+.card-b.nopad{padding:0}
+.btn-sm{padding:6px 13px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:none}
+.btn-red{background:var(--brand);color:#fff}
+.btn-red:hover{background:var(--brand-dark)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:#152d4a}
+.btn-out{background:var(--bg);color:var(--text-sub);border:1px solid var(--rule)}
+.btn-out:hover{background:var(--surface)}
+.pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap}
+.pill-brand{background:var(--brand-lite);color:var(--brand)}
+.pill-navy{background:var(--navy-lite);color:var(--navy)}
+.pill-green{background:var(--green-lite);color:var(--green)}
+.pill-amber{background:var(--amber-lite);color:var(--amber)}
+.pill-purple{background:var(--purple-lite);color:var(--purple)}
+.pill-teal{background:var(--teal-lite);color:var(--teal)}
+.cols{display:flex;gap:18px;align-items:flex-start}
+.col-l{flex:0 0 60%;min-width:0}
+.col-r{flex:1;min-width:0}
+.banner{background:linear-gradient(135deg,#fff7ed,#fff);border:1px solid #fdba74;border-left:4px solid var(--amber);border-radius:8px;padding:12px 14px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.banner strong{color:var(--amber)}
+.searchbox{display:flex;gap:10px;align-items:center}
+.searchbox input{width:100%;max-width:380px;height:34px;border:1px solid var(--rule);border-radius:4px;padding:0 12px;background:var(--bg);font-family:inherit;font-size:13px}
+.grid-2{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+table{width:100%;border-collapse:collapse}
+.reservations{font-size:11px}
+.reservations th{text-align:left;font-size:9.5px;color:var(--text-mute);text-transform:uppercase;letter-spacing:.3px;padding:8px 8px;border-bottom:1px solid var(--rule-soft);font-weight:600;white-space:nowrap;background:var(--surface)}
+.reservations td{padding:8px 8px;border-bottom:1px solid var(--rule-lite);vertical-align:middle;white-space:nowrap}
+.reservations tr:hover td{background:var(--surface)}
+.resv-id{font-weight:700;color:var(--navy)}
+.guest{font-weight:600}
+.lang-flag{font-size:10px;font-weight:700;border-radius:4px;padding:1px 5px;margin-left:6px}
+.en{background:#e8f0fe;color:#1a73e8}.zh{background:#fff0e6;color:#e8590c}.ko{background:#e7f5ff;color:#0c8599}.jp{background:#f1f3f5;color:#495057}
+.sync-ok{color:var(--green);font-weight:700}.sync-err{color:var(--brand);font-weight:700}.sync-warn{color:var(--amber);font-weight:700}
+.status{font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.st-duein{background:var(--navy-lite);color:var(--navy)} .st-checkin{background:var(--green-lite);color:var(--green)} .st-dueout{background:var(--amber-lite);color:var(--amber)} .st-checkout{background:var(--surface);color:var(--text-sub)} .st-noshow{background:var(--brand-lite);color:var(--brand)} .st-wait{background:var(--purple-lite);color:var(--purple)}
+.risk{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.risk-hi{background:var(--brand-lite);color:var(--brand)} .risk-mid{background:var(--amber-lite);color:var(--amber)} .risk-low{background:var(--green-lite);color:var(--green)}
+.table-wrap{border:1px solid var(--rule-soft);border-radius:8px;overflow:hidden;background:var(--bg);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.subhead{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--rule-soft)}
+.subhead .title{font-size:14px;font-weight:700}
+.subhead .meta{font-size:11px;color:var(--text-mute)}
+.mini-note{font-size:10px;color:var(--text-mute);margin-top:8px;line-height:1.6}
+.ac-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.ac-grid .d{font-size:10px;text-align:center;color:var(--text-mute);padding:4px 0;background:var(--surface);border-radius:4px}
+.room-table{width:100%;border-collapse:separate;border-spacing:0;font-size:11px}
+.room-table th,.room-table td{padding:7px 7px;border-bottom:1px solid var(--rule-lite);text-align:center}
+.room-table th{font-size:9.5px;color:var(--text-mute);background:var(--surface);text-transform:uppercase;letter-spacing:.3px}
+.room-table td:first-child,.room-table th:first-child{text-align:left}
+.cell{display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.1}
+.cell .n{font-size:12px;font-weight:700}
+.cell .m{font-size:9px;color:var(--text-mute)}
+.cell.sold{background:#fee2e2;color:#991b1b;font-weight:700}
+.cell.sold .n{font-size:11px}
+.cell.mlos{background:#fff7ed}
+.cell.mlos .m{color:var(--amber);font-weight:700}
+.tabbar{display:inline-flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden}
+.tabbar button{border:none;background:var(--bg);padding:6px 10px;font-size:11px;font-family:inherit;cursor:pointer;color:var(--text-sub);border-right:1px solid var(--rule)}
+.tabbar button:last-child{border-right:none}
+.tabbar button.on{background:var(--brand);color:#fff;font-weight:600}
+.error-group{padding:10px 0;border-bottom:1px solid var(--rule-lite)}
+.error-group:last-child{border-bottom:none}
+.error-group .g{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.error-group .g .t{font-size:11.5px;font-weight:700}
+.error-group ul{list-style:none}
+.error-group li{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:11px;border-top:1px dashed var(--rule-lite)}
+.drawer{border:1px solid var(--rule-soft);border-radius:8px;background:var(--bg);box-shadow:0 1px 3px rgba(0,0,0,.04);position:sticky;top:80px}
+.drawer .head{padding:14px 16px;border-bottom:1px solid var(--rule-soft)}
+.drawer .head .k{font-size:10px;color:var(--text-mute);text-transform:uppercase;letter-spacing:.3px}
+.drawer .head .n{font-size:14px;font-weight:700;margin-top:3px}
+.drawer .body{padding:14px 16px}
+.drawer .sec{padding:10px 0;border-bottom:1px solid var(--rule-lite)}
+.drawer .sec:last-child{border-bottom:none}
+.drawer .sec .st{font-size:10px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px}
+.kv{display:grid;grid-template-columns:96px 1fr;gap:6px;font-size:11px;padding:4px 0}
+.kv .k{color:var(--text-mute)}
+.kv .v{font-weight:600}
+.flow{font-size:10.5px;color:var(--text-sub);line-height:1.65;background:var(--surface);border-left:3px solid var(--teal);padding:9px 10px;border-radius:4px}
+.flow b{color:var(--teal)}
+.action-row{display:flex;gap:8px;flex-wrap:wrap}
+.muted{color:var(--text-mute)}
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="screen1_dashboard.html" class="header-logo"><div class="dot"></div><span>旅館運営システム</span></a>
+  <div class="header-facility">○○リゾート箱根 — 全施設横断ビュー <span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
+  <div class="header-search"><input type="text" placeholder="予約番号・氏名・室番・ネット予約サイト番号を検索"></div>
+  <div class="header-right">
+    <div class="header-bell">&#x1F514;<span class="badge-notif">12</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item active" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item" href="screen8_reports.html">レポート</a>
+  <div class="sidebar-sub">予約ビュー</div>
+  <a class="sidebar-item active" href="screen3_reservations.html">予約一覧</a>
+  <a class="sidebar-item" href="screen3_reservations.html">空室照会</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約データ取込</a>
+  <a class="sidebar-item" href="screen3_reservations.html">料金・売止</a>
+</nav>
+
+<div class="main">
+  <div class="page-head">
+    <div class="page-title">予約管理 <span class="badge">業界標準のデータ項目に準拠 / 予約・在庫・連携データ同期</span></div>
+    <div class="seg">
+      <button class="on">予約一覧</button><button>空室照会</button><button>予約データ取込</button><button>差異同期</button>
+    </div>
+  </div>
+  <div class="page-sub">営業日 2026/05/30。人泊2食は <b>食事プラン</b>・<b>入湯税¥150</b>・<b>布団数</b>・<b>仲居配膳数</b> が連動し、子供12歳未満は入湯税免除。空室照会と予約データ取込を同一画面で扱い、予約サイト一元管理の残室と基幹システム在庫のズレを即時に見せるデモです。</div>
+
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="label">本日 到着予定</div><div class="value" style="color:var(--navy)">18<span class="unit">件</span></div><div class="sub delta-up">うち団体 1 / VIP 3</div></div>
+    <div class="kpi-card"><div class="label">チェックイン済</div><div class="value" style="color:var(--green)">26<span class="unit">件</span></div><div class="sub delta-up">本館和室・別館が中心</div></div>
+    <div class="kpi-card"><div class="label">予約サイト一元管理／基幹システム 差異</div><div class="value" style="color:var(--brand)">4<span class="unit">室</span></div><div class="sub delta-dn">売止反映遅延 2 / 変更未取込 2</div></div>
+    <div class="kpi-card"><div class="label">予約データ取込エラー</div><div class="value" style="color:var(--amber)">7<span class="unit">件</span></div><div class="sub">新規 2 / 変更 3 / キャンセル 2</div></div>
+    <div class="kpi-card"><div class="label">高リスク予約</div><div class="value" style="color:var(--purple)">5<span class="unit">件</span></div><div class="sub">無断不泊の予兆 / 与信 / 団体名簿未完</div></div>
+    <div class="kpi-card"><div class="label">1泊2食 需要上限</div><div class="value" style="color:var(--teal)">120<span class="unit">名</span></div><div class="sub">本日夕食 96 名、残 24</div></div>
+  </div>
+
+  <div class="banner">
+    <div><strong>予約サイト一元管理の残室 58</strong> vs <strong>基幹システム在庫 54</strong>。差異 4 室を検知。売止解除 2 件と変更データ 2 件が未反映です。</div>
+    <div class="action-row">
+      <button class="btn-sm btn-navy">ワンクリック再同期</button>
+      <button class="btn-sm btn-out">差異内訳を見る</button>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="col-l">
+      <div class="card">
+        <div class="card-h">
+          <div class="t">1ボックス高速検索</div>
+          <div class="hint">氏名 / カナ / 電話 / 室番 / 予約番号 / ネット予約サイト番号</div>
+        </div>
+        <div class="card-b">
+          <div class="searchbox">
+            <input type="text" value="J.W" />
+            <button class="btn-sm btn-red">検索</button>
+            <button class="btn-sm btn-out">/</button>
+          </div>
+          <div class="mini-note">人泊2食の人数変更で <b>食事プラン / 入湯税 / 布団数 / 仲居配膳数</b> が自動連動。手修正は不要です。</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <div class="t">予約一覧</div>
+          <div class="hint">高密度 1行表示 / 18行 / 業界標準のデータ項目に準拠</div>
+        </div>
+        <div class="card-b nopad">
+          <div class="table-wrap" style="border:none;box-shadow:none;border-radius:0">
+            <table class="reservations">
+              <thead>
+                <tr>
+                  <th>#予約ID</th><th>基幹システム 滞在番号</th><th>予約サイト 受付番号</th><th>氏名(言語旗)</th><th>施設</th><th>チェックイン-アウト</th><th>室タイプ</th><th>人泊</th><th>食事区分</th><th>夕食時刻</th><th>市場/流入元/料金プラン</th><th>支払</th><th>同期状態</th><th>状態</th><th>リスク</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="resv-id">R260530-001</td><td>S-88021</td><td>EX-784213</td><td class="guest">J.W 様 <span class="lang-flag en">EN</span></td><td>512号室</td><td>05/30-06/01 (2)</td><td>別館和洋室</td><td>大2 / 子A0 B0 C0</td><td>1泊2食</td><td>18:30</td><td>Expedia / ネット予約サイト / EXP-HP</td><td>事前決済</td><td class="sync-ok">同期済</td><td><span class="status st-duein">到着予定</span></td><td><span class="risk risk-hi">与信注意</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-002</td><td>S-88022</td><td>BK-992104</td><td class="guest">E.C 様 <span class="lang-flag en">EN</span></td><td>231号室</td><td>05/30-05/31 (1)</td><td>本館和室</td><td>大1 / 子A0 B0 C0</td><td>朝食付</td><td>19:00</td><td>Booking / ネット予約サイト / BKG-SAVER</td><td>現地</td><td class="sync-ok">同期済</td><td><span class="status st-checkin">チェックイン済</span></td><td><span class="risk risk-low">低リスク</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-003</td><td>S-88023</td><td>HT-550201</td><td class="guest">W.J 様 <span class="lang-flag zh">繁中</span></td><td>605号室</td><td>05/30-06/02 (3)</td><td>離れ露天付</td><td>大2 / 子A1 B0 C0</td><td>1泊2食</td><td>18:00</td><td>公式 / 直販 / HKD-BB</td><td>事前決済</td><td class="sync-ok">同期済</td><td><span class="status st-dueout">出発予定</span></td><td><span class="risk risk-mid">子供税免除</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-004</td><td>S-88024</td><td>RK-772914</td><td class="guest">K.M 様 <span class="lang-flag ko">KR</span></td><td>418号室</td><td>05/31-06/02 (2)</td><td>別館和洋室</td><td>大2 / 子A0 B1 C0</td><td>素泊</td><td>--</td><td>楽天 / ネット予約サイト / RAK-NR</td><td>現地</td><td class="sync-err">変更未取込</td><td><span class="status st-wait">空き待ち</span></td><td><span class="risk risk-hi">部屋タイプ仮押さえ</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-005</td><td>S-88025</td><td>JP-100882</td><td class="guest">青葉商事 団体 <span class="lang-flag jp">JP</span></td><td>団体14室</td><td>05/30-06/01 (2)</td><td>本館和室 / 別館混在</td><td>大38 / 子A0 B0 C0</td><td>1泊2食</td><td>19:00</td><td>法人 / 団体 / CORP-STD</td><td>請求書</td><td class="sync-warn">部分同期</td><td><span class="status st-duein">到着予定</span></td><td><span class="risk risk-hi">名簿未完</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-006</td><td>S-88026</td><td>TR-440190</td><td class="guest">S.M 様 <span class="lang-flag jp">JP</span></td><td>312号室</td><td>05/30-05/30 (0)</td><td>本館和室</td><td>大1 / 子A0 B0 C0</td><td>朝食付</td><td>18:00</td><td>旅行会社 / 旅行会社 / TA-ADV</td><td>事前決済</td><td class="sync-ok">同期済</td><td><span class="status st-checkout">チェックアウト済</span></td><td><span class="risk risk-low">本日精算済</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-007</td><td>S-88027</td><td>JR-909155</td><td class="guest">S.Y 様 <span class="lang-flag jp">JP</span></td><td>124号室</td><td>05/30-06/03 (4)</td><td>本館和室</td><td>大2 / 子A2 B0 C0</td><td>1泊2食</td><td>18:30</td><td>じゃらん / ネット予約サイト / JAL-HP</td><td>現地</td><td class="sync-ok">同期済</td><td><span class="status st-checkin">チェックイン済</span></td><td><span class="risk risk-mid">子供食 2 名</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-008</td><td>S-88028</td><td>AG-335709</td><td class="guest">S.M 様 <span class="lang-flag en">EN</span></td><td>701号室</td><td>05/30-06/01 (2)</td><td>ヴィラ</td><td>大2 / 子A0 B0 C0</td><td>1泊2食</td><td>19:30</td><td>Agoda / ネット予約サイト / AGD-VIL</td><td>事前決済</td><td class="sync-ok">同期済</td><td><span class="status st-noshow">無断不泊</span></td><td><span class="risk risk-hi">直前キャンセル懸念</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-009</td><td>S-88029</td><td>FI-228010</td><td class="guest">M.B 様 <span class="lang-flag en">EN</span></td><td>204号室</td><td>05/31-06/02 (2)</td><td>本館和室</td><td>大1 / 子A0 B0 C0</td><td>素泊</td><td>--</td><td>公式 / 直販 / WEB-SAVE</td><td>事前決済</td><td class="sync-ok">同期済</td><td><span class="status st-wait">空き待ち</span></td><td><span class="risk risk-low">候補待ち</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-010</td><td>S-88030</td><td>EX-990217</td><td class="guest">E.C 様 <span class="lang-flag en">EN</span></td><td>522号室</td><td>06/01-06/03 (2)</td><td>別館和洋室</td><td>大2 / 子A0 B0 C0</td><td>1泊2食</td><td>18:30</td><td>Expedia / ネット予約サイト / EXP-LOS</td><td>現地</td><td class="sync-err">エラー</td><td><span class="status st-duein">到着予定</span></td><td><span class="risk risk-mid">最低2連泊</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-011</td><td>S-88031</td><td>BK-110781</td><td class="guest">W.J 様 <span class="lang-flag zh">繁中</span></td><td>511号室</td><td>05/30-05/31 (1)</td><td>本館和室</td><td>大2 / 子A0 B0 C0</td><td>朝食付</td><td>18:00</td><td>Booking / ネット予約サイト / BKG-ADV</td><td>事前決済</td><td class="sync-ok">同期済</td><td><span class="status st-checkin">チェックイン済</span></td><td><span class="risk risk-low">安定</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-012</td><td>S-88032</td><td>HK-778221</td><td class="guest">K.M 様 <span class="lang-flag ko">KR</span></td><td>602号室</td><td>05/31-06/01 (1)</td><td>別館和洋室</td><td>大2 / 子A0 B0 C0</td><td>1泊2食</td><td>19:00</td><td>公式 / 直販 / KR-GOLD</td><td>現地</td><td class="sync-ok">同期済</td><td><span class="status st-duein">到着予定</span></td><td><span class="risk risk-low">常連</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-013</td><td>S-88033</td><td>JP-440291</td><td class="guest">T.Y 様 <span class="lang-flag jp">JP</span></td><td>101号室</td><td>05/30-06/01 (2)</td><td>本館和室</td><td>大2 / 子A0 B1 C0</td><td>1泊2食</td><td>18:00</td><td>公式 / 直販 / STD-RM</td><td>現地</td><td class="sync-ok">同期済</td><td><span class="status st-dueout">出発予定</span></td><td><span class="risk risk-mid">子供A 1</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-014</td><td>S-88034</td><td>TR-551992</td><td class="guest">J.W 様 <span class="lang-flag en">EN</span></td><td>513号室</td><td>05/30-06/02 (2)</td><td>別館和洋室</td><td>大2 / 子A0 B0 C0</td><td>1泊2食</td><td>18:30</td><td>Expedia / ネット予約サイト / EXP-RM</td><td>事前決済</td><td class="sync-ok">同期済</td><td><span class="status st-checkin">チェックイン済</span></td><td><span class="risk risk-hi">複数予約</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-015</td><td>S-88035</td><td>GM-140788</td><td class="guest">E.C 様 <span class="lang-flag en">EN</span></td><td>219号室</td><td>05/30-06/04 (5)</td><td>本館和室</td><td>大2 / 子A0 B0 C0</td><td>素泊</td><td>--</td><td>公式 / 直販 / LONG-STAY</td><td>請求書</td><td class="sync-warn">変更待ち</td><td><span class="status st-wait">空き待ち</span></td><td><span class="risk risk-low">長期滞在</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-016</td><td>S-88036</td><td>OA-883210</td><td class="guest">W.J 様 <span class="lang-flag zh">繁中</span></td><td>550号室</td><td>05/31-06/02 (2)</td><td>離れ露天付</td><td>大2 / 子A0 B0 C0</td><td>1泊2食</td><td>19:30</td><td>公式 / 直販 / SENIOR</td><td>現地</td><td class="sync-ok">同期済</td><td><span class="status st-duein">到着予定</span></td><td><span class="risk risk-mid">露天付</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-017</td><td>S-88037</td><td>BK-771901</td><td class="guest">K.M 様 <span class="lang-flag ko">KR</span></td><td>409号室</td><td>05/30-05/31 (1)</td><td>本館和室</td><td>大1 / 子A0 B0 C0</td><td>朝食付</td><td>18:30</td><td>Booking / ネット予約サイト / BKG-LAST</td><td>事前決済</td><td class="sync-ok">同期済</td><td><span class="status st-noshow">無断不泊</span></td><td><span class="risk risk-hi">直前未着</span></td>
+                </tr>
+                <tr>
+                  <td class="resv-id">R260530-018</td><td>S-88038</td><td>GR-332119</td><td class="guest">青葉商事 団体 <span class="lang-flag jp">JP</span></td><td>14室</td><td>05/30-06/01 (2)</td><td>本館和室</td><td>大38 / 子A0 B0 C0</td><td>1泊2食</td><td>19:00</td><td>団体 / 法人 / CORP-STD</td><td>請求書</td><td class="sync-warn">再取込待ち</td><td><span class="status st-duein">到着予定</span></td><td><span class="risk risk-hi">名簿照合</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-h">
+            <div class="t">空室照会グリッド</div>
+            <div class="hint">横 = 日付10日 / 縦 = 室タイプ / セル = 空室数 + 売止赤× + 最低連泊数</div>
+          </div>
+          <div class="card-b">
+            <div class="ac-grid" style="margin-bottom:8px">
+              <div class="d">05/30</div><div class="d">05/31</div><div class="d">06/01</div><div class="d">06/02</div><div class="d">06/03</div><div class="d">06/04</div><div class="d">06/05</div><div class="d">06/06</div><div class="d">06/07</div><div class="d">06/08</div>
+            </div>
+            <table class="room-table">
+              <thead>
+                <tr><th>室タイプ</th><th>05/30</th><th>05/31</th><th>06/01</th><th>06/02</th><th>06/03</th><th>06/04</th><th>06/05</th><th>06/06</th><th>06/07</th><th>06/08</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="text-align:left;font-weight:600">本館和室</td>
+                  <td><div class="cell"><span class="n">7</span><span class="m">最低1泊</span></div></td>
+                  <td><div class="cell"><span class="n">5</span><span class="m">最低1泊</span></div></td>
+                  <td class="sold">×</td>
+                  <td><div class="cell mlos"><span class="n">2</span><span class="m">最低2泊</span></div></td>
+                  <td><div class="cell"><span class="n">8</span><span class="m">最低1泊</span></div></td>
+                  <td><div class="cell"><span class="n">9</span><span class="m">最低1泊</span></div></td>
+                  <td><div class="cell"><span class="n">6</span><span class="m">最低1泊</span></div></td>
+                  <td><div class="cell"><span class="n">4</span><span class="m">最低1泊</span></div></td>
+                  <td class="sold">×</td>
+                  <td><div class="cell"><span class="n">3</span><span class="m">最低1泊</span></div></td>
+                </tr>
+                <tr>
+                  <td style="text-align:left;font-weight:600">別館和洋室</td>
+                  <td><div class="cell"><span class="n">4</span><span class="m">最低1泊</span></div></td>
+                  <td><div class="cell"><span class="n">3</span><span class="m">最低2泊</span></div></td>
+                  <td><div class="cell"><span class="n">2</span><span class="m">最低2泊</span></div></td>
+                  <td class="sold">×</td>
+                  <td><div class="cell"><span class="n">5</span><span class="m">最低1泊</span></div></td>
+                  <td><div class="cell"><span class="n">4</span><span class="m">最低1泊</span></div></td>
+                  <td><div class="cell"><span class="n">6</span><span class="m">最低1泊</span></div></td>
+                  <td><div class="cell"><span class="n">3</span><span class="m">最低1泊</span></div></td>
+                  <td><div class="cell"><span class="n">2</span><span class="m">最低2泊</span></div></td>
+                  <td><div class="cell"><span class="n">4</span><span class="m">最低1泊</span></div></td>
+                </tr>
+                <tr>
+                  <td style="text-align:left;font-weight:600">離れ露天付</td>
+                  <td><div class="cell"><span class="n">2</span><span class="m">最低2泊</span></div></td>
+                  <td><div class="cell"><span class="n">2</span><span class="m">最低2泊</span></div></td>
+                  <td><div class="cell"><span class="n">1</span><span class="m">最低3泊</span></div></td>
+                  <td><div class="cell"><span class="n">1</span><span class="m">最低3泊</span></div></td>
+                  <td class="sold">×</td>
+                  <td><div class="cell"><span class="n">2</span><span class="m">最低2泊</span></div></td>
+                  <td><div class="cell"><span class="n">2</span><span class="m">最低2泊</span></div></td>
+                  <td><div class="cell"><span class="n">1</span><span class="m">最低3泊</span></div></td>
+                  <td><div class="cell"><span class="n">1</span><span class="m">最低3泊</span></div></td>
+                  <td><div class="cell"><span class="n">2</span><span class="m">最低2泊</span></div></td>
+                </tr>
+                <tr>
+                  <td style="text-align:left;font-weight:600">ヴィラ</td>
+                  <td><div class="cell"><span class="n">1</span><span class="m">最低2泊</span></div></td>
+                  <td class="sold">×</td>
+                  <td><div class="cell"><span class="n">1</span><span class="m">最低2泊</span></div></td>
+                  <td><div class="cell"><span class="n">0</span><span class="m">売止</span></div></td>
+                  <td><div class="cell"><span class="n">1</span><span class="m">最低2泊</span></div></td>
+                  <td><div class="cell"><span class="n">1</span><span class="m">最低2泊</span></div></td>
+                  <td class="sold">×</td>
+                  <td><div class="cell"><span class="n">1</span><span class="m">最低2泊</span></div></td>
+                  <td><div class="cell"><span class="n">0</span><span class="m">売止</span></div></td>
+                  <td><div class="cell"><span class="n">1</span><span class="m">最低2泊</span></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">
+            <div class="t">予約データ取込パネル</div>
+            <div class="hint">新規 / 変更 / キャンセル / エラー理由グループ</div>
+          </div>
+          <div class="card-b">
+            <div class="tabbar" style="margin-bottom:10px">
+              <button class="on">新規 12</button><button>変更 7</button><button>キャンセル 4</button>
+            </div>
+            <div class="error-group">
+              <div class="g"><div class="t"><span class="pill pill-brand">予約サイト番号の重複</span></div><button class="btn-sm btn-navy">ワンクリック再取込</button></div>
+              <ul>
+                <li><span>EX-990217 / 変更未反映</span><span class="muted">Expedia 反映待ち</span></li>
+                <li><span>BK-110781 / 同一氏名重複</span><span class="muted">Booking 送信失敗</span></li>
+              </ul>
+            </div>
+            <div class="error-group">
+              <div class="g"><div class="t"><span class="pill pill-amber">部屋タイプ未マッチ</span></div><button class="btn-sm btn-navy">ワンクリック再取込</button></div>
+              <ul>
+                <li><span>RK-772914 / 別館和洋室</span><span class="muted">料金プラン 不一致</span></li>
+                <li><span>JR-909155 / 本館和室</span><span class="muted">子供区分 A/B 変換要</span></li>
+              </ul>
+            </div>
+            <div class="error-group">
+              <div class="g"><div class="t"><span class="pill pill-purple">変更データ</span></div><button class="btn-sm btn-out">手動再取込</button></div>
+              <ul>
+                <li><span>TR-440190 / 夕食時刻変更</span><span class="muted">手動再取込が必要</span></li>
+                <li><span>AG-335709 / 人数変更</span><span class="muted">食事プラン 再計算</span></li>
+              </ul>
+            </div>
+            <div class="mini-note">変更データは自動再処理ではなく <b>手動再取込</b> を明示。理由別にまとめて、担当者が 1 クリックで回収できます。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-r">
+      <div class="drawer">
+        <div class="head">
+          <div class="k">選択中の予約</div>
+          <div class="n">J.W 様 / 512号室</div>
+        </div>
+        <div class="body">
+          <div class="sec">
+            <div class="st">基本情報</div>
+            <div class="kv"><div class="k">予約ID</div><div class="v">R260530-001</div></div>
+            <div class="kv"><div class="k">基幹システム 滞在番号</div><div class="v">S-88021</div></div>
+            <div class="kv"><div class="k">予約サイト 受付番号</div><div class="v">EX-784213</div></div>
+            <div class="kv"><div class="k">言語</div><div class="v">英語 / Expedia</div></div>
+          </div>
+          <div class="sec">
+            <div class="st">滞在・人数</div>
+            <div class="kv"><div class="k">チェックイン-アウト</div><div class="v">2026/05/30 - 2026/06/01 (2泊)</div></div>
+            <div class="kv"><div class="k">室タイプ</div><div class="v">別館和洋室 / 512号室</div></div>
+            <div class="kv"><div class="k">人泊</div><div class="v">大人2 / 子供A0 B0 C0</div></div>
+            <div class="kv"><div class="k">食事</div><div class="v">1泊2食 / 18:30</div></div>
+            <div class="kv"><div class="k">課税</div><div class="v">入湯税 ¥150 × 2名 = ¥300</div></div>
+          </div>
+          <div class="sec">
+            <div class="st">連動注記</div>
+            <div class="flow">人数変更を行うと <b>食事プラン</b>、<b>入湯税</b>、<b>布団数</b>、<b>仲居配膳数</b> が自動で再計算されます。<br>例: 大人 2 名 → 料理 2 名分、布団 2 組、配膳 2 名。</div>
+          </div>
+          <div class="sec">
+            <div class="st">支払・同期・状態</div>
+            <div class="kv"><div class="k">支払</div><div class="v">事前決済</div></div>
+            <div class="kv"><div class="k">同期状態</div><div class="v"><span class="sync-ok">同期済</span></div></div>
+            <div class="kv"><div class="k">状態</div><div class="v"><span class="status st-duein">到着予定</span></div></div>
+            <div class="kv"><div class="k">リスク</div><div class="v"><span class="risk risk-hi">与信注意</span></div></div>
+          </div>
+          <div class="sec">
+            <div class="st">操作</div>
+            <div class="action-row">
+              <button class="btn-sm btn-red">チェックイン</button>
+              <button class="btn-sm btn-navy">再同期</button>
+              <button class="btn-sm btn-out">変更データ確認</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

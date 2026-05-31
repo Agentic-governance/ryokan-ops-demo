@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>食事管理 (旅館の料飲 / 配膳の取りまとめ・アレルギー・配膳)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #FFFFFF; --text: #1A1A1A; --text-sub: #4A4A4A; --text-mute: #8C8C8C;
+  --rule: #D0D0D0; --rule-soft: #E5E5E5; --rule-lite: #F0F0F0; --surface: #F7F7F7;
+  --brand: #C8102E; --brand-lite: #FCE5E8; --brand-soft: #FFF0F2; --brand-dark: #8B0F1F;
+  --navy: #1E3A5F; --navy-lite: #DCE5F0;
+  --amber: #D97706; --amber-lite: #FEF3C7;
+  --green: #15803D; --green-lite: #DCFCE7;
+  --purple: #7C3AED; --purple-lite: #EDE9FE;
+  --teal: #0E7490; --teal-lite: #CFFAFE;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif;
+  color: var(--text); background: var(--bg); width: 1440px; min-height: 900px;
+  font-size: 13px; line-height: 1.5;
+}
+a { text-decoration: none; color: inherit; }
+
+.header { position: fixed; top: 0; left: 0; width: 1440px; height: 56px; background: var(--bg); border-bottom: 1px solid var(--rule-soft); z-index: 100; display: flex; align-items: center; padding: 0 20px; gap: 16px; }
+.header-logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.header-logo .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--brand); }
+.header-logo span { font-size: 16px; font-weight: 700; }
+.header-facility { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--rule); border-radius: 4px; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.header-search { flex: 1; max-width: 360px; margin: 0 auto; position: relative; }
+.header-search input { width: 100%; height: 34px; border: 1px solid var(--rule); border-radius: 4px; padding: 0 12px 0 34px; font-size: 13px; background: var(--surface); outline: none; font-family: inherit; }
+.header-search input:focus { border-color: var(--brand); background: var(--bg); }
+.header-search::before { content: '\1F50D'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
+.header-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; margin-left: auto; }
+.header-bell { position: relative; font-size: 18px; cursor: pointer; }
+.header-bell .badge-notif { position: absolute; top: -6px; right: -8px; background: var(--brand); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 5px; border-radius: 8px; line-height: 1.3; }
+.header-user { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.header-user-info { text-align: right; }
+.header-user-info .name { font-size: 13px; font-weight: 600; }
+.header-user-info .role { font-size: 11px; color: var(--text-mute); }
+.header-user .arrow { font-size: 10px; color: var(--text-mute); }
+
+.sidebar { position: fixed; top: 56px; left: 0; width: 200px; height: calc(100vh - 56px); background: var(--bg); border-right: 1px solid var(--rule-soft); padding: 12px 0; z-index: 90; overflow-y: auto; }
+.sidebar-item { display: block; padding: 10px 16px; font-size: 13px; color: var(--text-sub); border-left: 3px solid transparent; transition: all .15s; }
+.sidebar-item:hover { background: var(--surface); color: var(--text); }
+.sidebar-item.active { border-left-color: var(--brand); background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+.sidebar-sub { font-size: 10px; color: var(--text-mute); padding: 12px 16px 4px; text-transform: uppercase; letter-spacing: .5px; }
+
+.main { margin-top: 56px; margin-left: 200px; padding: 20px 24px; width: 1240px; }
+.page-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+.page-title { font-size: 19px; font-weight: 700; }
+.page-title .meal-badge { font-size: 11px; font-weight: 700; color: var(--navy); background: var(--navy-lite); padding: 2px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+.page-sub { font-size: 12px; color: var(--text-mute); margin-bottom: 16px; }
+.seg { display:inline-flex; border:1px solid var(--rule); border-radius:5px; overflow:hidden; }
+.seg button { border:none; background:var(--bg); padding:6px 12px; font-size:12px; font-family:inherit; cursor:pointer; color:var(--text-sub); border-right:1px solid var(--rule); }
+.seg button:last-child{border-right:none;}
+.seg button.on { background:var(--navy); color:#fff; font-weight:600; }
+
+.kpi-strip { display: flex; gap: 12px; margin-bottom: 18px; }
+.kpi-card { flex: 1; padding: 13px 14px; border-radius: 6px; background: var(--bg); border: 1px solid var(--rule-soft); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.kpi-card .label { font-size: 10px; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; line-height:1.3; min-height:26px; }
+.kpi-card .value { font-size: 20px; font-weight: 700; }
+.kpi-card .unit { font-size: 11px; font-weight: 400; }
+.kpi-card .sub { font-size: 10px; color: var(--text-mute); margin-top: 2px; }
+.delta-up{color:var(--green);} .delta-dn{color:var(--brand);}
+
+.card { border:1px solid var(--rule-soft); border-radius:8px; background:var(--bg); box-shadow:0 1px 3px rgba(0,0,0,.04); margin-bottom:18px; overflow:hidden; }
+.card-h { padding:11px 16px; border-bottom:1px solid var(--rule-soft); display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.card-h .t { font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px; }
+.card-h .src { font-size:9.5px; color:var(--text-mute); font-weight:400; background:var(--surface); padding:2px 7px; border-radius:10px; white-space:nowrap; }
+.card-b { padding:14px 16px; }
+.card-b.nopad{ padding:0; }
+.cols { display:flex; gap:18px; }
+
+.meal-hero { display:flex; gap:16px; margin-bottom:18px; }
+.meal-hero .hero-left { flex:0 0 40%; border:1px solid var(--brand-lite); border-left:4px solid var(--brand); border-radius:8px; background:linear-gradient(135deg,#fff,var(--brand-soft)); padding:14px 16px; }
+.meal-hero .hero-right { flex:1; border:1px solid var(--navy-lite); border-radius:8px; background:linear-gradient(135deg,#fff,#f8fbff); padding:14px 16px; }
+.hero-k { font-size:10px; font-weight:700; color:var(--brand-dark); letter-spacing:.4px; text-transform:uppercase; }
+.hero-v { font-size:32px; font-weight:800; color:var(--brand); line-height:1.05; margin-top:4px; }
+.hero-v small { font-size:14px; font-weight:600; }
+.hero-list { margin-top:8px; }
+.hero-line { display:flex; justify-content:space-between; gap:12px; font-size:11.5px; padding:4px 0; border-top:1px dashed var(--brand-lite); }
+.hero-line b { color:var(--brand-dark); }
+.hero-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px; }
+.hero-grid .hg { background:var(--surface); border-radius:6px; padding:8px; text-align:center; }
+.hero-grid .hg .k { font-size:9px; color:var(--text-mute); }
+.hero-grid .hg .v { font-size:16px; font-weight:700; }
+.bar-mini { display:flex; align-items:flex-end; gap:8px; margin-top:6px; height:42px; }
+.bar-mini .b { flex:1; background:var(--navy-lite); border-radius:4px 4px 0 0; position:relative; min-width:18px; }
+.bar-mini .b span { position:absolute; left:50%; transform:translateX(-50%); bottom:100%; font-size:10px; color:var(--text-sub); margin-bottom:3px; white-space:nowrap; }
+.bar-mini .b i { display:block; height:100%; border-radius:4px 4px 0 0; background:var(--navy); }
+.bar-mini .b.hot i { background:var(--brand); }
+.bar-mini .b.warm i { background:var(--amber); }
+
+.layout { display:flex; gap:18px; align-items:flex-start; }
+.left { flex:0 0 66%; min-width:0; }
+.right { flex:1; min-width:0; }
+
+.grid-wrap { border:1px solid var(--rule-soft); border-radius:8px; overflow:hidden; background:var(--bg); }
+.grid-head { display:grid; grid-template-columns:140px repeat(4,1fr); background:var(--surface); border-bottom:1px solid var(--rule-soft); font-size:10px; color:var(--text-mute); font-weight:700; letter-spacing:.3px; }
+.grid-head div { padding:10px 8px; border-right:1px solid var(--rule-lite); }
+.grid-head div:last-child { border-right:none; }
+.grid-row { display:grid; grid-template-columns:140px repeat(4,1fr); border-bottom:1px solid var(--rule-lite); }
+.grid-row:last-child { border-bottom:none; }
+.grid-label { padding:10px 8px; border-right:1px solid var(--rule-soft); background:#fff; }
+.grid-label .name { font-weight:700; }
+.grid-label .meta { font-size:10px; color:var(--text-mute); margin-top:2px; }
+.cell { padding:8px; border-right:1px solid var(--rule-lite); min-height:92px; position:relative; background:#fff; }
+.cell:last-child { border-right:none; }
+.cell.full { background:var(--brand-soft); }
+.cell.over { background:#fff5f5; }
+.cell .seatbar { display:flex; align-items:flex-end; gap:6px; }
+.cell .seatbar .cap { flex:0 0 28px; font-size:10px; color:var(--text-mute); line-height:1.1; text-align:center; }
+.cell .seatbar .track { flex:1; height:28px; border-radius:5px; background:#eef2f7; overflow:hidden; position:relative; }
+.cell .seatbar .track > span { display:block; height:100%; background:linear-gradient(90deg,var(--navy),var(--teal)); }
+.cell.over .seatbar .track > span { background:linear-gradient(90deg,var(--brand),#ef4444); }
+.cell .seatbar .val { position:absolute; right:10px; top:8px; font-size:11px; font-weight:700; }
+.chip-row { display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }
+.chip { font-size:9px; font-weight:700; padding:2px 6px; border-radius:10px; line-height:1.4; white-space:nowrap; }
+.chip-room { background:var(--navy-lite); color:var(--navy); }
+.chip-course { background:var(--green-lite); color:var(--green); }
+.chip-alert { background:var(--brand-lite); color:var(--brand); }
+.chip-anniv { background:var(--purple-lite); color:var(--purple); }
+.chip-flag { background:var(--amber-lite); color:var(--amber); }
+.chip-flag.bad { background:#fee2e2; color:#b91c1c; }
+.cell .foot { font-size:10px; color:var(--text-mute); margin-top:7px; }
+.overline { display:flex; justify-content:space-between; gap:10px; margin-bottom:10px; font-size:10.5px; color:var(--text-sub); }
+.overline b { color:var(--text); }
+
+.panel-tabs { display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
+.panel-tabs .tbtn { border:1px solid var(--rule); background:#fff; color:var(--text-sub); border-radius:999px; font-size:10px; font-weight:700; padding:5px 10px; }
+.panel-tabs .tbtn.on { background:var(--navy); color:#fff; border-color:var(--navy); }
+.prep-box { border:1px solid var(--navy-lite); border-radius:8px; overflow:hidden; }
+.prep-head { background:linear-gradient(135deg,var(--navy),#2c5078); color:#fff; padding:12px 14px; }
+.prep-head .tag { font-size:9.5px; font-weight:700; background:rgba(255,255,255,.2); padding:2px 7px; border-radius:10px; letter-spacing:.3px; }
+.prep-head .ti { font-size:14px; font-weight:700; margin-top:5px; }
+.prep-head .de { font-size:11px; opacity:.9; margin-top:3px; line-height:1.5; }
+.prep-body { padding:12px 14px; }
+.prep-row { display:flex; justify-content:space-between; gap:10px; padding:7px 0; border-bottom:1px solid var(--rule-lite); font-size:11.5px; }
+.prep-row:last-child { border-bottom:none; }
+.prep-row b { color:var(--text); }
+.prep-row .n { font-weight:700; }
+.prep-note { font-size:10px; color:var(--text-mute); margin-top:8px; line-height:1.5; }
+.btn-sm { padding: 6px 13px; border-radius: 5px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; border: none; }
+.btn-red { background: var(--brand); color: #fff; }
+.btn-navy { background: var(--navy); color: #fff; }
+.btn-out { background: var(--bg); color: var(--text-sub); border: 1px solid var(--rule); }
+.btn-green { background: var(--green); color:#fff; }
+
+.small-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:10px; }
+.small-grid .box { background:var(--surface); border-radius:6px; padding:8px; }
+.small-grid .box .k { font-size:9px; color:var(--text-mute); }
+.small-grid .box .v { font-size:16px; font-weight:700; }
+
+.alist { margin-top:10px; border:1px solid var(--rule-soft); border-radius:8px; overflow:hidden; }
+.alist-h { display:grid; grid-template-columns:62px 1fr 58px 58px 72px 56px; gap:0; background:var(--surface); padding:8px 10px; font-size:9.5px; color:var(--text-mute); font-weight:700; }
+.alist-r { display:grid; grid-template-columns:62px 1fr 58px 58px 72px 56px; gap:0; padding:8px 10px; border-top:1px solid var(--rule-lite); font-size:11px; align-items:center; }
+.alist-r .tag { font-size:9px; font-weight:700; padding:2px 6px; border-radius:8px; display:inline-block; }
+.tag-ok { background:var(--green-lite); color:var(--green); }
+.tag-warn { background:var(--amber-lite); color:var(--amber); }
+.tag-bad { background:var(--brand-lite); color:var(--brand); }
+.alist-r .stat { font-size:10px; font-weight:700; }
+
+.dish-seq { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.dish-seq span { background:var(--navy-lite); color:var(--navy); font-size:9px; font-weight:700; padding:3px 6px; border-radius:8px; }
+
+.board { margin-top:18px; }
+.board-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.board-head .ttl { font-size:13px; font-weight:700; }
+.board-head .sub { font-size:10px; color:var(--text-mute); }
+.desh { border:1px solid var(--rule-soft); border-radius:8px; overflow:hidden; }
+.desh-row { display:grid; grid-template-columns:80px 1fr 130px 118px; gap:0; align-items:stretch; border-top:1px solid var(--rule-lite); }
+.desh-row:first-child { border-top:none; }
+.desh-row .h { background:var(--surface); padding:10px; font-weight:700; font-size:11px; border-right:1px solid var(--rule-lite); }
+.desh-row .c { padding:10px; border-right:1px solid var(--rule-lite); font-size:11px; }
+.desh-row .c:last-child { border-right:none; }
+.desh-list { display:flex; flex-wrap:wrap; gap:5px; }
+.table-pill { background:#fff; border:1px solid var(--rule); border-radius:10px; padding:3px 6px; font-size:9.5px; font-weight:700; }
+.table-pill.on { background:var(--navy); color:#fff; border-color:var(--navy); }
+.countdown { display:flex; align-items:center; gap:8px; }
+.countdown .bar { height:8px; flex:1; background:var(--rule-lite); border-radius:99px; overflow:hidden; }
+.countdown .bar span { display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--amber),var(--brand)); width:58%; }
+.countdown .tm { font-size:11px; font-weight:700; white-space:nowrap; }
+.flow { display:flex; gap:8px; flex-wrap:wrap; }
+.flow span { font-size:9px; font-weight:700; padding:3px 6px; border-radius:8px; background:var(--green-lite); color:var(--green); }
+
+.right-card { margin-bottom:18px; }
+.ai-card { border:1px solid var(--purple-lite); border-radius:8px; overflow:hidden; }
+.ai-head { background:linear-gradient(135deg,#6d28d9,#7C3AED); color:#fff; padding:12px 14px; }
+.ai-head .tag { font-size:9.5px; font-weight:700; background:rgba(255,255,255,.2); padding:2px 7px; border-radius:10px; letter-spacing:.3px; }
+.ai-head .ti { font-size:14px; font-weight:700; margin-top:5px; }
+.ai-head .de { font-size:11px; opacity:.9; margin-top:3px; line-height:1.5; }
+.ai-body { padding:12px 14px; }
+.ai-item { border:1px solid var(--purple-lite); border-radius:7px; padding:9px 10px; margin-bottom:8px; background:#fff; }
+.ai-item:last-child { margin-bottom:0; }
+.ai-t { font-size:11.5px; font-weight:700; display:flex; align-items:center; gap:5px; }
+.ai-d { font-size:10px; color:var(--text-sub); margin:3px 0 6px; line-height:1.5; }
+.ai-f { display:flex; justify-content:space-between; gap:8px; align-items:center; }
+.ai-conf { font-size:9px; color:var(--text-mute); }
+.ai-conf b { color:var(--green); }
+
+/* テックタッチ風ナッジ */
+.nudge { position:relative; border:1px solid var(--rule-soft); border-radius:8px; background:#fff; padding:11px 12px 11px 15px; margin-bottom:10px; overflow:hidden; }
+.nudge:last-child { margin-bottom:0; }
+.nudge::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; }
+.nudge.n-red::before { background:var(--brand); }
+.nudge.n-amber::before { background:var(--amber); }
+.nudge.n-blue::before { background:var(--navy); }
+.nudge.n-green::before { background:var(--green); }
+.nudge-top { display:flex; align-items:center; gap:7px; margin-bottom:6px; }
+.nudge-ai { font-size:9px; font-weight:700; color:var(--text-mute); background:var(--surface); border:1px solid var(--rule-lite); padding:1px 7px; border-radius:10px; letter-spacing:.2px; }
+.nudge-pri { font-size:9.5px; font-weight:700; padding:1px 8px; border-radius:10px; letter-spacing:.2px; }
+.nudge-pri.p-red { background:var(--brand-lite); color:var(--brand); }
+.nudge-pri.p-amber { background:var(--amber-lite); color:var(--amber); }
+.nudge-pri.p-blue { background:var(--navy-lite); color:var(--navy); }
+.nudge-pri.p-green { background:var(--green-lite); color:var(--green); }
+.nudge-msg { font-size:12.5px; font-weight:700; line-height:1.4; color:var(--text); }
+.nudge-why { font-size:10.5px; color:var(--text-sub); margin-top:4px; line-height:1.5; }
+.nudge-act { font-size:10.5px; color:var(--text); margin-top:4px; line-height:1.5; }
+.nudge-data { font-size:9.5px; color:var(--text-mute); margin-top:6px; }
+.nudge-btns { display:flex; gap:7px; margin-top:9px; }
+
+.foot-note{ font-size:10px; color:var(--text-mute); margin-top:8px; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a href="screen1_dashboard.html" class="header-logo"><div class="dot"></div><span>旅館運営システム</span></a>
+  <div class="header-facility">○○温泉旅館リゾート箱根 — 全施設横断ビュー <span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
+  <div class="header-search"><input type="text" placeholder="食事・席割・アレルギー・会場を検索"></div>
+  <div class="header-right">
+    <div class="header-bell">&#128276;<span class="badge-notif">5</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item active" href="screen_meals.html">食事管理</a>
+  <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item" href="screen8_reports.html">レポート</a>
+  <div class="sidebar-sub">食事オペ</div>
+  <a class="sidebar-item active" href="screen_meals.html">食事管理</a>
+  <a class="sidebar-item" href="screen_meals.html">夕食デシャップ</a>
+  <a class="sidebar-item" href="screen_meals.html">朝食オペ</a>
+  <a class="sidebar-item" href="screen_meals.html">アレルギー確認</a>
+  <a class="sidebar-item" href="screen_meals.html">子供食区分</a>
+  <a class="sidebar-item" href="screen_meals.html">厨房 仕込み表</a>
+</nav>
+
+<div class="main">
+  <div class="page-head">
+    <div class="page-title">食事管理 <span class="meal-badge">&#127860; 旅館の料飲(食事・飲料) / 夕食・朝食 / 食事の提供能力が販売室数を決める</span></div>
+    <div class="seg">
+      <button class="on">夕食</button><button>朝食</button><button>デシャップ</button><button>アレルギー</button><button>子供食</button><button>配膳</button>
+    </div>
+  </div>
+  <div class="page-sub">営業日 2026/05/30。食事の提供能力が客室販売数を決める前提で、会場席数・時間枠・厨房ピークを客室在庫へ戻して販売を止める。未確認アレルギーと定員超過は予約チップと仕込み表に即時反映。</div>
+
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="label">本日夕食</div><div class="value" style="color:var(--brand);">96<span class="unit">名</span></div><div class="sub delta-up">朝食見込み 88名</div></div>
+    <div class="kpi-card"><div class="label">時間枠別</div>
+      <div class="bar-mini">
+        <div class="b warm" style="height:28px;"><span>18:00</span><i></i></div>
+        <div class="b" style="height:42px;"><span>18:30</span><i></i></div>
+        <div class="b warm" style="height:28px;"><span>19:00</span><i></i></div>
+      </div>
+      <div class="sub">18:00=24 / 18:30=48 / 19:00=24</div>
+    </div>
+    <div class="kpi-card"><div class="label">会場稼働</div><div class="value" style="color:var(--navy);">82<span class="unit">%</span></div><div class="sub">食事処 82% / 個室 満</div></div>
+    <div class="kpi-card"><div class="label">アレルギー未確認</div><div class="value" style="color:var(--brand);">3<span class="unit">件</span></div><div class="sub">到着前確認推奨</div></div>
+    <div class="kpi-card"><div class="label">子供食</div><div class="value" style="color:var(--purple);">12<span class="unit">名</span></div><div class="sub">A5 / B4 / C3</div></div>
+    <div class="kpi-card"><div class="label">食事提供能力</div><div class="value" style="color:var(--green);">120<span class="unit">名</span></div><div class="sub">残24名 = 客室販売数を決める</div></div>
+  </div>
+
+  <div class="meal-hero">
+    <div class="hero-left">
+      <div class="hero-k">夕食上限 / 販売制御</div>
+      <div class="hero-v">残24 <small>名分</small></div>
+      <div class="hero-list">
+        <div class="hero-line"><span>会場席数×回転×厨房ピーク</span><b>120名上限</b></div>
+        <div class="hero-line"><span>客室在庫に戻す売止連動</span><b>18:30 枠優先</b></div>
+        <div class="hero-line"><span>未確認アレルギー</span><b>3件</b></div>
+      </div>
+      <div class="small-grid">
+        <div class="box"><div class="k">会席</div><div class="v">松 12 / 竹 40 / 梅 32</div></div>
+        <div class="box"><div class="k">個室</div><div class="v" style="color:var(--brand);">満</div></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-k">会場稼働と席圧</div>
+      <div class="hero-grid">
+        <div class="hg"><div class="k">食事処</div><div class="v">82%</div></div>
+        <div class="hg"><div class="k">個室</div><div class="v" style="color:var(--brand);">100%</div></div>
+        <div class="hg"><div class="k">部屋食</div><div class="v">14%</div></div>
+      </div>
+      <div class="bar-mini">
+        <div class="b" style="height:30px;"><span>配膳</span><i></i></div>
+        <div class="b hot" style="height:42px;"><span>上限</span><i></i></div>
+        <div class="b warm" style="height:24px;"><span>残席</span><i></i></div>
+      </div>
+      <div class="foot-note">会場稼働と客室稼働を同一画面に並べ、食事が販売のボトルネックであることを明示。</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="left">
+      <div class="card">
+        <div class="card-h">
+          <div class="t">時間枠 × 会場 グリッド</div>
+          <span class="src">縦=食事処/個室/大広間/部屋食/レストラン · 横=18:00/18:30/19:00/19:30</span>
+        </div>
+        <div class="card-b nopad">
+          <div class="grid-wrap">
+            <div class="grid-head">
+              <div>会場</div><div>18:00</div><div>18:30</div><div>19:00</div><div>19:30</div>
+            </div>
+            <div class="grid-row">
+              <div class="grid-label"><div class="name">食事処</div><div class="meta">28/32席 · 82%</div></div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">24</div><div class="track"><span style="width:75%;"></span></div><div class="val">24/32</div></div>
+                <div class="chip-row">
+                  <span class="chip chip-room">302 S.M 様 3名</span><span class="chip chip-course">梅</span><span class="chip chip-alert">卵</span>
+                  <span class="chip chip-anniv">記念日</span><span class="chip chip-flag">日本</span>
+                </div>
+                <div class="chip-row">
+                  <span class="chip chip-room">305 K. 様 2名</span><span class="chip chip-course">竹</span><span class="chip chip-flag">大2子1</span>
+                </div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">48</div><div class="track"><span style="width:100%;"></span></div><div class="val">32/32</div></div>
+                <div class="chip-row">
+                  <span class="chip chip-room">201 T.I 様 4名</span><span class="chip chip-course">松</span><span class="chip chip-alert">えび</span>
+                  <span class="chip chip-flag bad">超過 +8</span>
+                </div>
+                <div class="chip-row">
+                  <span class="chip chip-room">409 G. 様 2名</span><span class="chip chip-course">梅</span><span class="chip chip-flag">🇪🇸</span>
+                </div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">24</div><div class="track"><span style="width:58%;"></span></div><div class="val">19/32</div></div>
+                <div class="chip-row">
+                  <span class="chip chip-room">118 S. 様 3名</span><span class="chip chip-course">竹</span><span class="chip chip-alert">未確認</span>
+                </div>
+                <div class="chip-row">
+                  <span class="chip chip-room">512 L. 様 2名</span><span class="chip chip-flag">韓国</span>
+                </div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">0</div><div class="track"><span style="width:8%;"></span></div><div class="val">2/32</div></div>
+                <div class="chip-row"><span class="chip chip-room">部屋待機</span><span class="chip chip-course">朝食へ振替余地</span></div>
+              </div>
+            </div>
+            <div class="grid-row">
+              <div class="grid-label"><div class="name">個室</div><div class="meta">満席 · 予約制</div></div>
+              <div class="cell full">
+                <div class="seatbar"><div class="cap">8</div><div class="track"><span style="width:100%;"></span></div><div class="val">8/8</div></div>
+                <div class="chip-row">
+                  <span class="chip chip-room">210 T.K 様 2名</span><span class="chip chip-course">松</span><span class="chip chip-alert">乳</span>
+                  <span class="chip chip-anniv">結婚記念</span>
+                </div>
+                <div class="chip-row"><span class="chip chip-room">214 W.J 様 4名</span><span class="chip chip-course">竹</span><span class="chip chip-flag">子供食2</span></div>
+              </div>
+              <div class="cell full">
+                <div class="seatbar"><div class="cap">8</div><div class="track"><span style="width:100%;"></span></div><div class="val">8/8</div></div>
+                <div class="chip-row">
+                  <span class="chip chip-room">112 S. 様 3名</span><span class="chip chip-course">松</span><span class="chip chip-alert">そば</span>
+                  <span class="chip chip-flag bad">満</span>
+                </div>
+              </div>
+              <div class="cell full">
+                <div class="seatbar"><div class="cap">4</div><div class="track"><span style="width:100%;"></span></div><div class="val">4/4</div></div>
+                <div class="chip-row"><span class="chip chip-room">517 I. 様 2名</span><span class="chip chip-course">梅</span><span class="chip chip-flag">記念日</span></div>
+              </div>
+              <div class="cell full over">
+                <div class="seatbar"><div class="cap">0</div><div class="track"><span style="width:100%;"></span></div><div class="val">0/0</div></div>
+                <div class="chip-row"><span class="chip chip-flag bad">物理ブロック</span><span class="chip chip-alert">超過不可</span></div>
+              </div>
+            </div>
+            <div class="grid-row">
+              <div class="grid-label"><div class="name">大広間</div><div class="meta">法事/団体対応</div></div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">10</div><div class="track"><span style="width:31%;"></span></div><div class="val">10/32</div></div>
+                <div class="chip-row">
+                  <span class="chip chip-room">601 団体A</span><span class="chip chip-course">竹</span><span class="chip chip-flag">8名</span>
+                </div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">16</div><div class="track"><span style="width:50%;"></span></div><div class="val">16/32</div></div>
+                <div class="chip-row">
+                  <span class="chip chip-room">団体B 12名</span><span class="chip chip-course">梅</span><span class="chip chip-alert">小麦</span>
+                </div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">0</div><div class="track"><span style="width:10%;"></span></div><div class="val">3/32</div></div>
+                <div class="chip-row"><span class="chip chip-room">仮押さえ</span><span class="chip chip-flag">可変</span></div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">0</div><div class="track"><span style="width:0%;"></span></div><div class="val">0/32</div></div>
+                <div class="chip-row"><span class="chip chip-room">空き</span></div>
+              </div>
+            </div>
+            <div class="grid-row">
+              <div class="grid-label"><div class="name">部屋食</div><div class="meta">仲居配膳 / 布団連動</div></div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">6</div><div class="track"><span style="width:19%;"></span></div><div class="val">6/32</div></div>
+                <div class="chip-row"><span class="chip chip-room">821 Y. 様 2名</span><span class="chip chip-course">梅</span></div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">8</div><div class="track"><span style="width:25%;"></span></div><div class="val">8/32</div></div>
+                <div class="chip-row">
+                  <span class="chip chip-room">825 P. 様 3名</span><span class="chip chip-course">竹</span><span class="chip chip-alert">落花生</span>
+                </div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">4</div><div class="track"><span style="width:13%;"></span></div><div class="val">4/32</div></div>
+                <div class="chip-row"><span class="chip chip-room">832 F. 様 2名</span><span class="chip chip-course">朝食へ変更候補</span></div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">2</div><div class="track"><span style="width:6%;"></span></div><div class="val">2/32</div></div>
+                <div class="chip-row"><span class="chip chip-room">準備室</span></div>
+              </div>
+            </div>
+            <div class="grid-row">
+              <div class="grid-label"><div class="name">レストラン</div><div class="meta">朝食回転 / 一部夕食</div></div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">0</div><div class="track"><span style="width:0%;"></span></div><div class="val">0/32</div></div>
+                <div class="chip-row"><span class="chip chip-room">夕食なし</span></div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">12</div><div class="track"><span style="width:38%;"></span></div><div class="val">12/32</div></div>
+                <div class="chip-row"><span class="chip chip-room">朝食転換</span><span class="chip chip-course">予約調整</span></div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">8</div><div class="track"><span style="width:25%;"></span></div><div class="val">8/32</div></div>
+                <div class="chip-row"><span class="chip chip-room">待機卓</span><span class="chip chip-flag">8名振替提案</span></div>
+              </div>
+              <div class="cell">
+                <div class="seatbar"><div class="cap">0</div><div class="track"><span style="width:0%;"></span></div><div class="val">0/32</div></div>
+                <div class="chip-row"><span class="chip chip-room">空き</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="board">
+        <div class="board-head">
+          <div>
+            <div class="ttl">デシャップ / 卓リスト</div>
+            <div class="sub">時間枠ごとの一斉スタートとコース進行カウントダウン</div>
+          </div>
+          <div class="flow"><span>先付</span><span>椀物</span><span>向付</span><span>焼物</span><span>炊合せ</span><span>揚物</span><span>止肴</span><span>食事</span><span>水菓子</span></div>
+        </div>
+        <div class="desh">
+          <div class="desh-row">
+            <div class="h">18:00</div>
+            <div class="c">
+              <div class="desh-list">
+                <span class="table-pill on">302</span><span class="table-pill">305</span><span class="table-pill">821</span><span class="table-pill">601</span>
+              </div>
+            </div>
+            <div class="c"><div class="countdown"><div class="bar"><span style="width:72%;"></span></div><div class="tm">一斉スタート 12:00</div></div></div>
+            <div class="c"><div class="table-pill on">進行 先付→椀物</div></div>
+          </div>
+          <div class="desh-row">
+            <div class="h">18:30</div>
+            <div class="c">
+              <div class="desh-list">
+                <span class="table-pill on">201</span><span class="table-pill">214</span><span class="table-pill">112</span><span class="table-pill">825</span><span class="table-pill">517</span>
+              </div>
+            </div>
+            <div class="c"><div class="countdown"><div class="bar"><span style="width:46%;"></span></div><div class="tm">一斉スタート 08:20</div></div></div>
+            <div class="c"><div class="table-pill on">焼物 進行中</div></div>
+          </div>
+          <div class="desh-row">
+            <div class="h">19:00</div>
+            <div class="c">
+              <div class="desh-list">
+                <span class="table-pill on">118</span><span class="table-pill">409</span><span class="table-pill">512</span><span class="table-pill">832</span>
+              </div>
+            </div>
+            <div class="c"><div class="countdown"><div class="bar"><span style="width:28%;"></span></div><div class="tm">一斉スタート 05:40</div></div></div>
+            <div class="c"><div class="table-pill on">向付 追従</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="board">
+        <div class="board-head">
+          <div>
+            <div class="ttl">配膳 / 仲居担当卓</div>
+            <div class="sub">ステータス更新で下膳済卓を布団班に自動通知</div>
+          </div>
+        </div>
+        <div class="alist">
+          <div class="alist-h">
+            <div>室番</div><div>担当卓 / 代表者</div><div>人数</div><div>コース</div><div>ステータス</div><div>通知</div>
+          </div>
+          <div class="alist-r">
+            <div>302</div><div>S.M 様 / 3名</div><div>大2子1</div><div><span class="tag tag-ok">梅</span></div><div><span class="stat" style="color:var(--amber);">未着席</span></div><div>待機</div>
+          </div>
+          <div class="alist-r">
+            <div>201</div><div>T.I 様 / 4名</div><div>大2子2</div><div><span class="tag tag-ok">松</span></div><div><span class="stat" style="color:var(--green);">配膳済</span></div><div>OK</div>
+          </div>
+          <div class="alist-r">
+            <div>825</div><div>P. 様 / 3名</div><div>大2子1</div><div><span class="tag tag-warn">竹</span></div><div><span class="stat" style="color:var(--navy);">食事中</span></div><div>追跡</div>
+          </div>
+          <div class="alist-r">
+            <div>832</div><div>F. 様 / 2名</div><div>大2</div><div><span class="tag tag-ok">梅</span></div><div><span class="stat" style="color:var(--green);">下膳済</span></div><div><span class="tag tag-bad">布団班へ自動通知</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="card right-card">
+        <div class="card-h">
+          <div class="t">料理帳票 / 仕込み表</div>
+          <span class="src">会席 松12 / 竹40 / 梅32 · 子供食区分 · アレルギー個別行</span>
+        </div>
+        <div class="card-b nopad">
+          <div class="prep-box">
+            <div class="prep-head">
+              <div class="tag">厨房送信前プレビュー</div>
+              <div class="ti">本日夕食 仕込み表</div>
+              <div class="de">品目順: 先付→椀物→向付→焼物→炊合せ→揚物→止肴→食事→水菓子。アレルギーは個別行で展開し、未確認3件を先に潰す。</div>
+            </div>
+            <div class="prep-body">
+              <div class="prep-row"><span>会席 松</span><span class="n">12</span></div>
+              <div class="prep-row"><span>会席 竹</span><span class="n">40</span></div>
+              <div class="prep-row"><span>会席 梅</span><span class="n">32</span></div>
+              <div class="prep-row"><span>子供食 小学生 高学年</span><span class="n">5</span></div>
+              <div class="prep-row"><span>子供食 小学生 低学年</span><span class="n">4</span></div>
+              <div class="prep-row"><span>幼児 食事布団付</span><span class="n">3</span></div>
+              <div class="prep-row"><span>幼児 食事のみ</span><span class="n">0</span></div>
+              <div class="prep-row"><span>幼児 布団のみ</span><span class="n">0</span></div>
+              <div class="prep-row"><span>幼児 不要</span><span class="n">0</span></div>
+              <div class="dish-seq">
+                <span>先付 96</span><span>椀物 96</span><span>向付 96</span><span>焼物 96</span><span>炊合せ 96</span><span>揚物 96</span><span>止肴 96</span><span>食事 96</span><span>水菓子 96</span>
+              </div>
+              <div class="foot-note">アレルギー個別行は、特定原材料8品目を必ずチェックしてから厨房送信。7日前ルールを満たさない申告は赤旗。</div>
+              <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="btn-sm btn-navy">厨房へ送信</button>
+                <button class="btn-sm btn-out">印刷</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card right-card">
+        <div class="card-h">
+          <div class="t">アレルギー / 子供食</div>
+          <span class="src">特定原材料8品目 + 7日前ルール</span>
+        </div>
+        <div class="card-b">
+          <div class="panel-tabs">
+            <button class="tbtn on">特定原材料8品目</button>
+            <button class="tbtn">子供食区分</button>
+          </div>
+          <div class="alist" style="margin-top:0;">
+            <div class="alist-h" style="grid-template-columns:1fr 50px 50px 50px 50px 50px 50px 50px 50px;">
+              <div>予約</div><div>えび</div><div>かに</div><div>くるみ</div><div>小麦</div><div>そば</div><div>卵</div><div>乳</div><div>落花生</div>
+            </div>
+            <div class="alist-r" style="grid-template-columns:1fr 50px 50px 50px 50px 50px 50px 50px 50px;">
+              <div>302 S.M 様 3名 <span class="tag tag-warn">未確認</span></div><div>—</div><div>—</div><div>—</div><div>◯</div><div>—</div><div>◯</div><div>—</div><div>—</div>
+            </div>
+            <div class="alist-r" style="grid-template-columns:1fr 50px 50px 50px 50px 50px 50px 50px 50px;">
+              <div>201 T.I 様 4名 <span class="tag tag-bad">赤旗</span></div><div>◯</div><div>—</div><div>—</div><div>—</div><div>—</div><div>◯</div><div>◯</div><div>—</div>
+            </div>
+            <div class="alist-r" style="grid-template-columns:1fr 50px 50px 50px 50px 50px 50px 50px 50px;">
+              <div>825 P. 様 3名 <span class="tag tag-bad">未確認</span></div><div>—</div><div>—</div><div>◯</div><div>◯</div><div>—</div><div>—</div><div>—</div><div>◯</div>
+            </div>
+          </div>
+          <div class="prep-note">7日前ルール: 到着前7日以内の申告は優先確認。未確認は自動で赤点滅し、食事チップにも反映。</div>
+          <div class="small-grid">
+            <div class="box"><div class="k">小学生 高学年</div><div class="v">5</div></div>
+            <div class="box"><div class="k">小学生 低学年</div><div class="v">4</div></div>
+            <div class="box"><div class="k">幼児 食事布団付</div><div class="v">3</div></div>
+            <div class="box"><div class="k">幼児 3区分</div><div class="v">0 / 0 / 0</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card right-card">
+        <div class="card-h">
+          <div class="t">今の確認事項</div>
+          <span class="src">重要な3件 · 最終確認は支配人</span>
+        </div>
+        <div class="card-b">
+          <div class="nudge n-red">
+            <div class="nudge-top"><span class="nudge-ai">AI確認</span><span class="nudge-pri p-red">至急</span></div>
+            <div class="nudge-msg">アレルギー未確認が3件あります</div>
+            <div class="nudge-why">確定しないまま厨房に出すと、誤配膳でお客様の体調に関わります。</div>
+            <div class="nudge-act">302・825・118 の3室について、到着前に8品目を確認のうえ厨房へ共有するとよさそうです。</div>
+            <div class="nudge-data">未確認 3件 / 本日夕食 96名</div>
+            <div class="nudge-btns">
+              <button class="btn-sm btn-red">厨房へ共有</button>
+              <button class="btn-sm btn-out">3室を確認</button>
+            </div>
+          </div>
+          <div class="nudge n-amber">
+            <div class="nudge-top"><span class="nudge-ai">AI確認</span><span class="nudge-pri p-amber">今日中</span></div>
+            <div class="nudge-msg">19:00の枠が定員を8名超えています</div>
+            <div class="nudge-why">このままだと配膳が滞り、19:00開始のお客様をお待たせします。</div>
+            <div class="nudge-act">18:30に余裕があるため、4名×2組を18:30へご案内すると超過を解消できそうです。</div>
+            <div class="nudge-data">19:00枠 32名 / 席数 24名（+8名）</div>
+            <div class="nudge-btns">
+              <button class="btn-sm btn-navy">18:30へ振替案</button>
+              <button class="btn-sm btn-out">枠を見る</button>
+            </div>
+          </div>
+          <div class="nudge n-blue">
+            <div class="nudge-top"><span class="nudge-ai">AI確認</span><span class="nudge-pri p-blue">確認推奨</span></div>
+            <div class="nudge-msg">夕食の残りは24名分です</div>
+            <div class="nudge-why">食事の提供能力が満席に近づくと、客室を売り続けると当日に対応しきれません。</div>
+            <div class="nudge-act">残24名を上限に、超えそうな新規予約は客室の売止候補として表示します。反映可否は支配人がご判断ください。</div>
+            <div class="nudge-data">食事提供能力 120名 / 確定 96名（残24名）</div>
+            <div class="nudge-btns">
+              <button class="btn-sm btn-out">売止候補を見る</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+Chart.defaults.font.family = "'Inter','Hiragino Sans','Yu Gothic UI',sans-serif";
+Chart.defaults.font.size = 10;
+Chart.defaults.color = '#8C8C8C';
+</script>
+</body>
+</html>

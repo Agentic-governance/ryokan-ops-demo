@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>設備保全 — 止まると困る設備から先に守る</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #FFFFFF; --text: #1A1A1A; --text-sub: #4A4A4A; --text-mute: #8C8C8C;
+  --rule: #D0D0D0; --rule-soft: #E5E5E5; --rule-lite: #F0F0F0; --surface: #F7F7F7;
+  --brand: #C8102E; --brand-lite: #FCE5E8; --brand-soft: #FFF0F2; --brand-dark: #8B0F1F;
+  --navy: #1E3A5F; --navy-lite: #DCE5F0;
+  --amber: #D97706; --amber-lite: #FEF3C7;
+  --green: #15803D; --green-lite: #DCFCE7;
+  --purple: #7C3AED; --purple-lite: #EDE9FE;
+  --teal: #0E7490; --teal-lite: #CFFAFE;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif;
+  color: var(--text); background: var(--bg); width: 1440px; min-height: 900px;
+  font-size: 13px; line-height: 1.5;
+}
+a { text-decoration: none; color: inherit; }
+
+/* ── Header ── */
+.header { position: fixed; top: 0; left: 0; width: 1440px; height: 56px; background: var(--bg); border-bottom: 1px solid var(--rule-soft); z-index: 100; display: flex; align-items: center; padding: 0 20px; gap: 16px; }
+.header-logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.header-logo .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--brand); }
+.header-logo span { font-size: 16px; font-weight: 700; color: var(--text); }
+.header-facility { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--rule); border-radius: 4px; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.header-facility:hover { border-color: var(--text-mute); }
+.header-search { flex: 1; max-width: 360px; margin: 0 auto; position: relative; }
+.header-search input { width: 100%; height: 34px; border: 1px solid var(--rule); border-radius: 4px; padding: 0 12px 0 34px; font-size: 13px; background: var(--surface); outline: none; font-family: inherit; }
+.header-search input:focus { border-color: var(--brand); background: var(--bg); }
+.header-search::before { content: '\1F50D'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
+.header-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; margin-left: auto; }
+.header-bell { position: relative; font-size: 18px; cursor: pointer; }
+.header-bell .badge-notif { position: absolute; top: -6px; right: -8px; background: var(--brand); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 5px; border-radius: 8px; line-height: 1.3; }
+.header-user { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.header-user-info { text-align: right; }
+.header-user-info .name { font-size: 13px; font-weight: 600; }
+.header-user-info .role { font-size: 11px; color: var(--text-mute); }
+.header-user .arrow { font-size: 10px; color: var(--text-mute); }
+
+/* ── Sidebar ── */
+.sidebar { position: fixed; top: 56px; left: 0; width: 200px; height: calc(100vh - 56px); background: var(--bg); border-right: 1px solid var(--rule-soft); padding: 12px 0; z-index: 90; overflow-y: auto; }
+.sidebar-item { display: block; padding: 10px 16px; font-size: 13px; color: var(--text-sub); border-left: 3px solid transparent; transition: all .15s; }
+.sidebar-item:hover { background: var(--surface); color: var(--text); }
+.sidebar-item.active { border-left-color: var(--brand); background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+.sidebar-sub { font-size: 10px; color: var(--text-mute); padding: 12px 16px 4px; text-transform: uppercase; letter-spacing: .5px; }
+
+/* ── Main ── */
+.main { margin-top: 56px; margin-left: 200px; padding: 20px 24px; width: 1240px; }
+.page-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+.page-title { font-size: 19px; font-weight: 700; }
+.page-title .rcm-badge { font-size: 11px; font-weight: 700; color: var(--navy); background: var(--navy-lite); padding: 2px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+.page-sub { font-size: 12px; color: var(--text-mute); margin-bottom: 16px; }
+.seg { display:inline-flex; border:1px solid var(--rule); border-radius:5px; overflow:hidden; }
+.seg button { border:none; background:var(--bg); padding:6px 12px; font-size:12px; font-family:inherit; cursor:pointer; color:var(--text-sub); border-right:1px solid var(--rule); }
+.seg button:last-child{border-right:none;}
+.seg button.on { background:var(--navy); color:#fff; font-weight:600; }
+
+/* ── KPI Strip ── */
+.kpi-strip { display: flex; gap: 12px; margin-bottom: 18px; }
+.kpi-card { flex: 1; padding: 13px 14px; border-radius: 6px; background: var(--bg); border: 1px solid var(--rule-soft); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.kpi-card .label { font-size: 10px; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; line-height:1.3; min-height:26px; }
+.kpi-card .value { font-size: 21px; font-weight: 700; }
+.kpi-card .unit { font-size: 12px; font-weight: 400; }
+.kpi-card .sub { font-size: 10px; color: var(--text-mute); margin-top: 2px; }
+.delta-up{color:var(--green);} .delta-dn{color:var(--brand);}
+
+/* ── Hero row ── */
+.hero-row { display:flex; gap:16px; margin-bottom:18px; }
+.gnr-card { flex: 0 0 38%; background: linear-gradient(135deg,#fff,var(--brand-soft)); border:1px solid var(--brand-lite); border-left:4px solid var(--brand); border-radius:8px; padding:16px 18px; }
+.gnr-card .gnr-h { font-size:11px; color:var(--brand-dark); font-weight:700; text-transform:uppercase; letter-spacing:.4px; display:flex; align-items:center; gap:6px; }
+.gnr-card .gnr-v { font-size:34px; font-weight:800; color:var(--brand); line-height:1.1; margin:4px 0; }
+.gnr-card .gnr-v small{font-size:14px;font-weight:600;}
+.gnr-list { margin-top:8px; }
+.gnr-list .gnr-i { display:flex; justify-content:space-between; font-size:11.5px; padding:4px 0; border-top:1px dashed var(--brand-lite); }
+.gnr-list .gnr-i b{color:var(--brand-dark);}
+
+.legio-card { flex:1; background:var(--bg); border:1px solid var(--rule-soft); border-radius:8px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.legio-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.legio-head .t { font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px;}
+.legio-head .pill-ok{ background:var(--green-lite); color:var(--green); font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; }
+.legio-head .pill-warn{ background:var(--amber-lite); color:var(--amber); font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; }
+/* temperature danger band gauge */
+.tband { position:relative; height:30px; border-radius:5px; margin:14px 0 6px; background:linear-gradient(90deg,
+  #2f6fb3 0%, #2f6fb3 20%,
+  #f59e0b 20%, #dc2626 35%, #dc2626 65%, #f59e0b 80%,
+  #2f6fb3 80%, #2f6fb3 100%); }
+.tband .lbl{ position:absolute; top:-14px; font-size:9px; color:var(--text-mute); transform:translateX(-50%); }
+.tband .mark{ position:absolute; top:-6px; width:0;height:42px; border-left:2px solid #111; }
+.tband .mark::after{ content:attr(data-v); position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:10px; font-weight:700; background:#111; color:#fff; padding:1px 5px; border-radius:3px; white-space:nowrap;}
+.legio-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:16px;}
+.legio-grid .c{ background:var(--surface); border-radius:5px; padding:8px; text-align:center;}
+.legio-grid .c .k{ font-size:9px; color:var(--text-mute);}
+.legio-grid .c .v{ font-size:15px; font-weight:700;}
+.legio-foot{ font-size:10.5px; color:var(--text-sub); margin-top:10px; padding-top:8px; border-top:1px solid var(--rule-lite); }
+
+/* ── Columns ── */
+.cols { display:flex; gap:18px; }
+.col-l { flex:0 0 60%; min-width:0; }
+.col-r { flex:1; min-width:0; }
+.card { border:1px solid var(--rule-soft); border-radius:8px; background:var(--bg); box-shadow:0 1px 3px rgba(0,0,0,.04); margin-bottom:18px; overflow:hidden; }
+.card-h { padding:11px 16px; border-bottom:1px solid var(--rule-soft); display:flex; align-items:center; justify-content:space-between; }
+.card-h .t { font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px; }
+.card-h .hint { font-size:10px; color:var(--text-mute); font-weight:400; }
+.card-b { padding:14px 16px; }
+.card-b.nopad{ padding:0; }
+
+/* RPN table */
+table.rpn { width:100%; border-collapse:collapse; font-size:11.5px; }
+table.rpn th { text-align:left; font-size:10px; color:var(--text-mute); text-transform:uppercase; letter-spacing:.3px; padding:8px 8px; border-bottom:1px solid var(--rule-soft); font-weight:600; }
+table.rpn td { padding:9px 8px; border-bottom:1px solid var(--rule-lite); vertical-align:middle; }
+table.rpn tr:last-child td{ border-bottom:none; }
+table.rpn tr:hover td{ background:var(--surface); }
+.asset-name{ font-weight:600; }
+.asset-mode{ font-size:10px; color:var(--text-mute); }
+.sod{ display:inline-flex; gap:3px; }
+.sod span{ width:18px; height:18px; border-radius:3px; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; color:#fff; }
+.rpn-v{ font-weight:800; font-size:14px; }
+.rpn-pill{ display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:700; }
+.cons{ font-size:9.5px; font-weight:700; padding:2px 6px; border-radius:3px; white-space:nowrap;}
+.cons-safety{ background:var(--brand-lite); color:var(--brand);}
+.cons-hidden{ background:#1f2937; color:#fff;}
+.cons-op{ background:var(--amber-lite); color:var(--amber);}
+.cons-non{ background:var(--rule-lite); color:var(--text-mute);}
+
+/* failure pattern badges */
+.fp-badge{ display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; }
+.fp-A,.fp-B{ background:#fee2e2; color:#b91c1c;} /* wear-out */
+.fp-C{ background:#fef3c7; color:#b45309;}
+.fp-D,.fp-E,.fp-F{ background:#e0e7ff; color:#4338ca;} /* random/infant */
+
+/* pattern distribution bar */
+.fp-dist{ display:flex; height:26px; border-radius:5px; overflow:hidden; font-size:9px; font-weight:700; color:#fff; }
+.fp-dist div{ display:flex; align-items:center; justify-content:center; }
+.fp-legend{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; font-size:10.5px; }
+.fp-legend span{ display:inline-flex; align-items:center; gap:5px; }
+.fp-legend i{ width:10px;height:10px;border-radius:2px; display:inline-block;}
+
+/* P-F countdown */
+.pf-item{ padding:12px 0; border-bottom:1px solid var(--rule-lite); }
+.pf-item:last-child{ border-bottom:none; }
+.pf-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:7px; }
+.pf-top .n{ font-weight:700; font-size:12px;}
+.pf-top .n small{ color:var(--text-mute); font-weight:400; }
+.pf-top .eta{ font-size:11px; font-weight:700; }
+.pf-track{ position:relative; height:10px; background:linear-gradient(90deg,var(--green-lite),var(--amber-lite),var(--brand-lite)); border-radius:5px; }
+.pf-track .p,.pf-track .f{ position:absolute; top:-4px; font-size:8px; }
+.pf-track .pp{ position:absolute; top:-5px; width:0;height:20px; border-left:2px dashed var(--navy); }
+.pf-track .now{ position:absolute; top:-3px; width:14px; height:14px; border-radius:50%; background:#fff; border:3px solid var(--brand); transform:translateX(-50%); box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.pf-meta{ display:flex; gap:14px; margin-top:9px; font-size:10px; color:var(--text-sub); }
+.pf-meta b{ color:var(--text); }
+
+/* sensor tiles */
+.sensor-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+.sensor{ background:var(--surface); border-radius:6px; padding:9px 10px; position:relative; }
+.sensor.alert{ background:var(--brand-soft); border:1px solid var(--brand-lite); }
+.sensor .sk{ font-size:9.5px; color:var(--text-mute); }
+.sensor .sv{ font-size:16px; font-weight:700; }
+.sensor .sv small{ font-size:10px; font-weight:500; color:var(--text-sub);}
+.sensor .chart-spark{ margin-top:3px; }
+.sensor .trend{ position:absolute; top:8px; right:9px; font-size:10px; font-weight:700;}
+
+/* AI work package */
+.wp{ border:1px solid var(--navy-lite); border-radius:8px; overflow:hidden; }
+.wp-head{ background:linear-gradient(135deg,var(--navy),#2c5078); color:#fff; padding:12px 14px; }
+.wp-head .tag{ font-size:9.5px; font-weight:700; background:rgba(255,255,255,.2); padding:2px 7px; border-radius:10px; letter-spacing:.3px;}
+.wp-head .ti{ font-size:14px; font-weight:700; margin-top:6px; }
+.wp-head .de{ font-size:11px; opacity:.9; margin-top:3px; line-height:1.5;}
+.wp-steps{ padding:6px 14px 10px; }
+.wp-step{ display:flex; gap:10px; padding:8px 0; border-bottom:1px solid var(--rule-lite); }
+.wp-step:last-child{ border-bottom:none; }
+.wp-step .num{ flex:0 0 20px; height:20px; border-radius:50%; background:var(--navy-lite); color:var(--navy); font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center;}
+.wp-step .num.done{ background:var(--green); color:#fff;}
+.wp-step .sx .st{ font-size:11.5px; font-weight:600;}
+.wp-step .sx .sd{ font-size:10px; color:var(--text-mute);}
+.wp-foot{ padding:12px 14px; background:var(--surface); border-top:1px solid var(--rule-soft); display:flex; align-items:center; justify-content:space-between; gap:8px;}
+.wp-foot .autopilot{ font-size:10px; color:var(--text-sub);}
+.wp-foot .autopilot b{ color:var(--navy);}
+
+/* tech-touch nudge card */
+.nudge{ position:relative; background:var(--bg); border:1px solid var(--rule-soft); border-radius:8px; padding:13px 15px 13px 17px; box-shadow:0 1px 3px rgba(0,0,0,.04); overflow:hidden; }
+.nudge::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:4px; }
+.nudge.bar-red::before{ background:var(--brand); }
+.nudge.bar-amber::before{ background:var(--amber); }
+.nudge.bar-blue::before{ background:var(--navy); }
+.nudge.bar-green::before{ background:var(--green); }
+.nudge-top{ display:flex; align-items:center; gap:7px; margin-bottom:8px; }
+.nudge-ai{ font-size:9px; font-weight:700; color:var(--text-mute); background:var(--surface); border:1px solid var(--rule-soft); padding:1px 6px; border-radius:10px; letter-spacing:.2px; }
+.nudge-pri{ font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; }
+.nudge-pri.p-now{ background:var(--brand-lite); color:var(--brand); }
+.nudge-pri.p-today{ background:var(--amber-lite); color:var(--amber); }
+.nudge-pri.p-check{ background:var(--navy-lite); color:var(--navy); }
+.nudge-msg{ font-size:13.5px; font-weight:700; line-height:1.4; color:var(--text); }
+.nudge-why{ font-size:11px; color:var(--text-sub); margin-top:5px; line-height:1.5; }
+.nudge-act{ font-size:11.5px; color:var(--text); margin-top:7px; line-height:1.5; }
+.nudge-act b{ color:var(--brand-dark); font-weight:700; }
+.nudge-data{ font-size:10px; color:var(--text-mute); margin-top:6px; }
+.nudge-foot{ display:flex; gap:8px; margin-top:12px; }
+
+/* hidden failure list */
+.hf-row{ display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--rule-lite); }
+.hf-row:last-child{ border-bottom:none;}
+.hf-l .n{ font-size:11.5px; font-weight:600;}
+.hf-l .d{ font-size:10px; color:var(--text-mute);}
+.hf-due{ font-size:10px; font-weight:700; padding:3px 8px; border-radius:10px; white-space:nowrap;}
+.due-over{ background:var(--brand); color:#fff;}
+.due-soon{ background:var(--amber-lite); color:var(--amber);}
+.due-ok{ background:var(--green-lite); color:var(--green);}
+
+/* strategy donut + reliability */
+.dual{ display:flex; gap:12px; align-items:center; }
+.donut-wrap{ flex:0 0 120px; position:relative; }
+.donut-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.donut-center .dc-v{ font-size:18px; font-weight:800; color:var(--teal);}
+.donut-center .dc-l{ font-size:9px; color:var(--text-mute);}
+.strat-leg{ flex:1; }
+.strat-leg .sl{ display:flex; align-items:center; justify-content:space-between; font-size:11px; padding:3px 0;}
+.strat-leg .sl i{ width:9px;height:9px;border-radius:2px; display:inline-block; margin-right:6px;}
+.rel-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:4px;}
+.rel-grid .rc{ text-align:center; background:var(--surface); border-radius:6px; padding:9px 4px;}
+.rel-grid .rc .rk{ font-size:9px; color:var(--text-mute);}
+.rel-grid .rc .rv{ font-size:16px; font-weight:700;}
+
+/* chart wrappers — fixed-height relative box so responsive charts don't stretch */
+.chart-wrap{ position:relative; width:100%; }
+.chart-wrap canvas{ max-width:100%; }
+.chart-line{ height:180px; }
+.chart-donut{ height:150px; }
+.chart-spark{ height:36px; }
+
+.btn-sm { padding: 6px 13px; border-radius: 5px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; border: none; }
+.btn-red { background: var(--brand); color: #fff; } .btn-red:hover{background:var(--brand-dark);}
+.btn-navy { background: var(--navy); color: #fff; } .btn-navy:hover{background:#152d4a;}
+.btn-out { background: var(--bg); color: var(--text-sub); border: 1px solid var(--rule); } .btn-out:hover{background:var(--surface);}
+.foot-note{ font-size:10px; color:var(--text-mute); margin-top:6px; line-height:1.6; }
+.foot-note code{ background:var(--surface); padding:1px 4px; border-radius:3px; }
+</style>
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="header">
+  <a href="screen1_dashboard.html" class="header-logo"><div class="dot"></div><span>旅館運営システム</span></a>
+  <div class="header-facility">○○リゾート箱根 — 全施設横断ビュー <span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
+  <div class="header-search"><input type="text" placeholder="設備ID・客室・不具合内容を検索"></div>
+  <div class="header-right">
+    <div class="header-bell">&#x1F514;<span class="badge-notif">9</span></div>
+    <div class="header-user">
+      <div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div>
+      <span class="arrow">&#9662;</span>
+    </div>
+  </div>
+</header>
+
+<!-- ===== Sidebar ===== -->
+<nav class="sidebar">
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
+  <a class="sidebar-item active" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item" href="screen8_reports.html">レポート</a>
+  <div class="sidebar-sub">保全ビュー</div>
+  <a class="sidebar-item active" href="screen6_maintenance.html">保全ダッシュボード</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">設備台帳</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">作業オーダー</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">法定・コンプラ点検</a>
+</nav>
+
+<!-- ===== Main ===== -->
+<div class="main">
+
+  <div class="page-head">
+    <div class="page-title">設備保全 — 止まると困る設備から先に守る <span class="rcm-badge">予兆保全</span></div>
+    <div class="seg">
+      <button class="on">保全ダッシュボード</button>
+      <button>不具合の種類</button>
+      <button>状態監視</button>
+      <button>作業オーダー</button>
+    </div>
+  </div>
+  <div class="page-sub">「壊れてから直す」から「予兆をつかんで先に手を打つ」へ。止まると営業・安全に直結する設備（温泉・給湯・空調・電気）を重点的に見守り、点検の優先順位と頻度を最適化します。</div>
+
+  <!-- KPI strip -->
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <div class="label">設備起因の売止リスク(48h)</div>
+      <div class="value" style="color:var(--brand);">34<span class="unit">室泊</span></div>
+      <div class="sub">推定収益影響 &#165;1.08M</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">重要設備の状態スコア</div>
+      <div class="value" style="color:var(--amber);">87<span class="unit">/100</span></div>
+      <div class="sub delta-dn">&#9660; 4pt (温泉ポンプ#2)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">予兆をつかめた割合</div>
+      <div class="value" style="color:var(--green);">92<span class="unit">%</span></div>
+      <div class="sub">予兆を検知→故障前に処置</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">回避した停止リスク額</div>
+      <div class="value" style="color:var(--navy);">&#165;4.7<span class="unit">M</span></div>
+      <div class="sub">今四半期 / 返金+口コミ回避</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">レジオネラ対策 適合率</div>
+      <div class="value" style="color:var(--green);">100<span class="unit">%</span></div>
+      <div class="sub">循環式浴槽6系統 適合</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">防護設備の作動試験 期限</div>
+      <div class="value" style="color:var(--brand);">2<span class="unit">件</span></div>
+      <div class="sub">消火ポンプ / 非常用発電機</div>
+    </div>
+  </div>
+
+  <!-- Hero row: 売止リスク + Legionella -->
+  <div class="hero-row">
+    <div class="gnr-card">
+      <div class="gnr-h">&#x1F6A8; 設備起因の売止リスク(48h) — 売止見込み</div>
+      <div class="gnr-v">34<small> 室泊 / 48h以内</small></div>
+      <div class="gnr-list">
+        <div class="gnr-i"><span>温泉循環ポンプ#2 (大浴場・男湯)</span><b>22室泊 / &#165;0.7M</b></div>
+        <div class="gnr-i"><span>別館3F 空調系統 (301-308)</span><b>8室泊 / &#165;0.26M</b></div>
+        <div class="gnr-i"><span>客室個別 (302 エアコン異音)</span><b>4室泊 / &#165;0.12M</b></div>
+      </div>
+      <div style="margin-top:10px;font-size:10.5px;color:var(--text-sub);">「空室があるから売れる」ではない — 厨房・夕食席・温泉・設備の処理能力が販売できる室数を頭打ちにする</div>
+    </div>
+
+    <div class="legio-card">
+      <div class="legio-head">
+        <div class="t">&#x267A;&#xFE0F; レジオネラ安全管理 <span style="font-size:10px;color:var(--text-mute);font-weight:400;">大浴場 男湯 (循環式) — 普段は気づけない安全リスク</span></div>
+        <span class="pill-ok">適合 / 監視中</span>
+      </div>
+      <div class="tband" title="レジオネラ増殖危険帯">
+        <span class="lbl" style="left:0%;">15&deg;C</span>
+        <span class="lbl" style="left:20%;">20&deg;C</span>
+        <span class="lbl" style="left:50%;">35&deg;C</span>
+        <span class="lbl" style="left:80%;">50&deg;C</span>
+        <span class="lbl" style="left:100%;">65&deg;C</span>
+        <span class="mark" data-v="浴槽 41.2&deg;C" style="left:67%;"></span>
+      </div>
+      <div style="font-size:10px;color:var(--brand);font-weight:600;text-align:center;margin-top:18px;">赤帯=増殖最適 25-45&deg;C / 浴槽適温は危険帯の縁 → 残留塩素と循環温度で抑制</div>
+      <div class="legio-grid">
+        <div class="c"><div class="k">循環温度</div><div class="v" style="color:var(--green);">51&deg;C</div></div>
+        <div class="c"><div class="k">残留塩素</div><div class="v" style="color:var(--green);">0.4<small>mg/L</small></div></div>
+        <div class="c"><div class="k">pH</div><div class="v">7.2</div></div>
+        <div class="c"><div class="k">最終培養</div><div class="v" style="font-size:12px;">7日前<br><small style="color:var(--green);">陰性</small></div></div>
+      </div>
+      <div class="legio-foot">状態監視: 温度/塩素/pH 連続監視 ・ 定期作動試験: レジオネラ属菌培養 (法定 年1回以上、当館は四半期) — <b>日本の集団浴場は国内レジオネラ症の最大感染源</b>。本設備は当館 最優先。</div>
+    </div>
+  </div>
+
+  <!-- Columns -->
+  <div class="cols">
+    <!-- LEFT -->
+    <div class="col-l">
+
+      <!-- 設備ランキング -->
+      <div class="card">
+        <div class="card-h">
+          <div class="t">&#x1F4CB; 止まると困る設備ランキング（影響の大きい順）</div>
+          <div class="hint">影響の大きさ・起こりやすさ・気づきにくさで優先度を自動採点 &nbsp;|&nbsp; 100以上を優先</div>
+        </div>
+        <div class="card-b nopad">
+          <table class="rpn">
+            <thead>
+              <tr>
+                <th>設備 / 不具合 &rarr; 影響</th>
+                <th style="width:78px;">採点</th>
+                <th style="width:48px;">優先度</th>
+                <th style="width:74px;">影響区分</th>
+                <th style="width:90px;">推奨タスク</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="asset-name">温泉熱交換器 (男湯)</div><div class="asset-mode">スケール付着 &rarr; 給湯温度維持不能 &rarr; 大浴場売止+衛生</div></td>
+                <td><span class="sod"><span style="background:#b91c1c;">9</span><span style="background:#d97706;">5</span><span style="background:#b91c1c;">8</span></span></td>
+                <td><span class="rpn-v" style="color:var(--brand);">360</span></td>
+                <td><span class="cons cons-safety">安全</span></td>
+                <td><span style="font-size:10px;">温度・圧力を監視</span></td>
+              </tr>
+              <tr>
+                <td><div class="asset-name">消火ポンプ (非常用)</div><div class="asset-mode">いざという時に起動せず &rarr; 火災時 止まる（普段は気づけない）</div></td>
+                <td><span class="sod"><span style="background:#b91c1c;">10</span><span style="background:#16a34a;">2</span><span style="background:#b91c1c;">9</span></span></td>
+                <td><span class="rpn-v" style="color:var(--brand);">180</span></td>
+                <td><span class="cons cons-hidden">防護</span></td>
+                <td><span style="font-size:10px;">定期作動試験</span></td>
+              </tr>
+              <tr>
+                <td><div class="asset-name">温泉循環ポンプ#2</div><div class="asset-mode">軸受摩耗+シール漏れ &rarr; 循環停止 &rarr; 男湯売止+衛生</div></td>
+                <td><span class="sod"><span style="background:#d97706;">7</span><span style="background:#d97706;">6</span><span style="background:#16a34a;">3</span></span></td>
+                <td><span class="rpn-v" style="color:var(--amber);">126</span></td>
+                <td><span class="cons cons-safety">安全</span></td>
+                <td><span style="font-size:10px;">振動・電流を監視</span></td>
+              </tr>
+              <tr>
+                <td><div class="asset-name">受変電 高圧遮断器</div><div class="asset-mode">接続部発熱+絶縁劣化 &rarr; 全館停電</div></td>
+                <td><span class="sod"><span style="background:#b91c1c;">9</span><span style="background:#16a34a;">2</span><span style="background:#d97706;">6</span></span></td>
+                <td><span class="rpn-v" style="color:var(--amber);">108</span></td>
+                <td><span class="cons cons-safety">安全</span></td>
+                <td><span style="font-size:10px;">サーモ画像で点検</span></td>
+              </tr>
+              <tr>
+                <td><div class="asset-name">エレベーター (本館)</div><div class="asset-mode">巻上機ロープ/制御 &rarr; 閉じ込め</div></td>
+                <td><span class="sod"><span style="background:#b91c1c;">9</span><span style="background:#16a34a;">2</span><span style="background:#16a34a;">4</span></span></td>
+                <td><span class="rpn-v" style="color:var(--amber);">72</span></td>
+                <td><span class="cons cons-safety">安全</span></td>
+                <td><span style="font-size:10px;">法定点検＋状態監視</span></td>
+              </tr>
+              <tr>
+                <td><div class="asset-name">別館3F 空調 (空調機)</div><div class="asset-mode">フィルタ共通劣化+ベルト摩耗 &rarr; 8室 冷暖不能</div></td>
+                <td><span class="sod"><span style="background:#d97706;">5</span><span style="background:#d97706;">6</span><span style="background:#16a34a;">2</span></span></td>
+                <td><span class="rpn-v" style="color:var(--text-sub);">60</span></td>
+                <td><span class="cons cons-op">運用</span></td>
+                <td><span style="font-size:10px;">振動を監視</span></td>
+              </tr>
+              <tr>
+                <td><div class="asset-name">客室 ユニットバス (一般)</div><div class="asset-mode">混合栓パッキン劣化 &rarr; 1室 水漏れ</div></td>
+                <td><span class="sod"><span style="background:#16a34a;">3</span><span style="background:#d97706;">5</span><span style="background:#16a34a;">3</span></span></td>
+                <td><span class="rpn-v" style="color:var(--text-sub);">45</span></td>
+                <td><span class="cons cons-non">非運用</span></td>
+                <td><span style="font-size:10px;">事後保全</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- P-F countdown -->
+      <div class="card">
+        <div class="card-h">
+          <div class="t">&#x23F1;&#xFE0F; 予兆〜故障までの猶予 カウントダウン</div>
+          <div class="hint">予兆を検知してから故障までの残り日数 / 点検間隔は猶予のおよそ半分に設定</div>
+        </div>
+        <div class="card-b">
+          <div class="pf-item">
+            <div class="pf-top">
+              <div class="n">温泉循環ポンプ#2 <small>軸受摩耗 (振動を監視)</small></div>
+              <div class="eta" style="color:var(--brand);">故障まで 推定 6.2日</div>
+            </div>
+            <div class="pf-track">
+              <span class="pp" style="left:38%;"></span>
+              <span class="now" style="left:62%;"></span>
+              <span class="p" style="left:38%;color:var(--navy);">&#9650;予兆を検知(4日前)</span>
+              <span class="f" style="right:0;color:var(--brand);">故障 &rarr;</span>
+            </div>
+            <div class="pf-meta">
+              <span>予兆〜故障までの猶予: <b>約14日</b></span>
+              <span>シールキット 入荷見込み: <b>2日</b></span>
+              <span>低稼働作業枠: <b>明日 13:00-15:00</b></span>
+              <span style="color:var(--green);">&#10003; 間に合う</span>
+            </div>
+          </div>
+          <div class="pf-item">
+            <div class="pf-top">
+              <div class="n">温泉熱交換器(男湯) <small>スケール付着 (温度差の低下)</small></div>
+              <div class="eta" style="color:var(--amber);">故障まで 推定 19日</div>
+            </div>
+            <div class="pf-track">
+              <span class="pp" style="left:25%;"></span>
+              <span class="now" style="left:40%;"></span>
+              <span class="p" style="left:25%;color:var(--navy);">&#9650;予兆を検知</span>
+              <span class="f" style="right:0;color:var(--brand);">故障 &rarr;</span>
+            </div>
+            <div class="pf-meta">
+              <span>予兆〜故障までの猶予: <b>約45日</b></span>
+              <span>酸洗浄 計画: <b>休館日 1/22</b></span>
+              <span style="color:var(--green);">&#10003; 余裕あり</span>
+            </div>
+          </div>
+          <div class="pf-item">
+            <div class="pf-top">
+              <div class="n">受変電 高圧遮断器 <small>接続部発熱 (サーモ画像で点検 &Delta;30K)</small></div>
+              <div class="eta" style="color:var(--amber);">故障まで 推定 28日</div>
+            </div>
+            <div class="pf-track">
+              <span class="pp" style="left:18%;"></span>
+              <span class="now" style="left:30%;"></span>
+              <span class="p" style="left:18%;color:var(--navy);">&#9650;予兆を検知</span>
+              <span class="f" style="right:0;color:var(--brand);">故障 &rarr;</span>
+            </div>
+            <div class="pf-meta">
+              <span>予兆〜故障までの猶予: <b>約60日</b></span>
+              <span>増締/交換: <b>電気主任と調整中</b></span>
+              <span style="color:var(--amber);">&#9888; 計画要</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Failure pattern + condition monitoring -->
+      <div class="card">
+        <div class="card-h">
+          <div class="t">&#x1F4C9; 故障パターン分布 &amp; 状態監視</div>
+          <div class="hint">経年劣化型は少数 — 多くは状態で壊れる</div>
+        </div>
+        <div class="card-b">
+          <div class="fp-dist">
+            <div class="fp-A" style="width:4%;background:#dc2626;" title="初期不良＋経年劣化型 4%"></div>
+            <div class="fp-B" style="width:2%;background:#ef4444;" title="経年劣化型 2%"></div>
+            <div class="fp-C" style="width:5%;background:#f59e0b;" title="徐々に悪化型 5%"></div>
+            <div class="fp-D" style="width:7%;background:#6366f1;" title="初期に悪化後は安定型 7%"></div>
+            <div class="fp-E" style="width:14%;background:#4f46e5;" title="状態に左右される型 14%"></div>
+            <div class="fp-F" style="width:68%;background:#4338ca;" title="初期不良型 68%">初期不良型 (68%)</div>
+          </div>
+          <div class="fp-legend">
+            <span><i style="background:#dc2626;"></i>初期不良＋経年劣化型 4%</span>
+            <span><i style="background:#ef4444;"></i>経年劣化型 2%</span>
+            <span><i style="background:#f59e0b;"></i>徐々に悪化型 5%</span>
+            <span><i style="background:#6366f1;"></i>初期に悪化後は安定型 7%</span>
+            <span><i style="background:#4f46e5;"></i>状態に左右される型 14%</span>
+            <span><i style="background:#4338ca;"></i>初期不良型(電子部品) 68%</span>
+          </div>
+          <div class="foot-note">
+            多くの設備は「使った年数」より「今の状態」で壊れる。だから定期分解ではなく<b>状態監視</b>を主軸にします。
+            経年劣化がはっきり出る設備だけ計画的に交換し、予備系は<b>定期作動試験</b>で確認します。
+            当館設備の現分類:
+            <span class="fp-badge fp-A" style="margin-left:4px;">経年劣化型 ボイラー</span>
+            <span class="fp-badge fp-B">経年劣化型 エレベータ巻上機</span>
+            <span class="fp-badge fp-C">徐々に悪化型 熱交換器スケール</span>
+            <span class="fp-badge fp-E">状態に左右される型 循環ポンプ</span>
+            <span class="fp-badge fp-F">初期不良型 制御基板/センサ</span>
+          </div>
+
+          <div style="display:flex;gap:18px;margin-top:14px;align-items:flex-start;">
+            <div style="flex:1;">
+              <div style="font-size:11px;font-weight:700;margin-bottom:6px;">温泉循環ポンプ#2 — 状態監視トレンド (予兆〜故障)</div>
+              <div class="chart-wrap chart-line"><canvas id="pfChart"></canvas></div>
+            </div>
+          </div>
+
+          <div class="sensor-grid" style="margin-top:14px;">
+            <div class="sensor alert">
+              <div class="trend" style="color:var(--brand);">&#9650;+62%</div>
+              <div class="sk">振動 実効値 (ポンプ#2)</div>
+              <div class="sv" style="color:var(--brand);">7.8 <small>mm/s</small></div>
+              <div class="chart-wrap chart-spark"><canvas id="sp1"></canvas></div>
+            </div>
+            <div class="sensor alert">
+              <div class="trend" style="color:var(--brand);">&#9650;+8K</div>
+              <div class="sk">軸受温度 (ポンプ#2)</div>
+              <div class="sv" style="color:var(--amber);">68 <small>&deg;C</small></div>
+              <div class="chart-wrap chart-spark"><canvas id="sp2"></canvas></div>
+            </div>
+            <div class="sensor">
+              <div class="trend" style="color:var(--green);">安定</div>
+              <div class="sk">吐出圧 (ポンプ#2)</div>
+              <div class="sv">0.42 <small>MPa</small></div>
+              <div class="chart-wrap chart-spark"><canvas id="sp3"></canvas></div>
+            </div>
+            <div class="sensor">
+              <div class="trend" style="color:var(--amber);">&#9660;-6%</div>
+              <div class="sk">熱交換器 温度差 (男湯)</div>
+              <div class="sv" style="color:var(--amber);">11.3 <small>K</small></div>
+              <div class="chart-wrap chart-spark"><canvas id="sp4"></canvas></div>
+            </div>
+            <div class="sensor">
+              <div class="trend" style="color:var(--brand);">&Delta;30K</div>
+              <div class="sk">サーモ画像 遮断器</div>
+              <div class="sv" style="color:var(--brand);">63 <small>&deg;C</small></div>
+              <div class="chart-wrap chart-spark"><canvas id="sp5"></canvas></div>
+            </div>
+            <div class="sensor">
+              <div class="trend" style="color:var(--green);">正常</div>
+              <div class="sk">稼働時間 ポンプ#2</div>
+              <div class="sv">11,240 <small>h</small></div>
+              <div class="chart-wrap chart-spark"><canvas id="sp6"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col-r">
+
+      <!-- AI 確認・推奨ナッジ -->
+      <div style="margin-bottom:18px;display:flex;flex-direction:column;gap:10px;">
+
+        <!-- ナッジ1: 至急 / 赤 — 温泉ポンプ予兆 -->
+        <div class="nudge bar-red">
+          <div class="nudge-top"><span class="nudge-ai">&#x1F916; AI確認</span><span class="nudge-pri p-now">至急</span></div>
+          <div class="nudge-msg">大浴場・男湯の温泉ポンプが連休初日に止まる見込みです</div>
+          <div class="nudge-why">そのままだと連休初日に男湯を閉めることになり、22室泊の返金とお客様の不満につながります。</div>
+          <div class="nudge-act">予備ポンプへの切替は済んでいます。<b>明日13:00-15:00の低稼働枠で本機の修理</b>を入れておくと、お客様への影響なく連休前に直せそうです。</div>
+          <div class="nudge-data">故障まで残り6.2日 / 部品入荷2日 / 回避できる損失 約&#165;0.7M(22室泊)</div>
+          <div class="nudge-foot">
+            <button class="btn-sm btn-navy">修理を予定に入れる</button>
+            <button class="btn-sm btn-out">段取りを見る</button>
+          </div>
+        </div>
+
+        <!-- ナッジ2: 今日中 / 黄 — 消火ポンプ作動試験 期限超過(再発防止に点検登録) -->
+        <div class="nudge bar-amber">
+          <div class="nudge-top"><span class="nudge-ai">&#x1F916; AI確認</span><span class="nudge-pri p-today">今日中</span></div>
+          <div class="nudge-msg">消火ポンプの作動試験が13日過ぎています</div>
+          <div class="nudge-why">いざという時に動くかは試験でしか分かりません。火災時に止まると人命・営業停止に直結します。</div>
+          <div class="nudge-act">今日中に起動試験を1件入れて、あわせて<b>60日ごとの定期点検として登録</b>しておくと、期限超過の再発を防げそうです。</div>
+          <div class="nudge-data">前回73日前 / 推奨周期60日 / 同種の超過は今期2回目</div>
+          <div class="nudge-foot">
+            <button class="btn-sm btn-red">試験を今日に予約</button>
+            <button class="btn-sm btn-out">定期点検に登録</button>
+          </div>
+        </div>
+
+        <!-- ナッジ3: 確認推奨 / 青 — 改善提案 -->
+        <div class="nudge bar-blue">
+          <div class="nudge-top"><span class="nudge-ai">&#x1F916; AI確認</span><span class="nudge-pri p-check">確認推奨</span></div>
+          <div class="nudge-msg">受変電 高圧遮断器の発熱が少しずつ進んでいます</div>
+          <div class="nudge-why">放置すると全館停電のおそれ。ただし猶予はあり、今すぐ止める必要はありません。</div>
+          <div class="nudge-act"><b>28日以内に増締めか部品交換</b>を電気主任と日程調整しておくと、計画的に対処できそうです。</div>
+          <div class="nudge-data">サーモ温度差 &Delta;30K / 故障まで推定28日</div>
+          <div class="nudge-foot">
+            <button class="btn-sm btn-navy">日程を調整する</button>
+          </div>
+        </div>
+
+        <div style="font-size:9.5px;color:var(--text-mute);line-height:1.6;text-align:center;">候補を表示します。最終確認は支配人が行います（AIは自動で実行しません）。</div>
+      </div>
+
+      <!-- Hidden-failure test schedule -->
+      <div class="card">
+        <div class="card-h">
+          <div class="t">&#x1F575;&#xFE0F; 防護設備の作動試験</div>
+        </div>
+        <div class="card-b">
+          <div style="font-size:10.5px;color:var(--text-sub);margin-bottom:8px;line-height:1.5;">普段の運転では「いざという時に動くか」が分からない予備系・防護系。重なった故障を防ぐため<b>定期作動試験</b>が欠かせません。</div>
+          <div class="hf-row">
+            <div class="hf-l"><div class="n">消火ポンプ 起動試験</div><div class="d">前回 73日前 / 周期 60日</div></div>
+            <span class="hf-due due-over">期限超過 13日</span>
+          </div>
+          <div class="hf-row">
+            <div class="hf-l"><div class="n">非常用発電機 負荷試験</div><div class="d">前回 27日前 / 周期 30日</div></div>
+            <span class="hf-due due-soon">あと 3日</span>
+          </div>
+          <div class="hf-row">
+            <div class="hf-l"><div class="n">温泉 予備循環ポンプ#1 自動起動</div><div class="d">前回 12日前 / 周期 30日 (今回 実起動で確認済)</div></div>
+            <span class="hf-due due-ok">正常</span>
+          </div>
+          <div class="hf-row">
+            <div class="hf-l"><div class="n">漏電遮断器 / 非常照明 切替</div><div class="d">前回 18日前 / 周期 30日</div></div>
+            <span class="hf-due due-ok">正常</span>
+          </div>
+          <div class="hf-row">
+            <div class="hf-l"><div class="n">無停電電源 (サーバ/基幹システム) 自動切替</div><div class="d">前回 41日前 / 周期 90日</div></div>
+            <span class="hf-due due-ok">正常</span>
+          </div>
+          <button class="btn-sm btn-red" style="margin-top:10px;width:100%;">消火ポンプ試験を緊急スケジュール</button>
+        </div>
+      </div>
+
+      <!-- Strategy mix + reliability -->
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F527; 保全方式ミックス &amp; 設備の信頼性</div></div>
+        <div class="card-b">
+          <div class="dual">
+            <div class="donut-wrap">
+              <div class="chart-wrap" style="height:120px;"><canvas id="stratDonut"></canvas></div>
+              <div class="donut-center"><div class="dc-v">58%</div><div class="dc-l">状態監視・予兆保全</div></div>
+            </div>
+            <div class="strat-leg">
+              <div class="sl"><span><i style="background:#0E7490;"></i>状態監視・予兆保全</span><b>58%</b></div>
+              <div class="sl"><span><i style="background:#1E3A5F;"></i>定期点検 (経年劣化型＋法定)</span><b>22%</b></div>
+              <div class="sl"><span><i style="background:#15803D;"></i>事後保全 (止まっても軽微)</span><b>14%</b></div>
+              <div class="sl"><span><i style="background:#7C3AED;"></i>定期作動試験 (防護系)</span><b>6%</b></div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--text-mute);margin:10px 0 4px;">状態監視への移行が進み、むやみな定期分解を削減（41%&rarr;58%、前年比）</div>
+          <div class="rel-grid">
+            <div class="rc"><div class="rk">平均故障間隔 (重要系)</div><div class="rv">1,840<small style="font-size:9px;">h</small></div></div>
+            <div class="rc"><div class="rk">平均復旧時間</div><div class="rv">3.1<small style="font-size:9px;">h</small></div></div>
+            <div class="rc"><div class="rk">稼働率</div><div class="rv" style="color:var(--green);">99.8%</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 保全方針の決め方 -->
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F500; 保全方針の決め方</div></div>
+        <div class="card-b">
+          <div style="font-size:10.5px;line-height:1.7;color:var(--text-sub);">
+            各設備の不具合を次の観点で判定 &rarr; やるべき保全を自動割当:
+          </div>
+          <div style="margin-top:8px;font-size:10.5px;">
+            <div style="padding:6px 8px;background:var(--surface);border-radius:5px;margin-bottom:5px;">① 普段気づけるか? &rarr; 気づけない<b>防護系</b>は定期作動試験</div>
+            <div style="padding:6px 8px;background:var(--surface);border-radius:5px;margin-bottom:5px;">② 影響: <b>安全</b> &gt; 営業 &gt; 軽微</div>
+            <div style="padding:6px 8px;background:var(--surface);border-radius:5px;margin-bottom:5px;">③ まず状態監視 &rarr; だめなら定期交換</div>
+            <div style="padding:6px 8px;background:var(--surface);border-radius:5px;">④ 打つ手がなければ 設計見直し / 故障後対応</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statutory / compliance -->
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F4DC; 法定・コンプラ点検</div></div>
+        <div class="card-b nopad">
+          <table class="rpn" style="font-size:11px;">
+            <tbody>
+              <tr><td>ボイラー 性能検査 (労安法)</td><td style="text-align:right;"><span class="hf-due due-ok">3/14 完了</span></td></tr>
+              <tr><td>エレベーター 定期検査 (建基法)</td><td style="text-align:right;"><span class="hf-due due-soon">期日 6/20</span></td></tr>
+              <tr><td>消防設備点検 (消防法)</td><td style="text-align:right;"><span class="hf-due due-ok">適合</span></td></tr>
+              <tr><td>レジオネラ 水質検査 (公衆浴場)</td><td style="text-align:right;"><span class="hf-due due-ok">陰性</span></td></tr>
+              <tr><td>受変電 年次点検 (電気事業法)</td><td style="text-align:right;"><span class="hf-due due-soon">期日 7/10</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+Chart.defaults.font.family = "'Inter','Hiragino Sans','Yu Gothic UI',sans-serif";
+Chart.defaults.font.size = 10;
+Chart.defaults.color = '#8C8C8C';
+
+// P-F curve chart for pump #2
+new Chart(document.getElementById('pfChart'), {
+  type:'line',
+  data:{
+    labels:['-30d','-25d','-20d','-15d','-10d','予兆検知(-4d)','今日','+3d','故障(+6d)'],
+    datasets:[
+      { label:'振動 (mm/s)', data:[2.3,2.5,2.6,3.0,3.6,4.8,7.8,null,null],
+        borderColor:'#C8102E', backgroundColor:'rgba(200,16,46,.08)', tension:.35, fill:true, pointRadius:2, borderWidth:2 },
+      { label:'予測 (残り寿命)', data:[null,null,null,null,null,null,7.8,9.6,11.2],
+        borderColor:'#C8102E', borderDash:[5,4], tension:.2, pointRadius:0, borderWidth:1.5 },
+      { label:'予兆ライン', data:[4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5],
+        borderColor:'#1E3A5F', borderDash:[3,3], pointRadius:0, borderWidth:1 },
+      { label:'故障ライン', data:[11.2,11.2,11.2,11.2,11.2,11.2,11.2,11.2,11.2],
+        borderColor:'#8C8C8C', borderDash:[2,2], pointRadius:0, borderWidth:1 }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, font:{size:9}, padding:8 } } },
+    scales:{ y:{ title:{display:true,text:'mm/s'}, grid:{color:'#F0F0F0'} }, x:{ grid:{display:false} } }
+  }
+});
+
+// sparklines
+function spark(id,data,color){
+  new Chart(document.getElementById(id),{ type:'line',
+    data:{ labels:data.map((_,i)=>i), datasets:[{ data:data, borderColor:color, borderWidth:1.5, pointRadius:0, tension:.4, fill:false }]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:{enabled:false}}, scales:{x:{display:false},y:{display:false}} }
+  });
+}
+spark('sp1',[2.4,2.6,3.0,3.6,4.8,7.8],'#C8102E');
+spark('sp2',[60,61,62,64,66,68],'#D97706');
+spark('sp3',[0.43,0.42,0.43,0.42,0.42,0.42],'#15803D');
+spark('sp4',[12.0,11.9,11.7,11.6,11.4,11.3],'#D97706');
+spark('sp5',[40,44,50,55,60,63],'#C8102E');
+spark('sp6',[11150,11170,11190,11210,11225,11240],'#15803D');
+
+// strategy donut
+new Chart(document.getElementById('stratDonut'),{
+  type:'doughnut',
+  data:{ labels:['状態監視・予兆保全','定期点検','事後保全','定期作動試験'],
+    datasets:[{ data:[58,22,14,6], backgroundColor:['#0E7490','#1E3A5F','#15803D','#7C3AED'], borderWidth:0 }]},
+  options:{ responsive:true, maintainAspectRatio:false, cutout:'72%', plugins:{legend:{display:false},tooltip:{enabled:true}} }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>レポート (夜間締め処理 / 財務)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#FFFFFF; --text:#1A1A1A; --text-sub:#4A4A4A; --text-mute:#8C8C8C;
+  --rule:#D0D0D0; --rule-soft:#E5E5E5; --rule-lite:#F0F0F0; --surface:#F7F7F7;
+  --brand:#C8102E; --brand-lite:#FCE5E8; --brand-soft:#FFF0F2; --brand-dark:#8B0F1F;
+  --navy:#1E3A5F; --navy-lite:#DCE5F0;
+  --amber:#D97706; --amber-lite:#FEF3C7;
+  --green:#15803D; --green-lite:#DCFCE7;
+  --purple:#7C3AED; --purple-lite:#EDE9FE;
+  --teal:#0E7490; --teal-lite:#CFFAFE;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;color:var(--text);background:var(--bg);width:1440px;min-height:900px;font-size:13px;line-height:1.5}
+a{text-decoration:none;color:inherit}
+.header{position:fixed;top:0;left:0;width:1440px;height:56px;background:var(--bg);border-bottom:1px solid var(--rule-soft);z-index:100;display:flex;align-items:center;padding:0 20px;gap:16px}
+.header-logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.header-logo .dot{width:12px;height:12px;border-radius:50%;background:var(--brand)}
+.header-logo span{font-size:16px;font-weight:700}
+.header-facility{display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--rule);border-radius:4px;font-size:13px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.header-search{flex:1;max-width:360px;margin:0 auto;position:relative}
+.header-search input{width:100%;height:34px;border:1px solid var(--rule);border-radius:4px;padding:0 12px 0 34px;font-size:13px;background:var(--surface);outline:none;font-family:inherit}
+.header-search::before{content:'\1F50D';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px}
+.header-right{display:flex;align-items:center;gap:16px;margin-left:auto}
+.header-bell{position:relative;font-size:18px;cursor:pointer}
+.badge-notif{position:absolute;top:-6px;right:-8px;background:var(--brand);color:#fff;font-size:10px;font-weight:600;padding:1px 5px;border-radius:8px}
+.header-user{display:flex;align-items:center;gap:8px;cursor:pointer}
+.header-user-info{text-align:right}
+.header-user-info .name{font-size:13px;font-weight:600}
+.header-user-info .role{font-size:11px;color:var(--text-mute)}
+.header-user .arrow{font-size:10px;color:var(--text-mute)}
+.sidebar{position:fixed;top:56px;left:0;width:200px;height:calc(100vh - 56px);background:var(--bg);border-right:1px solid var(--rule-soft);padding:12px 0;z-index:90;overflow-y:auto}
+.sidebar-item{display:block;padding:10px 16px;font-size:13px;color:var(--text-sub);border-left:3px solid transparent}
+.sidebar-item:hover{background:var(--surface);color:var(--text)}
+.sidebar-item.active{border-left-color:var(--brand);background:var(--brand-soft);color:var(--brand);font-weight:600}
+.sidebar-sub{font-size:10px;color:var(--text-mute);padding:12px 16px 4px;text-transform:uppercase;letter-spacing:.5px}
+.main{margin-top:56px;margin-left:200px;padding:20px 24px;width:1240px}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:4px}
+.page-title{font-size:19px;font-weight:700}
+.page-title .ai-badge{font-size:11px;font-weight:700;color:var(--navy);background:var(--navy-lite);padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
+.page-sub{font-size:12px;color:var(--text-mute);margin-bottom:16px}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden}
+.seg button{border:none;background:var(--bg);padding:6px 12px;font-size:12px;font-family:inherit;cursor:pointer;color:var(--text-sub);border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:none}
+.seg button.on{background:var(--navy);color:#fff;font-weight:600}
+.kpi-strip{display:flex;gap:12px;margin-bottom:18px}
+.kpi-card{flex:1;padding:13px 14px;border-radius:6px;background:var(--bg);border:1px solid var(--rule-soft);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.kpi-card .label{font-size:10px;color:var(--text-mute);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px;line-height:1.3;min-height:26px}
+.kpi-card .value{font-size:21px;font-weight:700}
+.kpi-card .unit{font-size:12px;font-weight:400}
+.kpi-card .sub{font-size:10px;color:var(--text-mute);margin-top:2px}
+.delta-up{color:var(--green)} .delta-dn{color:var(--brand)}
+.card{border:1px solid var(--rule-soft);border-radius:8px;background:var(--bg);box-shadow:0 1px 3px rgba(0,0,0,.04);margin-bottom:18px;overflow:hidden}
+.card-h{padding:11px 16px;border-bottom:1px solid var(--rule-soft);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-h .t{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.card-h .src{font-size:9.5px;color:var(--text-mute);font-weight:400;background:var(--surface);padding:2px 7px;border-radius:10px}
+.card-b{padding:14px 16px}
+.card-b.nopad{padding:0}
+.cols{display:flex;gap:18px}
+.col-l{flex:0 0 58%;min-width:0}
+.col-r{flex:1;min-width:0}
+.btn-sm{padding:6px 13px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:none}
+.btn-red{background:var(--brand);color:#fff}.btn-red:hover{background:var(--brand-dark)}
+.btn-navy{background:var(--navy);color:#fff}.btn-navy:hover{background:#152d4a}
+.btn-out{background:var(--bg);color:var(--text-sub);border:1px solid var(--rule)}.btn-out:hover{background:var(--surface)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{filter:brightness(.95)}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-surface{background:var(--surface);color:var(--text-sub)}
+.badge-ok{background:var(--green-lite);color:var(--green)}
+.badge-bad{background:var(--brand-lite);color:var(--brand)}
+.badge-warn{background:var(--amber-lite);color:var(--amber)}
+.badge-info{background:var(--navy-lite);color:var(--navy)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel-soft{background:linear-gradient(135deg,#fff,var(--surface));border:1px solid var(--rule-soft);border-radius:8px;padding:12px 13px}
+.panel-soft h4{font-size:12px;font-weight:700;margin-bottom:8px}
+.audit-score{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:10px}
+.audit-score .v{font-size:30px;font-weight:800;line-height:1}
+.audit-score .v.ok{color:var(--green)} .audit-score .v.bad{color:var(--brand)}
+.audit-score .m{font-size:11px;color:var(--text-mute);text-align:right}
+.waterfall{display:flex;align-items:flex-end;gap:8px;height:140px;margin-top:8px;padding-top:6px}
+.wf-col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+.wf-bar{width:100%;border-radius:6px 6px 3px 3px;min-height:18px;display:flex;align-items:flex-end;justify-content:center;padding:4px 2px;color:#fff;font-size:10px;font-weight:700}
+.wf-label{font-size:10px;color:var(--text-mute);margin-top:6px;text-align:center;line-height:1.3}
+.wf-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:10.5px;color:var(--text-sub)}
+.wf-legend span{display:inline-flex;align-items:center;gap:4px}
+.wf-legend i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.tax-stack{display:grid;grid-template-columns:1fr;gap:10px}
+.tax-tier{border:1px solid var(--rule-soft);border-radius:8px;padding:11px 12px;background:#fff}
+.tax-tier .th{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.tax-tier .th .ttl{font-size:12px;font-weight:700}
+.tax-tier .num{font-size:20px;font-weight:800}
+.tax-tier .meta{font-size:10.5px;color:var(--text-mute);line-height:1.5}
+.tax-tier.tax-1{background:linear-gradient(135deg,#fff,var(--brand-soft))}
+.tax-tier.tax-2{background:linear-gradient(135deg,#fff,var(--amber-lite))}
+.tax-tier.tax-3{background:linear-gradient(135deg,#fff,var(--navy-lite))}
+.tax-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.tax-grid .mini{background:var(--surface);border-radius:6px;padding:8px;text-align:center}
+.tax-grid .mini .k{font-size:9px;color:var(--text-mute)}
+.tax-grid .mini .v{font-size:14px;font-weight:700}
+.cols-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.report-table,.aging-table,.meal-table{width:100%;border-collapse:collapse;font-size:11.5px}
+.report-table th,.aging-table th,.meal-table th{text-align:left;font-size:9.5px;color:var(--text-mute);text-transform:uppercase;padding:7px 8px;border-bottom:1px solid var(--rule-soft);white-space:nowrap}
+.report-table td,.aging-table td,.meal-table td{padding:8px;border-bottom:1px solid var(--rule-lite);vertical-align:middle}
+.report-table tr:last-child td,.aging-table tr:last-child td,.meal-table tr:last-child td{border-bottom:none}
+.pdf-box{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;background:linear-gradient(135deg,#fff,var(--brand-soft));border:1px solid var(--brand-lite);border-radius:8px}
+.pdf-box .big{font-size:18px;font-weight:800;color:var(--brand)}
+.pdf-box .sub{font-size:11px;color:var(--text-sub)}
+.heatmap{width:100%;border-collapse:separate;border-spacing:6px 6px}
+.heatmap th{font-size:10px;color:var(--text-mute);text-align:center;padding-bottom:2px}
+.heatmap td{border-radius:6px;padding:10px 8px;text-align:center;font-size:11px;font-weight:700;border:1px solid transparent}
+.hm-0{background:#f8fafc;color:#334155;border-color:#e2e8f0}
+.hm-1{background:#eef6ff;color:#1d4ed8;border-color:#dbeafe}
+.hm-2{background:#dbeafe;color:#1e3a8a;border-color:#bfdbfe}
+.hm-3{background:#fee2e2;color:#991b1b;border-color:#fecaca}
+.hm-txt{display:block;font-size:10px;font-weight:600;color:inherit;opacity:.75;margin-top:2px}
+.match-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.match-card{border:1px solid var(--rule-soft);border-radius:8px;padding:10px;background:var(--surface)}
+.match-card .h{font-size:10px;color:var(--text-mute);margin-bottom:4px}
+.match-card .v{font-size:18px;font-weight:800}
+.match-card .d{font-size:10.5px;color:var(--text-sub);margin-top:2px;line-height:1.4}
+.feed-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.feed-card{border:1px solid var(--rule-soft);border-radius:8px;padding:10px;background:#fff}
+.feed-card .h{font-size:11px;font-weight:700;margin-bottom:4px}
+.feed-card .m{font-size:10px;color:var(--text-mute);margin-bottom:6px}
+.feed-card .v{font-size:19px;font-weight:800}
+.feed-card .hint{font-size:10.5px;color:var(--text-sub);margin-top:4px;line-height:1.5}
+.kpi-mini{display:flex;gap:10px;margin-top:10px}
+.kpi-mini .mk{flex:1;text-align:center;background:var(--surface);border-radius:6px;padding:8px 4px}
+.kpi-mini .mk .mv{font-size:16px;font-weight:700}
+.kpi-mini .mk .ml{font-size:9px;color:var(--text-mute)}
+.foot-note{font-size:10px;color:var(--text-mute);margin-top:8px;line-height:1.6}
+canvas{max-width:100%}
+.chart-wrap{position:relative;height:220px}
+.chart-wrap.short{height:160px}
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="screen1_dashboard.html" class="header-logo"><div class="dot"></div><span>旅館運営システム</span></a>
+  <div class="header-facility">○○リゾート箱根 — 全施設横断ビュー <span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
+  <div class="header-search"><input type="text" placeholder="日次レポート・売掛金・税集計を検索"></div>
+  <div class="header-right">
+    <div class="header-bell">&#x1F514;<span class="badge-notif">6</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item active" href="screen8_reports.html">レポート</a>
+  <div class="sidebar-sub">レポート表示</div>
+  <a class="sidebar-item active" href="screen8_reports.html">夜間締め処理</a>
+  <a class="sidebar-item" href="screen8_reports.html">税ダッシュボード</a>
+  <a class="sidebar-item" href="screen8_reports.html">売掛金の経過日数</a>
+  <a class="sidebar-item" href="screen8_reports.html">食数・ロス</a>
+  <a class="sidebar-item" href="screen8_reports.html">経営の主要指標</a>
+</nav>
+
+<main class="main">
+  <div class="page-head">
+    <div>
+      <div class="page-title">レポート <span class="ai-badge">営業日 2026/05/30</span></div>
+      <div class="page-sub">本システム / ○○リゾート箱根 / 夜間締め処理・財務・現金管理を統合表示</div>
+    </div>
+    <div class="seg"><button class="on">日次</button><button>週次</button><button>月次</button></div>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="label">試算表<br>借方 / 貸方</div><div class="value" style="color:var(--green)">¥12.84<span class="unit">M</span></div><div class="sub delta-up">一致 +¥0 / 乖離なし</div></div>
+    <div class="kpi-card"><div class="label">入湯税 見込<br>(人泊×¥150)</div><div class="value">¥186<span class="unit">K</span></div><div class="sub">12歳未満除外 14件</div></div>
+    <div class="kpi-card"><div class="label">宿泊税 / 消費税<br>分離集計</div><div class="value">¥42.1<span class="unit">K</span></div><div class="sub">宿泊税 ¥13.4K / 消費税 ¥28.7K</div></div>
+    <div class="kpi-card"><div class="label">売掛金 回収率<br>自動消込提案</div><div class="value" style="color:var(--navy)">91.4<span class="unit">%</span></div><div class="sub delta-up">提案 8件 / 自動照合 5件</div></div>
+    <div class="kpi-card"><div class="label">食数実績<br>予約比 / 無断不泊</div><div class="value">238<span class="unit">食</span></div><div class="sub">予約比 96.8% / 無断不泊 7名</div></div>
+    <div class="kpi-card"><div class="label">経営の主要指標<br>正味の平均客室単価 / 1室あたり売上</div><div class="value">¥24,800</div><div class="sub">ネット予約サイト控除後の平均客室単価 / 1室あたり売上 ¥18,240</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">
+      <div class="t">🧾 夜間締め処理ダッシュボード</div>
+      <span class="src">財務領域 / 試算表 / 増減のウォーターフォール</span>
+    </div>
+    <div class="card-b">
+      <div class="cols">
+        <div class="col-l">
+          <div class="two-col">
+            <div class="panel-soft">
+              <div class="audit-score">
+                <div>
+                  <h4>監査バランス</h4>
+                  <div class="v ok">一致</div>
+                </div>
+                <div class="m">借方 = 貸方<br>差異 ¥0</div>
+              </div>
+              <div class="kpi-mini">
+                <div class="mk"><div class="mv">¥12.84M</div><div class="ml">借方</div></div>
+                <div class="mk"><div class="mv">¥12.84M</div><div class="ml">貸方</div></div>
+              </div>
+              <div class="foot-note">最終締め・収益確認を想定した固定表示。差異が出た場合は赤判定に切替。</div>
+            </div>
+            <div class="panel-soft">
+              <h4>ウォーターフォール</h4>
+              <div class="waterfall">
+                <div class="wf-col"><div class="wf-bar" style="height:26px;background:var(--navy)">+4.8</div><div class="wf-label">前日残</div></div>
+                <div class="wf-col"><div class="wf-bar" style="height:52px;background:var(--green)">+12.6</div><div class="wf-label">売上</div></div>
+                <div class="wf-col"><div class="wf-bar" style="height:34px;background:var(--teal)">-8.9</div><div class="wf-label">入金</div></div>
+                <div class="wf-col"><div class="wf-bar" style="height:22px;background:var(--amber)">+2.1</div><div class="wf-label">売掛振替</div></div>
+                <div class="wf-col"><div class="wf-bar" style="height:18px;background:var(--purple)">+0.7</div><div class="wf-label">前受変動</div></div>
+                <div class="wf-col"><div class="wf-bar" style="height:44px;background:var(--brand)">+11.3</div><div class="wf-label">当日残</div></div>
+              </div>
+              <div class="wf-legend">
+                <span><i style="background:var(--navy)"></i>前日残</span>
+                <span><i style="background:var(--green)"></i>売上</span>
+                <span><i style="background:var(--teal)"></i>入金</span>
+                <span><i style="background:var(--amber)"></i>売掛振替</span>
+                <span><i style="background:var(--purple)"></i>前受変動</span>
+                <span><i style="background:var(--brand)"></i>当日残</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-r">
+          <div class="pdf-box">
+            <div>
+              <div class="big">日次レポート PDF</div>
+              <div class="sub">直近2日のチェックイン / チェックアウト 人数・室数・稼働率をそのまま配布できる定型出力</div>
+            </div>
+            <button class="btn-sm btn-red">PDF出力</button>
+          </div>
+          <div class="chart-wrap short" style="margin-top:10px"><canvas id="auditChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="col-l">
+      <div class="card">
+        <div class="card-h"><div class="t">💴 税ダッシュボード</div><span class="src">入湯税 / 宿泊税 / 消費税</span></div>
+        <div class="card-b">
+          <div class="tax-stack">
+            <div class="tax-tier tax-1">
+              <div class="th"><div class="ttl">入湯税</div><span class="badge badge-bad">人泊 × ¥150</span></div>
+              <div class="num">¥186,000</div>
+              <div class="meta">対象人泊 1,240 / 12歳未満除外 14件 / 免税判定は年齢で自動切替</div>
+            </div>
+            <div class="tax-tier tax-2">
+              <div class="th"><div class="ttl">宿泊税</div><span class="badge badge-warn">料金帯別</span></div>
+              <div class="num">¥13,400</div>
+              <div class="meta">¥5,000-¥10,000: 26件 / ¥10,000超: 44件 / 段階別件数と税額を分離表示</div>
+              <div class="tax-grid">
+                <div class="mini"><div class="k">低料金帯</div><div class="v">26件</div></div>
+                <div class="mini"><div class="k">高料金帯</div><div class="v">44件</div></div>
+                <div class="mini"><div class="k">税額合計</div><div class="v">¥13.4K</div></div>
+              </div>
+            </div>
+            <div class="tax-tier tax-3">
+              <div class="th"><div class="ttl">消費税</div><span class="badge badge-info">内税 / 外税</span></div>
+              <div class="num">¥28,700</div>
+              <div class="meta">内税対象 ¥312,000 / 外税対象 ¥186,000 / 預り金と租税公課を分離</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">📈 経営の主要指標</div><span class="src">平均客室単価 / 1室あたり売上 / 稼働率 / 人泊数 / 正味の平均客室単価 / キャンセル回収率</span></div>
+        <div class="card-b">
+          <div class="chart-wrap"><canvas id="kpiChart"></canvas></div>
+          <div class="kpi-mini">
+            <div class="mk"><div class="mv">¥31,200</div><div class="ml">平均客室単価</div></div>
+            <div class="mk"><div class="mv">¥24,240</div><div class="ml">1室あたり売上</div></div>
+            <div class="mk"><div class="mv">84.3%</div><div class="ml">定員稼働率</div></div>
+            <div class="mk"><div class="mv">1,240</div><div class="ml">人泊数</div></div>
+            <div class="mk"><div class="mv">78.4%</div><div class="ml">キャンセル料回収率</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="card">
+        <div class="card-h"><div class="t">🧮 売掛金の経過日数</div><span class="src">0-30 / 31-60 / 61-90 / 90+ 日 + ネット予約サイト入金消込</span></div>
+        <div class="card-b">
+          <table class="heatmap">
+            <thead>
+              <tr><th>取引先</th><th>0-30</th><th>31-60</th><th>61-90</th><th>90+</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="text-align:left;font-size:11px;font-weight:700">予約サイトA</td><td class="hm-1">2件<span class="hm-txt">¥0.8M</span></td><td class="hm-1">1件<span class="hm-txt">¥0.3M</span></td><td class="hm-0">0件<span class="hm-txt">-</span></td><td class="hm-0">0件<span class="hm-txt">-</span></td></tr>
+              <tr><td style="text-align:left;font-size:11px;font-weight:700">予約サイトB</td><td class="hm-2">4件<span class="hm-txt">¥1.2M</span></td><td class="hm-1">2件<span class="hm-txt">¥0.4M</span></td><td class="hm-0">0件<span class="hm-txt">-</span></td><td class="hm-0">0件<span class="hm-txt">-</span></td></tr>
+              <tr><td style="text-align:left;font-size:11px;font-weight:700">直接請求</td><td class="hm-1">3件<span class="hm-txt">¥0.9M</span></td><td class="hm-2">2件<span class="hm-txt">¥0.6M</span></td><td class="hm-1">1件<span class="hm-txt">¥0.2M</span></td><td class="hm-0">0件<span class="hm-txt">-</span></td></tr>
+              <tr><td style="text-align:left;font-size:11px;font-weight:700">会社掛け売り</td><td class="hm-1">1件<span class="hm-txt">¥0.2M</span></td><td class="hm-2">2件<span class="hm-txt">¥0.7M</span></td><td class="hm-2">2件<span class="hm-txt">¥0.8M</span></td><td class="hm-3">1件<span class="hm-txt">¥0.5M</span></td></tr>
+            </tbody>
+          </table>
+          <div class="match-grid" style="margin-top:6px">
+            <div class="match-card"><div class="h">自動照合候補</div><div class="v">5件</div><div class="d">予約サイトの入金明細と会計明細(精算書)を一致候補化</div></div>
+            <div class="match-card"><div class="h">要確認差異</div><div class="v">2件</div><div class="d">金額差 / 日付差で保留</div></div>
+            <div class="match-card"><div class="h">消込率</div><div class="v">91.4%</div><div class="d">当日分の自動消込済み</div></div>
+            <div class="match-card"><div class="h">保留残</div><div class="v">¥0.8M</div><div class="d">担当者確認待ち</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">🍽 食数実績 / ロス / ドリンク</div><span class="src">予約比 / 無断不泊 / 仕入れフィードバック</span></div>
+        <div class="card-b">
+          <div class="feed-grid">
+            <div class="feed-card">
+              <div class="h">食数実績</div><div class="m">予約比 / 無断不泊</div><div class="v">238 食</div>
+              <div class="hint">予約 246 食に対して 96.8%。無断不泊 7名で推移。</div>
+            </div>
+            <div class="feed-card">
+              <div class="h">食材ロス</div><div class="m">前日比</div><div class="v">2.4%</div>
+              <div class="hint">朝食ロス低下、夕食の過剰仕込みを抑制。</div>
+            </div>
+            <div class="feed-card">
+              <div class="h">ドリンク売上</div><div class="m">会食 / バー</div><div class="v">¥482K</div>
+              <div class="hint">客単価上振れ。メニュー構成は高粗利に寄与。</div>
+            </div>
+          </div>
+          <table class="meal-table" style="margin-top:10px">
+            <thead><tr><th>区分</th><th>予約</th><th>実績</th><th>差分</th><th>備考</th></tr></thead>
+            <tbody>
+              <tr><td>朝食</td><td>124</td><td>121</td><td class="delta-dn">-3</td><td>無断不泊 2</td></tr>
+              <tr><td>夕食</td><td>122</td><td>117</td><td class="delta-dn">-5</td><td>宴会振替 4</td></tr>
+              <tr><td>ドリンク</td><td>--</td><td>--</td><td class="delta-up">+8%</td><td>会食比率増</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">📊 直近2日の日次レポート</div><span class="src">チェックイン / チェックアウト 人数・室数・稼働率</span></div>
+        <div class="card-b">
+          <div class="chart-wrap short"><canvas id="dailyChart"></canvas></div>
+          <table class="report-table" style="margin-top:10px">
+            <thead><tr><th>日付</th><th>チェックイン 人数</th><th>チェックアウト 人数</th><th>チェックイン 室数</th><th>チェックアウト 室数</th><th>稼働率</th></tr></thead>
+            <tbody>
+              <tr><td>2026/05/29</td><td>82</td><td>76</td><td>38</td><td>34</td><td>83.1%</td></tr>
+              <tr><td>2026/05/30</td><td>94</td><td>81</td><td>43</td><td>37</td><td>84.3%</td></tr>
+            </tbody>
+          </table>
+          <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="btn-sm btn-navy">PDF出力</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const baseTicks = { color: '#8C8C8C', font: { family: 'Inter, -apple-system, BlinkMacSystemFont, Hiragino Sans, Yu Gothic UI, Meiryo, sans-serif', size: 10 } };
+const grid = { color: '#F0F0F0' };
+new Chart(document.getElementById('auditChart'), {
+  type: 'bar',
+  data: {
+    labels: ['前日残', '売上', '入金', '売掛振替', '前受変動', '当日残'],
+    datasets: [{ label: '金額', data: [4.8, 12.6, 8.9, 2.1, 0.7, 11.3], backgroundColor: ['#1E3A5F','#15803D','#0E7490','#D97706','#7C3AED','#C8102E'], borderRadius: 6 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.parsed.y}M` } } },
+    scales: { x: { ticks: baseTicks, grid: { display: false } }, y: { ticks: baseTicks, grid } }
+  }
+});
+
+new Chart(document.getElementById('kpiChart'), {
+  type: 'bar',
+  data: {
+    labels: ['5/28', '5/29', '5/30'],
+    datasets: [
+      { type: 'line', label: 'ADR', data: [29800, 30400, 31200], borderColor: '#1E3A5F', backgroundColor: '#1E3A5F', tension: .35, pointRadius: 3, pointBackgroundColor: '#1E3A5F' },
+      { type: 'line', label: 'RevPAR', data: [21900, 23200, 24240], borderColor: '#15803D', backgroundColor: '#15803D', tension: .35, pointRadius: 3, pointBackgroundColor: '#15803D' },
+      { type: 'bar', label: '稼働率', data: [80.1, 82.4, 84.3], backgroundColor: 'rgba(201,16,46,.18)', borderColor: '#C8102E', borderWidth: 1, borderRadius: 5, yAxisID: 'y1' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } },
+    scales: {
+      x: { ticks: baseTicks, grid: { display: false } },
+      y: { ticks: baseTicks, grid },
+      y1: { position: 'right', min: 0, max: 100, ticks: baseTicks, grid: { drawOnChartArea: false } }
+    }
+  }
+});
+
+new Chart(document.getElementById('dailyChart'), {
+  type: 'bar',
+  data: {
+    labels: ['2026/05/29', '2026/05/30'],
+    datasets: [
+      { label: 'IN人数', data: [82, 94], backgroundColor: '#1E3A5F', borderRadius: 5 },
+      { label: 'OUT人数', data: [76, 81], backgroundColor: '#15803D', borderRadius: 5 },
+      { label: '稼働率', data: [83.1, 84.3], type: 'line', borderColor: '#C8102E', backgroundColor: '#C8102E', yAxisID: 'y1', tension: .3, pointRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } },
+    scales: {
+      x: { ticks: baseTicks, grid: { display: false } },
+      y: { ticks: baseTicks, grid },
+      y1: { position: 'right', min: 0, max: 100, ticks: baseTicks, grid: { drawOnChartArea: false } }
+    }
+  }
+});
+</script>
+</body>
+</html>

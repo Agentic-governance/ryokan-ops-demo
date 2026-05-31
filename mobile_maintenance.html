@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>設備保全</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+    --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+    --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+    --navy:#1E3A5F;--navy-lite:#DCE5F0;
+    --amber:#D97706;--amber-lite:#FEF3C7;
+    --green:#15803D;--green-lite:#DCFCE7;
+    --purple:#7C3AED;--purple-lite:#EDE9FE;
+    --teal:#0E7490;--teal-lite:#CFFAFE;
+    --slate:#334155;--slate-lite:#E2E8F0;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;
+    background:#F0F0F0;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:20px 0;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a { text-decoration:none; color:inherit; }
+  button { font:inherit; }
+
+  .phone-frame {
+    width:375px;
+    min-height:812px;
+    background:var(--bg);
+    border-radius:40px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow:hidden;
+    position:relative;
+  }
+
+  .status-bar {
+    height:44px;
+    background:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+  }
+  .status-bar .time { font-size:14px; font-weight:700; }
+  .status-bar .carrier { font-size:11px; opacity:0.85; letter-spacing:0.3px; }
+  .status-bar .icons { font-size:12px; letter-spacing:2px; }
+
+  .app-header {
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    border-bottom:1px solid var(--rule-soft);
+    background:var(--bg);
+  }
+  .app-header .logo {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-weight:700;
+    font-size:15px;
+    color:var(--navy);
+  }
+  .app-header .logo .dot { width:8px; height:8px; background:var(--brand); border-radius:50%; }
+  .app-header .title { font-size:17px; font-weight:700; color:var(--text); }
+  .app-header .bell { position:relative; font-size:20px; cursor:pointer; }
+  .app-header .bell .badge {
+    position:absolute;
+    top:-4px; right:-6px;
+    background:var(--brand);
+    color:#fff;
+    font-size:10px;
+    font-weight:700;
+    width:16px; height:16px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+  }
+
+  .content { padding-bottom:100px; overflow-y:auto; }
+
+  .hero {
+    padding:14px 16px 10px;
+    background:linear-gradient(180deg, #fff 0%, #fff7f8 100%);
+    border-bottom:1px solid var(--rule-lite);
+  }
+  .hero-kicker {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:11px;
+    color:var(--brand-dark);
+    font-weight:700;
+    letter-spacing:.3px;
+    text-transform:uppercase;
+  }
+  .hero-title {
+    margin-top:6px;
+    font-size:18px;
+    font-weight:800;
+    color:var(--text);
+    line-height:1.2;
+  }
+  .hero-sub {
+    margin-top:6px;
+    font-size:12px;
+    color:var(--text-sub);
+    line-height:1.5;
+  }
+
+  .section { padding:0 16px; margin-top:16px; }
+  .section-title {
+    font-size:15px;
+    font-weight:700;
+    color:var(--text);
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .section-title .count {
+    background:var(--surface);
+    color:var(--text-mute);
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:10px;
+    font-weight:600;
+  }
+
+  .risk-card {
+    border:1px solid var(--brand-lite);
+    border-left:4px solid var(--brand);
+    border-radius:14px;
+    background:linear-gradient(135deg, #fff 0%, var(--brand-soft) 100%);
+    padding:14px;
+    margin-bottom:10px;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
+  }
+  .risk-card .top {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:flex-start;
+    margin-bottom:8px;
+  }
+  .risk-card .name {
+    font-size:15px;
+    font-weight:800;
+    color:var(--text);
+  }
+  .risk-card .badge {
+    font-size:10px;
+    font-weight:700;
+    padding:3px 8px;
+    border-radius:10px;
+    white-space:nowrap;
+    background:var(--brand-lite);
+    color:var(--brand);
+  }
+  .risk-card .value {
+    font-size:28px;
+    font-weight:800;
+    color:var(--brand);
+    line-height:1;
+  }
+  .risk-card .value small {
+    font-size:13px;
+    font-weight:700;
+    color:var(--text-sub);
+  }
+  .risk-list { margin-top:8px; }
+  .risk-item {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    font-size:11.5px;
+    padding:5px 0;
+    border-top:1px dashed var(--brand-lite);
+  }
+  .risk-item b { color:var(--brand-dark); white-space:nowrap; }
+  .risk-foot {
+    margin-top:8px;
+    font-size:10.5px;
+    color:var(--text-sub);
+    line-height:1.5;
+  }
+
+  .mini-grid {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+  .metric {
+    border:1px solid var(--rule-soft);
+    border-radius:12px;
+    background:var(--bg);
+    padding:12px;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
+  }
+  .metric .k { font-size:10px; color:var(--text-mute); line-height:1.3; min-height:26px; }
+  .metric .v { font-size:21px; font-weight:800; line-height:1.1; }
+  .metric .s { font-size:10.5px; color:var(--text-mute); margin-top:3px; line-height:1.4; }
+
+  .safety-card {
+    border:1px solid var(--rule-soft);
+    border-radius:14px;
+    background:var(--bg);
+    padding:14px;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
+    margin-bottom:10px;
+  }
+  .safety-head {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  .safety-head .t { font-size:13px; font-weight:800; display:flex; align-items:center; gap:6px; }
+  .pill-ok, .pill-warn, .pill-bad {
+    font-size:10px;
+    font-weight:800;
+    padding:3px 8px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .pill-ok { background:var(--green-lite); color:var(--green); }
+  .pill-warn { background:var(--amber-lite); color:var(--amber); }
+  .pill-bad { background:var(--brand-lite); color:var(--brand); }
+
+  .temp-band {
+    position:relative;
+    height:30px;
+    border-radius:8px;
+    margin:12px 0 8px;
+    background:linear-gradient(90deg,
+      #2f6fb3 0%, #2f6fb3 20%,
+      #f59e0b 20%, #dc2626 35%, #dc2626 65%, #f59e0b 80%,
+      #2f6fb3 80%, #2f6fb3 100%);
+  }
+  .temp-band .lbl {
+    position:absolute;
+    top:-14px;
+    font-size:9px;
+    color:var(--text-mute);
+    transform:translateX(-50%);
+    white-space:nowrap;
+  }
+  .temp-band .mark {
+    position:absolute;
+    top:-6px;
+    width:0;
+    height:42px;
+    border-left:2px solid #111;
+  }
+  .temp-band .mark::after {
+    content:attr(data-v);
+    position:absolute;
+    top:-16px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:10px;
+    font-weight:700;
+    background:#111;
+    color:#fff;
+    padding:1px 5px;
+    border-radius:3px;
+    white-space:nowrap;
+  }
+  .safety-note {
+    font-size:10.5px;
+    color:var(--brand);
+    font-weight:700;
+    text-align:center;
+    margin-top:16px;
+    line-height:1.5;
+  }
+
+  .order-card {
+    display:flex;
+    border:1px solid var(--rule-soft);
+    border-radius:14px;
+    margin-bottom:10px;
+    overflow:hidden;
+    background:var(--bg);
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
+  }
+  .order-bar { width:4px; flex-shrink:0; }
+  .order-bar.red { background:var(--brand); }
+  .order-bar.amber { background:var(--amber); }
+  .order-bar.navy { background:var(--navy); }
+  .order-bar.green { background:var(--green); }
+  .order-body { padding:12px 14px; flex:1; min-width:0; }
+  .order-top {
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    align-items:flex-start;
+    margin-bottom:4px;
+  }
+  .order-no { font-size:14px; font-weight:800; color:var(--text); }
+  .order-asset { font-size:12px; color:var(--text-sub); margin-top:2px; line-height:1.4; }
+  .order-meta {
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:8px;
+  }
+  .chip {
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-size:10px;
+    font-weight:700;
+    padding:3px 7px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .chip.rpn { background:#fee2e2; color:#b91c1c; }
+  .chip.pf { background:var(--navy-lite); color:var(--navy); }
+  .chip.safe { background:var(--brand-lite); color:var(--brand); }
+  .chip.op { background:var(--amber-lite); color:var(--amber); }
+  .chip.hidden { background:#111827; color:#fff; }
+  .chip.photo { background:var(--teal-lite); color:var(--teal); }
+  .order-notes {
+    font-size:11px;
+    color:var(--text-sub);
+    line-height:1.5;
+    margin-top:8px;
+  }
+
+  .legend-line {
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:8px;
+    font-size:10px;
+    color:var(--text-mute);
+  }
+  .legend-line span {
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    background:var(--surface);
+    padding:3px 7px;
+    border-radius:999px;
+  }
+  .legend-line i { width:8px; height:8px; border-radius:2px; display:inline-block; }
+
+  .hint-card {
+    border:1px solid var(--rule-soft);
+    border-radius:14px;
+    background:var(--surface);
+    padding:12px 14px;
+    margin-bottom:10px;
+  }
+  .hint-card .t { font-size:13px; font-weight:800; color:var(--text); margin-bottom:5px; }
+  .hint-card .d { font-size:11.5px; color:var(--text-sub); line-height:1.5; }
+
+  .bottom-nav {
+    position:sticky;
+    bottom:0;
+    left:0; right:0;
+    height:83px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--rule-soft);
+    display:flex;
+    padding-bottom:20px;
+    z-index:5;
+  }
+  .nav-tab {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    text-decoration:none;
+    color:var(--text-mute);
+    font-size:10px;
+    font-weight:500;
+    cursor:pointer;
+    padding-top:6px;
+  }
+  .nav-tab .icon { font-size:22px; line-height:1; }
+  .nav-tab.active { color:var(--brand); }
+  .nav-tab.active .label-text { font-weight:600; }
+
+  .fab {
+    position:fixed;
+    right:18px;
+    bottom:96px;
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    border:none;
+    background:linear-gradient(135deg, var(--navy), #2c5078);
+    color:#fff;
+    box-shadow:0 12px 24px rgba(30,58,95,.28);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="status-bar">
+    <span class="time">15:42</span>
+    <span class="carrier">&#9679;&#9679;&#9679; リゾート箱根</span>
+    <span class="icons">&#9632;&#9632;&#9632;&#9632;&#9632;</span>
+  </div>
+
+  <div class="app-header">
+    <div class="logo"><span class="dot"></span> 旅館運営システム</div>
+    <span class="title">保全</span>
+    <div class="bell">
+      &#128276;
+      <span class="badge">4</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="hero">
+      <div class="hero-kicker">&#9888; 営業日 2026/05/30</div>
+      <div class="hero-title">設備担当向け 保全モバイル</div>
+      <div class="hero-sub">現場で見るのは、売止リスク・優先作業・安全値・防護設備の作動試験期限。QRと写真で、履歴確認から完了報告までを1画面で閉じる。</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">設備起因の売止リスク <span class="count">設備起因の売止影響</span></div>
+
+      <div class="risk-card">
+        <div class="top">
+          <div>
+            <div class="name">売止リスク見込み</div>
+            <div class="value">34<small> 室泊 / 48h</small></div>
+          </div>
+          <span class="badge">収益影響 ¥1.08M</span>
+        </div>
+        <div class="risk-list">
+          <div class="risk-item"><span>温泉循環ポンプ#2（大浴場 男湯）</span><b>22室泊 / ¥0.7M</b></div>
+          <div class="risk-item"><span>別館3F 空調系統（301-308）</span><b>8室泊 / ¥0.26M</b></div>
+          <div class="risk-item"><span>客室302 エアコン異音</span><b>4室泊 / ¥0.12M</b></div>
+        </div>
+        <div class="risk-foot">設備の停止は「空室がある」だけでは売れない問題に直結。売止判断は、客室ではなく「設備が止まったときの影響」で見る。</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">優先作業オーダー <span class="count">縦リスト</span></div>
+
+      <div class="order-card">
+        <div class="order-bar red"></div>
+        <div class="order-body">
+          <div class="order-top">
+            <div>
+              <div class="order-no">#RM-302</div>
+              <div class="order-asset">302号室 エアコン異音・冷え不良</div>
+            </div>
+            <span class="chip hidden">防護 / 住宅系</span>
+          </div>
+          <div class="order-meta">
+            <span class="chip rpn">優先度 245</span>
+            <span class="chip pf">故障まで 残2日</span>
+            <span class="chip safe">影響: 営業</span>
+          </div>
+          <div class="order-notes">QRスキャンで設備履歴・前回点検・使用部品を即表示。写真添付で完了報告、異音再発時は同一設備へ再起票。</div>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-bar amber"></div>
+        <div class="order-body">
+          <div class="order-top">
+            <div>
+              <div class="order-no">#B1-BOILER</div>
+              <div class="order-asset">ボイラー循環ポンプ 圧力低下</div>
+            </div>
+            <span class="chip safe">影響: 安全</span>
+          </div>
+          <div class="order-meta">
+            <span class="chip rpn">優先度 198</span>
+            <span class="chip pf">故障まで 残4日</span>
+            <span class="chip op">要部品手配</span>
+          </div>
+          <div class="order-notes">保全班は部品在庫を確認してから着手。QRで前回点検と交換履歴を参照し、交換後は写真2枚で完了登録。</div>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-bar navy"></div>
+        <div class="order-body">
+          <div class="order-top">
+            <div>
+              <div class="order-no">#POOL-CIRC</div>
+              <div class="order-asset">大浴場 循環温度・残留塩素点検</div>
+            </div>
+            <span class="chip safe">影響: 安全</span>
+          </div>
+          <div class="order-meta">
+            <span class="chip rpn">優先度 210</span>
+            <span class="chip pf">故障まで 残1日</span>
+            <span class="chip photo">写真必須</span>
+          </div>
+          <div class="order-notes">レジオネラ安全ループの値を先に押さえる。点検記録と写真添付がない完了報告は無効扱い。</div>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-bar green"></div>
+        <div class="order-body">
+          <div class="order-top">
+            <div>
+              <div class="order-no">#GEN-01</div>
+              <div class="order-asset">非常用発電機 自動起動テスト</div>
+            </div>
+            <span class="chip hidden">防護 / 法定</span>
+          </div>
+          <div class="order-meta">
+            <span class="chip rpn">優先度 176</span>
+            <span class="chip pf">故障まで 残7日</span>
+            <span class="chip op">テスト期限</span>
+          </div>
+          <div class="order-notes">消火ポンプと並ぶ防護設備の作動試験。写真・計測値・起動結果を残し、次回点検のきっかけへつなぐ。</div>
+        </div>
+      </div>
+
+      <div class="hint-card">
+        <div class="t">作業時の運用メモ</div>
+        <div class="d">QRスキャンで設備履歴・前回点検・部品表示。写真添付で完了報告。未スキャンのまま完了は押せない前提で、現場の記録抜けを防ぐ。</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">レジオネラ安全パネル <span class="count">簡易監視</span></div>
+
+      <div class="safety-card">
+        <div class="safety-head">
+          <div class="t">&#9851; 循環温度 / 残留塩素</div>
+          <span class="pill-ok">適合 / 監視中</span>
+        </div>
+
+        <div class="temp-band">
+          <span class="lbl" style="left:0%;">15&deg;C</span>
+          <span class="lbl" style="left:20%;">20&deg;C</span>
+          <span class="lbl" style="left:50%;">35&deg;C</span>
+          <span class="lbl" style="left:80%;">50&deg;C</span>
+          <span class="lbl" style="left:100%;">65&deg;C</span>
+          <span class="mark" data-v="浴槽 41.2&deg;C" style="left:67%;"></span>
+        </div>
+
+        <div class="mini-grid">
+          <div class="metric">
+            <div class="k">循環温度</div>
+            <div class="v" style="color:var(--green);">51&deg;C</div>
+            <div class="s">危険帯 25-45&deg;C を外す</div>
+          </div>
+          <div class="metric">
+            <div class="k">残留塩素</div>
+            <div class="v" style="color:var(--green);">0.4<span style="font-size:10px;font-weight:600;"> mg/L</span></div>
+            <div class="s">基準内で推移</div>
+          </div>
+        </div>
+
+        <div class="safety-note">危険帯 25-45&deg;C は増殖リスクが高い。温度と残留塩素をセットで見て、監視中のままにしない。</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">防護設備の作動試験 期限 <span class="count">法定・予防</span></div>
+
+      <div class="order-card">
+        <div class="order-bar red"></div>
+        <div class="order-body">
+          <div class="order-top">
+            <div>
+              <div class="order-no">消火ポンプ</div>
+              <div class="order-asset">起動テスト / 圧力確認 / 記録保全</div>
+            </div>
+            <span class="chip hidden">期限 3日</span>
+          </div>
+          <div class="order-meta">
+            <span class="chip rpn">未完了</span>
+            <span class="chip pf">故障まで 残3日</span>
+            <span class="chip photo">写真添付</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-bar navy"></div>
+        <div class="order-body">
+          <div class="order-top">
+            <div>
+              <div class="order-no">非常用発電機</div>
+              <div class="order-asset">無負荷試験 / 自動起動 / 燃料残量確認</div>
+            </div>
+            <span class="chip hidden">期限 7日</span>
+          </div>
+          <div class="order-meta">
+            <span class="chip rpn">要記録</span>
+            <span class="chip pf">故障まで 残7日</span>
+            <span class="chip op">テスト期限</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" style="margin-bottom:12px;">
+      <div class="section-title">今日の運用ヒント <span class="count">QR / 写真 / 引き継ぎ</span></div>
+      <div class="hint-card">
+        <div class="t">作業の起点</div>
+        <div class="d">右下の撮影ボタンで QR スキャンを起動。作業票は設備履歴と前回点検を引き、完了時は写真 2 枚で報告。引き継ぎタブでは未完了と未撮影だけを残す。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-tab active" href="mobile_maintenance.html">
+      <span class="icon">&#128736;</span>
+      <span class="label-text">作業</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#128295;</span>
+      <span class="label-text">設備</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#128247;</span>
+      <span class="label-text">QR</span>
+    </a>
+    <a class="nav-tab" href="#">
+      <span class="icon">&#128203;</span>
+      <span class="label-text">引継ぎ</span>
+    </a>
+  </div>
+</div>
+
+<button class="fab" aria-label="QRスキャン">&#128247;</button>
+
+</body>
+</html>

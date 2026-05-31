@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ゲスト</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+    --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+    --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+    --navy:#1E3A5F;--navy-lite:#DCE5F0;
+    --amber:#D97706;--amber-lite:#FEF3C7;
+    --green:#15803D;--green-lite:#DCFCE7;
+    --purple:#7C3AED;--purple-lite:#EDE9FE;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;
+    background:#F0F0F0;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:20px 0;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .phone-frame {
+    width:375px;
+    min-height:812px;
+    background:var(--bg);
+    border-radius:40px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow:hidden;
+    position:relative;
+  }
+
+  .status-bar {
+    height:44px;
+    background:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+  }
+  .status-bar .time { font-size:14px; font-weight:700; }
+  .status-bar .carrier { font-size:11px; opacity:0.85; letter-spacing:0.3px; }
+  .status-bar .icons { font-size:12px; letter-spacing:2px; }
+
+  .app-header {
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    border-bottom:1px solid var(--rule-soft);
+    background:var(--bg);
+  }
+  .app-header .logo {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-weight:700;
+    font-size:15px;
+    color:var(--navy);
+  }
+  .app-header .logo .dot {
+    width:8px; height:8px;
+    background:var(--brand);
+    border-radius:50%;
+  }
+  .app-header .title {
+    font-size:17px;
+    font-weight:700;
+    color:var(--text);
+  }
+  .app-header .bell {
+    position:relative;
+    font-size:20px;
+    cursor:pointer;
+  }
+  .app-header .bell .badge {
+    position:absolute;
+    top:-4px; right:-6px;
+    background:var(--brand);
+    color:#fff;
+    font-size:10px;
+    font-weight:700;
+    width:16px; height:16px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+  }
+
+  .content {
+    padding-bottom:100px;
+    overflow-y:auto;
+  }
+
+  .hero {
+    margin:16px;
+    border-radius:18px;
+    background:linear-gradient(135deg, var(--navy) 0%, #274C7E 55%, var(--brand-dark) 100%);
+    color:#fff;
+    padding:14px;
+    box-shadow:0 10px 24px rgba(30,58,95,0.16);
+  }
+  .hero-top {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .hero .label {
+    font-size:11px;
+    letter-spacing:0.6px;
+    text-transform:uppercase;
+    opacity:0.82;
+    margin-bottom:4px;
+  }
+  .hero .headline {
+    font-size:15px;
+    font-weight:700;
+    line-height:1.35;
+  }
+  .hero .subline {
+    margin-top:8px;
+    font-size:12px;
+    opacity:0.92;
+    line-height:1.45;
+  }
+  .locator-badge {
+    flex:0 0 auto;
+    background:rgba(255,255,255,0.14);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:12px;
+    padding:8px 10px;
+    min-width:96px;
+    text-align:right;
+  }
+  .locator-badge .small {
+    display:block;
+    font-size:10px;
+    opacity:0.8;
+    margin-bottom:2px;
+  }
+  .locator-badge .place {
+    font-size:13px;
+    font-weight:700;
+  }
+
+  .search-card {
+    margin:0 16px 12px;
+    border:1px solid var(--rule-soft);
+    border-radius:16px;
+    background:var(--bg);
+    padding:12px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.04);
+  }
+  .search-row {
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+  .search-input {
+    flex:1;
+    border:1px solid var(--rule);
+    background:var(--surface);
+    border-radius:12px;
+    padding:12px 12px;
+    font-size:14px;
+    color:var(--text);
+    outline:none;
+  }
+  .search-input::placeholder { color:var(--text-mute); }
+  .search-btn {
+    border:none;
+    border-radius:12px;
+    background:var(--navy);
+    color:#fff;
+    min-width:56px;
+    height:44px;
+    font-size:13px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .search-hints {
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .chip {
+    border-radius:999px;
+    padding:5px 8px;
+    font-size:11px;
+    font-weight:600;
+    background:var(--navy-lite);
+    color:var(--navy);
+  }
+  .chip.gray { background:var(--surface); color:var(--text-sub); }
+  .chip.amber { background:var(--amber-lite); color:var(--amber); }
+
+  .action-row {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin:0 16px 14px;
+  }
+  .action-btn {
+    border:1px solid var(--rule-soft);
+    background:var(--bg);
+    border-radius:14px;
+    min-height:58px;
+    padding:10px 12px;
+    text-align:left;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .action-btn.primary {
+    background:linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+    color:#fff;
+    border-color:transparent;
+  }
+  .action-btn .top {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    font-size:11px;
+    font-weight:600;
+    opacity:0.92;
+  }
+  .action-btn .title {
+    margin-top:4px;
+    font-size:13px;
+    font-weight:700;
+    line-height:1.35;
+  }
+  .action-btn .meta {
+    margin-top:4px;
+    font-size:11px;
+    line-height:1.35;
+    color:var(--text-mute);
+  }
+  .action-btn.primary .meta,
+  .action-btn.primary .top { color:rgba(255,255,255,0.88); }
+
+  .section {
+    padding:0 16px;
+    margin-top:18px;
+  }
+  .section-title {
+    font-size:15px;
+    font-weight:700;
+    color:var(--text);
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .section-title .count {
+    background:var(--surface);
+    color:var(--text-mute);
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:10px;
+    font-weight:600;
+  }
+
+  .guest-card {
+    background:var(--bg);
+    border:1px solid var(--rule-soft);
+    border-radius:16px;
+    padding:14px;
+    margin-bottom:10px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.03);
+  }
+  .guest-card .head {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:flex-start;
+    margin-bottom:8px;
+  }
+  .guest-card .name {
+    font-size:15px;
+    font-weight:700;
+    color:var(--text);
+    line-height:1.2;
+  }
+  .guest-card .room {
+    font-size:12px;
+    color:var(--text-sub);
+    margin-top:3px;
+    line-height:1.4;
+  }
+  .guest-card .flags {
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+  .flag {
+    font-size:10px;
+    font-weight:700;
+    border-radius:8px;
+    padding:4px 7px;
+    white-space:nowrap;
+  }
+  .flag.en { background:var(--navy-lite); color:var(--navy); }
+  .flag.cn { background:var(--amber-lite); color:var(--amber); }
+  .flag.kr { background:var(--purple-lite); color:var(--purple); }
+  .flag.vip { background:var(--brand-lite); color:var(--brand); }
+  .flag.member { background:var(--green-lite); color:var(--green); }
+
+  .meta-grid {
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:10px;
+  }
+  .meta-pill {
+    border-radius:10px;
+    background:var(--surface);
+    color:var(--text-sub);
+    padding:5px 8px;
+    font-size:11px;
+    font-weight:600;
+    line-height:1.2;
+  }
+  .meta-pill strong { color:var(--text); }
+
+  .alerts {
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  .alert {
+    border-radius:999px;
+    padding:5px 8px;
+    font-size:11px;
+    font-weight:700;
+    line-height:1;
+  }
+  .alert.red { background:var(--brand-lite); color:var(--brand); }
+  .alert.amber { background:var(--amber-lite); color:var(--amber); }
+  .alert.green { background:var(--green-lite); color:var(--green); }
+  .alert.purple { background:var(--purple-lite); color:var(--purple); }
+
+  .divider {
+    height:1px;
+    background:var(--rule-soft);
+    margin:12px 0;
+  }
+
+  .guest-actions {
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+  }
+  .guest-actions .mini {
+    flex:1;
+    border:none;
+    border-radius:12px;
+    min-height:40px;
+    font-family:inherit;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .mini.chat { background:var(--navy-lite); color:var(--navy); }
+  .mini.msg { background:var(--green-lite); color:var(--green); }
+  .mini.scan { background:var(--amber-lite); color:var(--amber); }
+
+  .language-panel {
+    margin:18px 16px 0;
+    border:1px solid var(--rule-soft);
+    border-radius:16px;
+    background:linear-gradient(135deg, #fff 0%, #FBFCFE 100%);
+    padding:12px;
+  }
+  .language-panel .title-line {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .language-panel .title-line .label {
+    font-size:14px;
+    font-weight:700;
+    color:var(--text);
+  }
+  .language-panel .title-line .note {
+    font-size:11px;
+    color:var(--text-mute);
+  }
+  .message-grid {
+    display:grid;
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  .message-item {
+    border:1px solid var(--rule-soft);
+    border-radius:12px;
+    padding:10px 12px;
+    background:var(--bg);
+  }
+  .message-item .top {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:4px;
+  }
+  .message-item .lang {
+    font-size:12px;
+    font-weight:700;
+    color:var(--text);
+  }
+  .message-item .snippet {
+    font-size:12px;
+    color:var(--text-sub);
+    line-height:1.45;
+  }
+
+  .bottom-nav {
+    position:sticky;
+    bottom:0;
+    left:0; right:0;
+    height:83px;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--rule-soft);
+    display:flex;
+    padding-bottom:20px;
+  }
+  .nav-tab {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    text-decoration:none;
+    color:var(--text-mute);
+    font-size:10px;
+    font-weight:500;
+    cursor:pointer;
+    padding-top:6px;
+    transition:color 0.15s;
+  }
+  .nav-tab .icon { font-size:22px; line-height:1; }
+  .nav-tab.active { color:var(--brand); }
+  .nav-tab.active .label-text { font-weight:600; }
+  .nav-tab:not(.active):hover { color:var(--text-sub); }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="status-bar">
+    <span class="time">15:42</span>
+    <span class="carrier">営業日 2026/05/30</span>
+    <span class="icons">&#9679;&#9679;&#9679;&#9679;&#9679;</span>
+  </div>
+
+  <div class="app-header">
+    <div class="logo"><span class="dot"></span> 旅館運営システム</div>
+    <span class="title">ゲスト</span>
+    <div class="bell">
+      &#128276;
+      <span class="badge">12</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="label">フロント / 支配人向け</div>
+          <div class="headline">常連・要注意・多言語対応をこの1画面で追う</div>
+          <div class="subline">旅券未済、アレルギー、記念日、VIP、館内動線（現在地）を即時把握。予約・客室・配膳の判断材料を圧縮表示。</div>
+        </div>
+        <div class="locator-badge">
+          <span class="small">現在地</span>
+          <span class="place">ロビー</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-card">
+      <div class="search-row">
+        <input class="search-input" type="text" value="" placeholder="氏名 / 室番 / 予約番号" aria-label="高速検索">
+        <button class="search-btn">検索</button>
+      </div>
+      <div class="search-hints">
+        <span class="chip">高速検索 1 BOX</span>
+        <span class="chip gray">到着 / 滞在 / 出発</span>
+        <span class="chip amber">旅券未済で赤表示</span>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="action-btn primary">
+        <div class="top"><span>旅券スキャン</span><span>カメラ</span></div>
+        <div class="title">名簿へ自動転記</div>
+        <div class="meta">氏名・国籍・旅券番号を転記して、未済を即抽出</div>
+      </button>
+      <button class="action-btn">
+        <div class="top"><span>定型送信</span><span>中 / 英 / 韓</span></div>
+        <div class="title">多言語メッセージ</div>
+        <div class="meta">到着案内、朝食、送迎、記念日案内をテンプレ化</div>
+      </button>
+    </div>
+
+    <div class="section">
+      <div class="section-title">常連ゲスト <span class="count">512号室の再訪</span></div>
+
+      <div class="guest-card">
+        <div class="head">
+          <div>
+            <div class="name">J.W 様</div>
+            <div class="room">512号室 / 予約 #HK-250530-018 / 英語</div>
+          </div>
+          <div class="flags">
+            <span class="flag en">EN</span>
+            <span class="flag member">R5</span>
+            <span class="flag vip">VIP</span>
+          </div>
+        </div>
+        <div class="meta-grid">
+          <span class="meta-pill"><strong>現在地:</strong> 大浴場</span>
+          <span class="meta-pill"><strong>担当:</strong> フロント</span>
+          <span class="meta-pill"><strong>到着:</strong> 16:10</span>
+        </div>
+        <div class="alerts">
+          <span class="alert red">アレルギー: えび</span>
+          <span class="alert amber">記念日</span>
+          <span class="alert green">旅券済</span>
+        </div>
+        <div class="guest-actions">
+          <button class="mini chat">英語定型</button>
+          <button class="mini msg">現在地更新</button>
+          <button class="mini scan">詳細</button>
+        </div>
+      </div>
+
+      <div class="guest-card">
+        <div class="head">
+          <div>
+            <div class="name">E.C 様</div>
+            <div class="room">512号室 / 予約 #HK-250530-019 / 英語</div>
+          </div>
+          <div class="flags">
+            <span class="flag en">EN</span>
+            <span class="flag member">R3</span>
+            <span class="flag vip">VIP</span>
+          </div>
+        </div>
+        <div class="meta-grid">
+          <span class="meta-pill"><strong>現在地:</strong> ラウンジ</span>
+          <span class="meta-pill"><strong>担当:</strong> フロント</span>
+          <span class="meta-pill"><strong>到着:</strong> 17:00</span>
+        </div>
+        <div class="alerts">
+          <span class="alert amber">記念日</span>
+          <span class="alert purple">英語メッセージ優先</span>
+          <span class="alert green">旅券済</span>
+        </div>
+        <div class="guest-actions">
+          <button class="mini chat">英語定型</button>
+          <button class="mini msg">送迎案内</button>
+          <button class="mini scan">詳細</button>
+        </div>
+      </div>
+
+      <div class="guest-card">
+        <div class="head">
+          <div>
+            <div class="name">W.J 様</div>
+            <div class="room">512号室 / 予約 #HK-250530-020 / 繁中</div>
+          </div>
+          <div class="flags">
+            <span class="flag cn">中</span>
+            <span class="flag member">R4</span>
+            <span class="flag vip">VIP</span>
+          </div>
+        </div>
+        <div class="meta-grid">
+          <span class="meta-pill"><strong>現在地:</strong> 売店</span>
+          <span class="meta-pill"><strong>担当:</strong> フロント</span>
+          <span class="meta-pill"><strong>到着:</strong> 15:30</span>
+        </div>
+        <div class="alerts">
+          <span class="alert red">アレルギー: 甲殻類</span>
+          <span class="alert amber">記念日</span>
+          <span class="alert green">旅券済</span>
+        </div>
+        <div class="guest-actions">
+          <button class="mini chat">繁中定型</button>
+          <button class="mini msg">食事案内</button>
+          <button class="mini scan">詳細</button>
+        </div>
+      </div>
+
+      <div class="guest-card">
+        <div class="head">
+          <div>
+            <div class="name">K.M 様</div>
+            <div class="room">512号室 / 予約 #HK-250530-021 / 한국어</div>
+          </div>
+          <div class="flags">
+            <span class="flag kr">韓</span>
+            <span class="flag member">R2</span>
+            <span class="flag vip">VIP</span>
+          </div>
+        </div>
+        <div class="meta-grid">
+          <span class="meta-pill"><strong>現在地:</strong> 客室</span>
+          <span class="meta-pill"><strong>担当:</strong> フロント</span>
+          <span class="meta-pill"><strong>到着:</strong> 18:20</span>
+        </div>
+        <div class="alerts">
+          <span class="alert amber">記念日</span>
+          <span class="alert purple">韓国語メッセージ優先</span>
+          <span class="alert green">旅券済</span>
+        </div>
+        <div class="guest-actions">
+          <button class="mini chat">韓国語定型</button>
+          <button class="mini msg">館内案内</button>
+          <button class="mini scan">詳細</button>
+        </div>
+      </div>
+
+      <div class="guest-card">
+        <div class="head">
+          <div>
+            <div class="name">S.M 様</div>
+            <div class="room">318号室 / 予約 #HK-250530-022 / 日本語</div>
+          </div>
+          <div class="flags">
+            <span class="flag member">M3</span>
+            <span class="flag vip">要対応</span>
+          </div>
+        </div>
+        <div class="meta-grid">
+          <span class="meta-pill"><strong>現在地:</strong> チェックイン待ち</span>
+          <span class="meta-pill"><strong>担当:</strong> フロント</span>
+          <span class="meta-pill"><strong>到着:</strong> 15:00</span>
+        </div>
+        <div class="alerts">
+          <span class="alert red">旅券未済</span>
+          <span class="alert amber">記念日</span>
+          <span class="alert purple">本人確認要</span>
+        </div>
+        <div class="guest-actions">
+          <button class="mini chat">確認送信</button>
+          <button class="mini msg">旅券催促</button>
+          <button class="mini scan">詳細</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="language-panel">
+      <div class="title-line">
+        <div class="label">定型メッセージ</div>
+        <div class="note">中 / 英 / 韓 をワンタップ送信</div>
+      </div>
+      <div class="message-grid">
+        <div class="message-item">
+          <div class="top">
+            <div class="lang">中文</div>
+            <span class="chip">到着案内</span>
+          </div>
+          <div class="snippet">欢迎入住。若您已到达，请直接到前台办理登记，我们可以协助您确认房间和行李。</div>
+        </div>
+        <div class="message-item">
+          <div class="top">
+            <div class="lang">English</div>
+            <span class="chip">VIP / 記念日</span>
+          </div>
+          <div class="snippet">Welcome to Hakone Resort. We are preparing your room and can arrange a smooth check-in with special requests.</div>
+        </div>
+        <div class="message-item">
+          <div class="top">
+            <div class="lang">한국어</div>
+            <span class="chip">到着案内</span>
+          </div>
+          <div class="snippet">하코네 리조트에 오신 것을 환영합니다. 체크인, 객실 안내, 식사 요청을 바로 도와드리겠습니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="mobile_today.html" class="nav-tab">
+      <span class="icon">&#128197;</span>
+      <span class="label-text">今日</span>
+    </a>
+    <a href="#" class="nav-tab">
+      <span class="icon">&#11119;</span>
+      <span class="label-text">到着出発</span>
+    </a>
+    <a href="#" class="nav-tab">
+      <span class="icon">&#128221;</span>
+      <span class="label-text">予約</span>
+    </a>
+    <a href="#" class="nav-tab">
+      <span class="icon">&#127969;</span>
+      <span class="label-text">客室</span>
+    </a>
+    <a href="#" class="nav-tab active">
+      <span class="icon">&#128101;</span>
+      <span class="label-text">ゲスト</span>
+    </a>
+    <a href="#" class="nav-tab">
+      <span class="icon">&#8942;</span>
+      <span class="label-text">もっと</span>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

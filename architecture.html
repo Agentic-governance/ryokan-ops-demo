@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>システム構成図 — 承認後だけ書き込む連携の仕組み</title>
+<style>
+:root{
+  --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+  --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+  --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+  --navy:#1E3A5F;--navy-lite:#DCE5F0;--amber:#D97706;--amber-lite:#FEF3C7;
+  --green:#15803D;--green-lite:#DCFCE7;--purple:#7C3AED;--purple-lite:#EDE9FE;--teal:#0E7490;--teal-lite:#CFFAFE;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;color:var(--text);background:#EEF1F4;width:1440px;min-height:1024px;font-size:13px;line-height:1.45;padding:24px 28px 36px;}
+.head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
+.head .l .logo{display:flex;align-items:center;gap:8px;}
+.head .l .logo .dot{width:12px;height:12px;border-radius:50%;background:var(--brand);}
+.head .l .logo span{font-size:16px;font-weight:800;}
+.head .l h1{font-size:23px;font-weight:800;margin-top:4px;letter-spacing:-.2px;}
+.head .l .sub{font-size:12.5px;color:var(--text-sub);margin-top:2px;}
+.badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:560px;}
+.badge{font-size:10.5px;font-weight:700;padding:5px 10px;border-radius:14px;background:#fff;border:1px solid var(--rule-soft);}
+.badge b{color:var(--navy);}
+.badge .chk{color:var(--green);}
+
+/* legend */
+.legend{display:flex;gap:18px;align-items:center;margin:12px 0 14px;font-size:11px;color:var(--text-sub);background:#fff;border:1px solid var(--rule-soft);border-radius:8px;padding:8px 14px;}
+.legend .it{display:flex;align-items:center;gap:6px;}
+.legend .sw{width:24px;height:0;border-top-width:3px;border-top-style:solid;}
+.legend .box{width:13px;height:13px;border-radius:3px;}
+
+/* zones */
+.zone{border-radius:12px;padding:14px 16px 16px;margin-bottom:14px;position:relative;border:1px solid var(--rule-soft);}
+.zone .ztag{position:absolute;top:-10px;left:16px;font-size:10.5px;font-weight:800;letter-spacing:.4px;padding:3px 10px;border-radius:10px;text-transform:uppercase;}
+.zone-client{background:#fff;}
+.zone-client .ztag{background:var(--navy);color:#fff;}
+.zone-control{background:linear-gradient(180deg,#fbfdff,#f4f8fc);border-color:#cfe0f0;}
+.zone-control .ztag{background:var(--navy);color:#fff;}
+.zone-ext{background:#fff;}
+.zone-ext .ztag{background:#374151;color:#fff;}
+.region-flag{position:absolute;top:-10px;right:16px;font-size:10px;font-weight:700;background:var(--green-lite);color:var(--green);padding:3px 10px;border-radius:10px;}
+
+.row{display:flex;gap:14px;align-items:stretch;}
+.row.center{justify-content:center;}
+.node{background:#fff;border:1px solid var(--rule-soft);border-radius:10px;padding:11px 13px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.node .nt{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;}
+.node .nd{font-size:10.5px;color:var(--text-mute);margin-top:3px;line-height:1.5;}
+.node .pill{font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;}
+.pill-host{background:var(--purple-lite);color:var(--purple);}
+.pill-self{background:var(--navy-lite);color:var(--navy);}
+.pill-ext{background:var(--rule-lite);color:var(--text-sub);}
+
+/* agent node accent */
+.node-agent{border:2px solid var(--purple);background:linear-gradient(135deg,#faf5ff,#fff);}
+.node-agent .nt{color:var(--purple);}
+.node-approval{border:2px solid var(--brand);background:linear-gradient(135deg,#fff5f6,#fff);}
+.node-approval .nt{color:var(--brand);}
+.node-read{border-left:4px solid var(--green);}
+.node-write{border-left:4px solid var(--brand);}
+.node-store{background:var(--surface);}
+
+.mcp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex:1;}
+.flow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:0 0 auto;padding:0 2px;}
+.flow .lbl{font-size:9px;font-weight:700;color:var(--text-sub);white-space:nowrap;text-align:center;}
+.arrow-down{font-size:20px;line-height:1;}
+.arrow-green{color:var(--green);} .arrow-red{color:var(--brand);} .arrow-navy{color:var(--navy);} .arrow-teal{color:var(--teal);}
+
+.connect{display:flex;flex-direction:column;align-items:center;margin:2px 0;}
+.connect .lbl{font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;background:#fff;border:1px dashed var(--rule);}
+.connect .lbl.read{color:var(--green);border-color:var(--green-lite);}
+.connect .lbl.prop{color:var(--purple);border-color:var(--purple-lite);}
+.connect .lbl.write{color:var(--brand);border-color:var(--brand-lite);}
+.connect .a{font-size:18px;}
+
+.side-col{display:flex;flex-direction:column;gap:10px;flex:0 0 200px;}
+.pii-line{border:1px dashed var(--brand);background:var(--brand-soft);border-radius:8px;padding:7px 11px;font-size:10px;color:var(--brand-dark);font-weight:600;line-height:1.5;}
+.note{font-size:10px;color:var(--text-mute);margin-top:8px;line-height:1.6;}
+.gate-chip{display:inline-block;font-size:9px;font-weight:700;color:#fff;background:var(--brand);padding:2px 7px;border-radius:8px;}
+.auto-chip{display:inline-block;font-size:9px;font-weight:700;color:#fff;background:var(--green);padding:2px 7px;border-radius:8px;}
+.foot{font-size:10px;color:var(--text-mute);text-align:center;margin-top:10px;}
+.kbox{flex:1;display:flex;gap:14px;}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div class="l">
+    <div class="logo"><span class="dot"></span><span>旅館運営システム</span></div>
+    <h1>承認後だけ書き込む連携の仕組み 構成図</h1>
+    <div class="sub">AIの実行基盤(判断・提案) × 自社の外部データ連携(基幹システム・予約サイト一元管理) — 元データ(予約・会計)の正しさを守り、書き込みは人間の承認後のみ</div>
+  </div>
+  <div class="badges">
+    <span class="badge"><span class="chk">✓</span> D1 <b>ハイブリッド</b>(AI実行基盤+自社の境界)</span>
+    <span class="badge"><span class="chk">✓</span> D2 <b>自社の外部データ連携(標準接続)</b></span>
+    <span class="badge"><span class="chk">✓</span> D3 <b>個人情報の伏せ込み</b>/名簿=日本拠点</span>
+    <span class="badge"><span class="chk">✓</span> D4 <b>基幹システム=元データ / 予約サイト一元管理=配信</b></span>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="it"><span class="sw" style="border-top-color:var(--green);"></span> 読み取り=AIが自律実行</div>
+  <div class="it"><span class="sw" style="border-top-color:var(--brand);"></span> 書き込み=承認必須(人間+権限ルール)</div>
+  <div class="it"><span class="box" style="border:1px dashed var(--brand);background:var(--brand-soft);"></span> 個人情報の境界(伏せ込み)</div>
+  <div class="it"><span class="auto-chip">読み取りは自動</span></div>
+  <div class="it"><span class="gate-chip">書き込みは承認後</span></div>
+  <div class="it" style="margin-left:auto;color:var(--text-mute);">根拠: Anthropic公式資料 + 外部データ連携の標準仕様 + 業界標準のデータ項目 + GPT-5.5 / 2026-05-30 確定</div>
+</div>
+
+<!-- ZONE 1: Client -->
+<div class="zone zone-client">
+  <span class="ztag">① クライアント</span>
+  <div class="row center" style="gap:18px;">
+    <div class="node" style="flex:0 0 320px;"><div class="nt">🖥️ パソコン画面</div><div class="nd">フロント/予約/会計/レポート/承認待ち一覧(支配人)</div></div>
+    <div class="node" style="flex:0 0 320px;"><div class="nt">📱 スマホ画面 (現場)</div><div class="nd">客室係/仲居/フロント/支配人 — 役割別ホーム・承認・QRコード</div></div>
+  </div>
+</div>
+
+<div class="connect"><span class="lbl">暗号化通信 / スタッフのログイン情報・施設区分・処理の追跡番号</span><span class="a">↓</span></div>
+
+<!-- ZONE 2: Control plane -->
+<div class="zone zone-control">
+  <span class="ztag">② 自社の統制基盤</span>
+  <span class="region-flag">🇯🇵 日本拠点に固定 (承認/監査記録/業務データベース/名簿/機密情報の保管庫)</span>
+
+  <div class="row" style="gap:14px;align-items:stretch;">
+    <!-- main column -->
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;">
+      <div class="row" style="gap:12px;">
+        <div class="node" style="flex:1;"><div class="nt">🚪 連携の窓口・中継役</div><div class="nd">認証・施設選択・役割別の権限管理・監査用の追跡番号付与</div></div>
+        <div class="flow"><span class="arrow-down arrow-navy">→</span></div>
+        <div class="node" style="flex:1;"><div class="nt">🧭 処理の取りまとめ役</div><div class="nd">会話の流れ・業務情報の引き渡し・使える機能の選択・承認待ち一覧との連携</div></div>
+      </div>
+
+      <div class="connect"><span class="a arrow-navy">↓</span></div>
+
+      <!-- Agent -->
+      <div class="node node-agent">
+        <div class="nt">🤖 AI(自律的に動く) <span class="pill pill-host">Anthropic側で稼働</span></div>
+        <div class="nd">空室/予約/在庫/申し送りを読み、変更点の説明・部門間調整・<b>提案</b>を生成。会話の記憶・要約を内蔵。<b>書き込みの機能は持たない</b> — 提案だけを行う。</div>
+      </div>
+
+      <div class="row" style="gap:12px;margin-top:2px;">
+        <!-- read path -->
+        <div style="flex:1;">
+          <div class="connect"><span class="lbl read">読み取り機能 <span class="auto-chip">自律</span></span><span class="a arrow-green">↓↑</span></div>
+          <div class="node node-read"><div class="nt" style="font-size:12px;">📖 読み取り用の連携窓口 <span class="pill pill-self">自社の標準接続</span></div>
+            <div class="mcp-grid" style="margin-top:8px;grid-template-columns:repeat(2,1fr);">
+              <div style="font-size:10px;background:var(--surface);border-radius:5px;padding:5px 7px;"><b>基幹システム読み取り</b><br>空室/予約/部屋割/会計</div>
+              <div style="font-size:10px;background:var(--surface);border-radius:5px;padding:5px 7px;"><b>予約サイト一元管理 読み取り</b><br>ネット予約サイトの在庫/料金/売止/予約通知</div>
+              <div style="font-size:10px;background:var(--surface);border-radius:5px;padding:5px 7px;"><b>現場業務 読み取り</b><br>清掃/料理/送迎/アレルギー/申し送り</div>
+              <div style="font-size:10px;background:var(--surface);border-radius:5px;padding:5px 7px;"><b>知識ベース</b><br>約款/業務手順/よくある質問・<b>観光需要データ</b></div>
+            </div>
+          </div>
+        </div>
+        <!-- write/proposal path -->
+        <div style="flex:1;">
+          <div class="connect"><span class="lbl prop">提案機能 <span class="gate-chip">承認へ</span></span><span class="a" style="color:var(--purple);">↓</span></div>
+          <div class="node node-approval">
+            <div class="nt" style="font-size:12px;">🛡️ 承認の仕組み + 権限ルール判定</div>
+            <div class="nd">提案+根拠+変更前後の差分+対象データ+二重実行を防ぐ識別子+ルールの版を保存。<b>権限/金額の上限/自己承認の禁止/二重承認/時間外</b>を判定。</div>
+            <div style="font-size:9.5px;color:var(--text-sub);margin-top:5px;">→ 🔔 通知 → 支配人/フロント責任者/経理 → 🧑‍💼 <b>承認者の画面</b>(承認/却下+理由)</div>
+          </div>
+          <div class="connect"><span class="lbl write">承認時のみ / 署名付きの承認証 + 二重実行防止の識別子</span><span class="a arrow-red">↓</span></div>
+          <div class="node node-write"><div class="nt" style="font-size:12px;">⚙️ 書き込み実行 → 書き込み用の連携窓口 <span class="pill pill-self">自社の標準接続 · 相互認証</span></div>
+            <div style="font-size:10px;color:var(--text-sub);margin-top:5px;line-height:1.5;"><b>基幹システム書き込み</b>(予約更新/返金/取り消し/顧客更新) ・ <b>予約サイト一元管理 書き込み</b>(料金/在庫/売止)。承認証が無ければ拒否(承認が必要)。実行直前に読み直し→内容が食い違えば無効化。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- side stores -->
+    <div class="side-col">
+      <div class="node node-store"><div class="nt" style="font-size:12px;">🗄️ 業務データベース / 宿泊者名簿</div><div class="nd">個人情報の元データ(氏名/住所/国籍/旅券・保存3年)。日本拠点。</div></div>
+      <div class="pii-line">🔒 個人情報の境界 — AIには宿泊客の識別番号 / 予約番号 / 制約 のみ渡す。旅券画像・決済・住所は連携窓口・保管庫の中で処理し要約だけ返す。</div>
+      <div class="node node-store"><div class="nt" style="font-size:12px;">📜 監査記録の保管</div><div class="nd">会話ID/提案/承認/送受信内容の照合値/実行者/時刻/再送。書き換え不可・改ざん検知。</div></div>
+      <div class="node node-store"><div class="nt" style="font-size:12px;">🔑 機密情報の保管庫</div><div class="nd">基幹システムの接続鍵+認証 / 予約サイト一元管理の認証情報。連携窓口・書き込み実行のみ参照。</div></div>
+      <div class="node node-store"><div class="nt" style="font-size:12px;">🔁 データ受け渡しの仕組み</div><div class="nd">取り込みの正規化・重複排除・再送・処理失敗データの退避 → 業務閲覧用データへ反映。</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="connect"><span class="lbl write">公式の連携経由 ・ 在庫の送信/予約の取得(順次反映) ・ 業務イベントの即時受信↑</span><span class="a arrow-red">↓↑</span></div>
+
+<!-- ZONE 3: External -->
+<div class="zone zone-ext">
+  <span class="ztag">③ 外部システム</span>
+  <div class="row" style="gap:14px;">
+    <div class="node" style="flex:1;border-top:3px solid var(--navy);"><div class="nt">🏨 Oracle OPERA 基幹システム <span class="pill pill-ext">元データ</span></div><div class="nd">公式の連携(都度・順次・業務イベントの配信)。予約・会計・顧客・部屋の元データ。</div></div>
+    <div class="node" style="flex:1;border-top:3px solid var(--brand);"><div class="nt">🔀 予約サイト一元管理 <span class="pill pill-ext">配信</span></div><div class="nd">手間いらず / TLリンカーン。空室・料金・在庫を各ネット予約サイトへ配信・予約データ取り込み。一方向/双方向。</div></div>
+    <div class="node" style="flex:1;border-top:3px solid var(--amber);"><div class="nt">🌐 ネット予約サイト / 公式直予約</div><div class="nd">楽天トラベル / じゃらん / 一休 / Booking.com / Expedia / Agoda / 予約エンジン。</div></div>
+    <div class="node" style="flex:1;border-top:3px solid var(--teal);"><div class="nt">📚 観光データベース</div><div class="nd">充実版データ 約1,946万件(専用サーバー上の外部データ連携)。需要先読み・市場の動向を知識ベースへ供給。</div></div>
+  </div>
+</div>
+
+<div class="foot">勝ち筋: AIは速く読めるが、料金・返金・在庫・顧客データの変更は人間と権限ルールが握る。「基幹システムを置き換える」のではなく「基幹システムの連携価値・データ価値・継続価値を高める拡張」。 ／ 地雷: AIに基幹システムへの書き込みを直接開放・個人情報を会話にそのまま投入・"全件取り消し"。</div>
+
+</body>
+</html>

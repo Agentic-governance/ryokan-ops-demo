@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>アクション詳細</title>
+<style>
+:root {
+  --bg:        #FFFFFF;
+  --text:      #1A1A1A;
+  --text-sub:  #4A4A4A;
+  --text-mute: #8C8C8C;
+  --rule:      #D0D0D0;
+  --rule-soft: #E5E5E5;
+  --rule-lite: #F0F0F0;
+  --surface:   #F7F7F7;
+  --brand:      #C8102E;
+  --brand-lite: #FCE5E8;
+  --brand-soft: #FFF0F2;
+  --brand-dark: #8B0F1F;
+  --navy:       #1E3A5F;
+  --navy-lite:  #DCE5F0;
+  --amber:      #D97706;
+  --amber-lite: #FEF3C7;
+  --green:      #15803D;
+  --green-lite: #DCFCE7;
+  --purple:     #7C3AED;
+  --purple-lite:#EDE9FE;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  width: 1440px;
+  min-height: 900px;
+}
+a { text-decoration: none; color: inherit; }
+
+/* ===== Header ===== */
+.header {
+  height: 56px;
+  border-bottom: 1px solid var(--rule-soft);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  background: var(--bg);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  flex-shrink: 0;
+}
+.header-logo .dot {
+  width: 12px;
+  height: 12px;
+  background: var(--brand);
+  border-radius: 50%;
+}
+.header-facility {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--text-sub);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.header-facility:hover { border-color: var(--text-mute); }
+.header-search {
+  flex: 0 0 360px;
+  margin: 0 auto;
+  position: relative;
+}
+.header-search input {
+  width: 100%;
+  padding: 8px 12px 8px 34px;
+  border: 1px solid var(--rule-soft);
+  border-radius: 4px;
+  font-size: 13px;
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+}
+.header-search input:focus { border-color: var(--brand); }
+.header-search::before {
+  content: '🔍';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.header-notif {
+  position: relative;
+  font-size: 18px;
+  cursor: pointer;
+}
+.header-notif .notif-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 8px;
+  line-height: 1.4;
+}
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.header-user:hover { background: var(--surface); }
+.header-user-name { font-size: 13px; font-weight: 600; }
+.header-user-role { font-size: 11px; color: var(--text-mute); }
+
+/* ===== Sidebar ===== */
+.sidebar {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  width: 200px;
+  height: calc(100% - 56px);
+  background: var(--bg);
+  border-right: 1px solid var(--rule-soft);
+  padding: 16px 0;
+  z-index: 90;
+}
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 13px;
+  color: var(--text-sub);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background 0.15s;
+}
+.sidebar-item:hover { background: var(--surface); }
+.sidebar-item.active {
+  border-left-color: var(--brand);
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-weight: 700;
+}
+
+/* ===== Main ===== */
+.main {
+  margin-top: 56px;
+  margin-left: 200px;
+  padding: 20px 24px 84px 24px;
+  width: 1240px;
+  min-height: 844px;
+}
+
+/* ===== Breadcrumb ===== */
+.breadcrumb {
+  font-size: 12px;
+  color: var(--text-mute);
+  margin-bottom: 16px;
+}
+.breadcrumb a {
+  color: var(--text-mute);
+  text-decoration: none;
+}
+.breadcrumb a:hover { color: var(--brand); }
+.breadcrumb .sep { margin: 0 6px; }
+
+/* ===== Action Header ===== */
+.action-header {
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-mail { background: var(--navy-lite); color: var(--navy); }
+.badge-urgency { background: var(--amber-lite); color: var(--amber); }
+.badge-confidence { background: var(--green-lite); color: var(--green); }
+.ah-subject {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+.ah-time {
+  font-size: 12px;
+  color: var(--text-mute);
+}
+.ah-guest {
+  font-size: 13px;
+  color: var(--text-sub);
+}
+.ah-guest .star { color: var(--amber); }
+.ah-reservation {
+  font-size: 12px;
+  color: var(--text-mute);
+  background: var(--bg);
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--rule-soft);
+}
+
+/* ===== 3 Column ===== */
+.three-col {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  min-height: 460px;
+}
+.col-left {
+  width: 320px;
+  flex-shrink: 0;
+}
+.col-center {
+  width: 440px;
+  flex-shrink: 0;
+}
+.col-right {
+  width: 440px;
+  flex-shrink: 0;
+}
+.card {
+  background: var(--bg);
+  border: 1px solid var(--rule-soft);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rule-lite);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+.card-body {
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Email card */
+.email-meta {
+  background: var(--surface);
+  border: 1px solid var(--rule-lite);
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text-sub);
+  line-height: 1.8;
+  margin-bottom: 12px;
+  font-family: 'Inter', sans-serif;
+}
+.email-meta strong {
+  display: inline-block;
+  width: 54px;
+  color: var(--text-mute);
+  font-weight: 600;
+}
+.email-body {
+  border: 1px solid var(--rule-soft);
+  border-radius: 4px;
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--text-sub);
+  background: var(--bg);
+  margin-bottom: 12px;
+}
+.email-hint {
+  font-size: 11px;
+  color: var(--text-mute);
+  line-height: 1.5;
+}
+
+/* AI Reply */
+.ai-textarea {
+  width: 100%;
+  height: 290px;
+  border: 1px solid var(--rule-soft);
+  border-radius: 4px;
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.8;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif;
+  color: var(--text-sub);
+  resize: none;
+  outline: none;
+}
+.ai-textarea:focus { border-color: var(--brand); }
+.ai-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 10px;
+}
+.btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-primary {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+}
+.btn-primary:hover { background: var(--brand-dark); }
+.btn-outline {
+  background: var(--bg);
+  color: var(--text-sub);
+  border-color: var(--rule);
+}
+.btn-outline:hover { border-color: var(--text-mute); background: var(--surface); }
+.ai-note {
+  font-size: 11px;
+  color: var(--text-mute);
+  line-height: 1.5;
+}
+
+/* AI Nudge (tech-touch) */
+.nudge {
+  border: 1px solid var(--rule-soft);
+  border-left: 4px solid var(--amber);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  background: var(--bg);
+}
+.nudge-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.nudge-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-mute);
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+.nudge-prio {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 4px;
+}
+.nudge-prio.today { background: var(--amber-lite); color: var(--amber); }
+.nudge-line1 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+.nudge-line2 {
+  font-size: 12px;
+  color: var(--text-sub);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+.nudge-line3 {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.nudge-line3 strong { color: var(--text); font-weight: 700; }
+.nudge-fact {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--text-mute);
+  background: var(--surface);
+  border-radius: 4px;
+  padding: 3px 8px;
+  margin-bottom: 10px;
+}
+.nudge-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* PMS Cards */
+.pms-change {
+  border: 1px solid var(--rule-soft);
+  border-radius: 4px;
+  padding: 14px;
+  margin-bottom: 12px;
+  background: var(--bg);
+}
+.pms-change:last-of-type { margin-bottom: 0; }
+.pms-change-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.pms-table {
+  width: 100%;
+  font-size: 12px;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+.pms-table td {
+  padding: 4px 0;
+  color: var(--text-sub);
+  border: none;
+}
+.pms-table .label-col {
+  width: 110px;
+  color: var(--text-mute);
+  font-weight: 500;
+}
+.pms-table .arrow {
+  width: 30px;
+  text-align: center;
+  color: var(--brand);
+  font-weight: 700;
+}
+.pms-table .changed {
+  color: var(--brand);
+  font-weight: 600;
+}
+.pms-table .unchanged {
+  color: var(--text-mute);
+  font-style: italic;
+}
+.pms-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 600;
+}
+.pms-check input[type="checkbox"] {
+  accent-color: var(--green);
+  width: 14px;
+  height: 14px;
+}
+.pms-note {
+  font-size: 11px;
+  color: var(--text-mute);
+  line-height: 1.5;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule-lite);
+}
+
+/* Inventory table */
+.inv-table {
+  width: 100%;
+  font-size: 12px;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+.inv-table td {
+  padding: 3px 0;
+  color: var(--text-sub);
+  border: none;
+}
+.inv-table .date-col { width: 50px; font-weight: 600; }
+.inv-table .change-col { color: var(--brand); }
+.inv-table .delta { font-size: 11px; color: var(--text-mute); }
+
+/* ===== Approval Flow ===== */
+.approval-section {
+  background: var(--bg);
+  border: 1px solid var(--rule-soft);
+  border-radius: 6px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+  margin-bottom: 16px;
+}
+.approval-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.approval-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.approval-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+}
+.approval-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 140px;
+}
+.approval-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+.approval-icon.done {
+  background: var(--green);
+  color: #fff;
+}
+.approval-icon.current {
+  background: var(--brand);
+  color: #fff;
+}
+.approval-icon.pending {
+  background: var(--bg);
+  border: 2px solid var(--rule);
+  color: var(--rule);
+}
+.approval-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+.approval-sub {
+  font-size: 11px;
+  color: var(--text-mute);
+  text-align: center;
+}
+.approval-connector {
+  width: 40px;
+  height: 2px;
+  background: var(--rule-soft);
+  margin-top: 18px;
+  flex-shrink: 0;
+}
+.approval-connector.done-line {
+  background: var(--green);
+}
+.approval-hint {
+  background: var(--amber-lite);
+  border: 1px solid #F5DEB3;
+  border-radius: 4px;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: var(--text-sub);
+  line-height: 1.6;
+  max-width: 360px;
+  flex-shrink: 0;
+}
+.approval-hint strong {
+  color: var(--text);
+}
+
+/* ===== Footer Action Bar ===== */
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 200px;
+  right: 0;
+  height: 64px;
+  background: var(--bg);
+  border-top: 1px solid var(--rule-soft);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  z-index: 100;
+}
+.action-bar-back {
+  font-size: 13px;
+  color: var(--text-mute);
+  text-decoration: none;
+  cursor: pointer;
+}
+.action-bar-back:hover { color: var(--brand); }
+.action-bar-spacer { flex: 1; }
+.action-bar-checks {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-sub);
+}
+.action-bar-checks label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.action-bar-checks input {
+  accent-color: var(--green);
+}
+.action-bar-checks .check-label {
+  font-size: 12px;
+  color: var(--text-mute);
+  margin-right: 4px;
+}
+.btn-save {
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  background: var(--bg);
+  color: var(--text-sub);
+  border: 1px solid var(--rule);
+}
+.btn-save:hover { background: var(--surface); border-color: var(--text-mute); }
+.btn-cta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.btn-cta {
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  white-space: nowrap;
+}
+.btn-cta:hover { background: var(--brand-dark); }
+.btn-cta-note {
+  font-size: 10px;
+  color: var(--text-mute);
+  margin-top: 3px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-logo">
+    <span class="dot"></span>
+    <span>旅館運営システム</span>
+  </div>
+  <div class="header-facility">
+    <span>○○リゾート箱根 — 全施設横断ビュー</span>
+    <span style="font-size:11px; color:var(--text-mute);">&#9662;</span>
+  </div>
+  <div class="header-search">
+    <input type="text" placeholder="予約番号・ゲスト名・部屋番号を検索">
+  </div>
+  <div class="header-right">
+    <a href="mobile_today.html" style="padding:4px 12px;border:1px solid var(--rule);border-radius:4px;font-size:11px;color:var(--text-sub);cursor:pointer;display:flex;align-items:center;gap:4px;text-decoration:none;">📱 モバイル版</a>
+    <div class="header-notif">
+      🔔
+      <span class="notif-badge">12</span>
+    </div>
+    <div class="header-user">
+      <div>
+        <div class="header-user-name">山田太郎</div>
+        <div class="header-user-role">支配人</div>
+      </div>
+      <span style="font-size:11px; color:var(--text-mute);">&#9662;</span>
+    </div>
+  </div>
+</header>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item active" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item" href="screen8_reports.html">レポート</a>
+</nav>
+
+<!-- Main -->
+<main class="main">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="screen1_dashboard.html">ダッシュボード</a><span class="sep">></span>
+    <a href="screen1_dashboard.html">本日のアクション</a><span class="sep">></span>
+    <span style="color: var(--text);">メール変更依頼 — T.I 様</span>
+  </div>
+
+  <!-- Action Header -->
+  <div class="action-header">
+    <span class="badge badge-mail">メール変更</span>
+    <span class="ah-subject">予約変更のお願い</span>
+    <span class="ah-time">09:23 (3 分前)</span>
+    <span class="ah-guest">T.I 様 <span class="star">★</span>リピーター 3 回目</span>
+    <span class="badge badge-urgency">通常</span>
+    <span class="ah-reservation">#R-2026-1289 / スイートB / 12/20-22 / ¥48,000</span>
+  </div>
+
+  <!-- 3 Column Layout -->
+  <div class="three-col">
+
+    <!-- Left: Received Email -->
+    <div class="col-left">
+      <div class="card">
+        <div class="card-header">📧 受信メール (元データ)</div>
+        <div class="card-body">
+          <div class="email-meta">
+            <div><strong>From:</strong> 登録メール（非表示）</div>
+            <div><strong>To:</strong> reservation@xxxresort.jp</div>
+            <div><strong>Date:</strong> 2026/12/16 09:23</div>
+            <div><strong>Subject:</strong> 予約変更のお願い</div>
+          </div>
+          <div class="email-body">
+○○リゾート箱根 ご担当者様<br><br>
+お世話になっております。T.I です。<br>
+先日予約させていただいた件 (#R-2026-1289) ですが、<br>
+当初の 12/20-22 から、12/21-23 へのチェックイン日変更を<br>
+お願いできますでしょうか。<br>
+仕事の都合で前日入りが難しくなってしまいました。<br><br>
+お部屋のタイプ・人数は変更ありません。<br>
+可能でしたら同じスイートB を継続希望ですが、<br>
+満室でしたら他タイプも検討いたします。<br><br>
+ご返信お待ちしております。<br><br>
+T.I
+          </div>
+          <div class="email-hint">💡 過去メール 12 通から「ですます調・簡潔」のスタイルを学習済み</div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--rule-lite);">
+            <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px;">📋 対応履歴</div>
+            <div style="font-size:11px;color:var(--text-sub);line-height:1.6;border-left:2px solid var(--rule-soft);padding-left:10px;">
+              <div style="margin-bottom:6px;"><span style="color:var(--text-mute);">12/10 14:22</span> — 予約作成 (自社サイト経由)</div>
+              <div style="margin-bottom:6px;"><span style="color:var(--text-mute);">12/14 09:10</span> — 朝食プラン追加 (電話)</div>
+              <div style="margin-bottom:6px;"><span style="color:var(--brand);">12/16 09:23</span> — <strong>変更依頼受信 ← 現在</strong></div>
+            </div>
+          </div>
+          <div style="margin-top:10px;padding:8px 10px;background:var(--amber-lite);border-radius:4px;font-size:11px;color:var(--text-sub);line-height:1.5;">
+            <strong>⚠️ ゲスト注意事項:</strong> 高層階希望 / 禁煙 / 遅めチェックイン (18時以降)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: AI Reply -->
+    <div class="col-center">
+      <div class="card">
+        <div class="card-header">
+          <span>返信対応</span>
+        </div>
+        <div class="card-body">
+
+          <!-- AI Nudge: this record -->
+          <div class="nudge">
+            <div class="nudge-top">
+              <span class="nudge-badge">✓ AI確認</span>
+              <span class="nudge-prio today">今日中</span>
+            </div>
+            <div class="nudge-line1">T.I 様の宿泊日変更 (12/20-22 → 12/21-23) に返信できます</div>
+            <div class="nudge-line2">リピーター3回目のお客様です。本日中にお返事すると、別タイプへの切替えを検討される前に同じスイートBで確定でき、満足度につながります。</div>
+            <div class="nudge-line3">12/21-23 のスイートBは空室です。<strong>下の返信案を確認のうえ送信する</strong>とよさそうです (料金・人数は変更なし)。</div>
+            <span class="nudge-fact">空室 12/21-23 スイートB / 変更 2件 + 在庫同期1件 連動</span>
+            <div class="nudge-buttons">
+              <button class="btn btn-primary" onclick="console.log('adopt')">この返信案を確認して送信</button>
+              <button class="btn btn-outline" onclick="console.log('edit')">別案を見る</button>
+            </div>
+          </div>
+
+          <textarea class="ai-textarea">T.I 様
+
+いつも○○リゾート箱根をご利用いただきありがとうございます。
+お問い合わせの件、確認いたしました。
+
+12/21-23 のスイートB につきまして、空室を確認いたしました。
+変更を承りますので、以下のご予約内容をご確認ください:
+
+  ■ チェックイン: 2026/12/21 (月) 15:00
+  ■ チェックアウト: 2026/12/23 (水) 11:00
+  ■ お部屋: スイートB (変更なし)
+  ■ 料金: ¥48,000 (変更なし)
+  ■ ご人数: 2 名 (変更なし)
+
+上記内容で問題ございませんでしたら、本メールにご返信
+いただけますと幸いです。
+
+ご来館を心よりお待ちしております。
+
+○○リゾート箱根
+予約担当 山田</textarea>
+          <div class="ai-buttons">
+            <button class="btn btn-outline" onclick="console.log('edit')">✏️ 本文を編集</button>
+            <button class="btn btn-outline" onclick="console.log('regenerate')">🔄 別案を表示</button>
+          </div>
+          <div class="ai-note">空室 (12/21-23 スイートB) と過去メール12通の文面を参照した返信案の候補を表示しています。送信前の確認・修正は支配人が行います。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: PMS Updates -->
+    <div class="col-right">
+      <div class="card">
+        <div class="card-header">📋 基幹システム データ更新案 (3 件連動)</div>
+        <div class="card-body">
+
+          <!-- Change 1 -->
+          <div class="pms-change">
+            <div class="pms-change-title">変更 1: 予約マスタ</div>
+            <div style="font-size: 12px; color: var(--text-mute); margin-bottom: 8px;">予約番号: #R-2026-1289</div>
+            <table class="pms-table">
+              <tr>
+                <td class="label-col">チェックイン</td>
+                <td>2026/12/20</td>
+                <td class="arrow">→</td>
+                <td class="changed">2026/12/21</td>
+              </tr>
+              <tr>
+                <td class="label-col">チェックアウト</td>
+                <td>2026/12/22</td>
+                <td class="arrow">→</td>
+                <td class="changed">2026/12/23</td>
+              </tr>
+              <tr>
+                <td class="label-col">泊数</td>
+                <td>2 泊</td>
+                <td class="arrow"></td>
+                <td class="unchanged">(変更なし)</td>
+              </tr>
+              <tr>
+                <td class="label-col">部屋</td>
+                <td>スイートB</td>
+                <td class="arrow"></td>
+                <td class="unchanged">(変更なし)</td>
+              </tr>
+              <tr>
+                <td class="label-col">料金</td>
+                <td>¥48,000</td>
+                <td class="arrow"></td>
+                <td class="unchanged">(変更なし)</td>
+              </tr>
+            </table>
+            <div class="pms-check">
+              <input type="checkbox" checked id="chk1"><label for="chk1">適用する</label>
+            </div>
+          </div>
+
+          <!-- Change 2 -->
+          <div class="pms-change">
+            <div class="pms-change-title">変更 2: 在庫調整</div>
+            <div style="font-size: 12px; color: var(--text-mute); margin-bottom: 8px;">スイートB:</div>
+            <table class="inv-table">
+              <tr>
+                <td class="date-col">12/20</td>
+                <td class="change-col">占有 → 空室</td>
+                <td class="delta">(在庫 +1)</td>
+              </tr>
+              <tr>
+                <td class="date-col">12/21</td>
+                <td class="change-col">空室 → 占有</td>
+                <td class="delta">(在庫 -1)</td>
+              </tr>
+              <tr>
+                <td class="date-col">12/22</td>
+                <td class="change-col">占有 → 空室</td>
+                <td class="delta">(在庫 +1)</td>
+              </tr>
+              <tr>
+                <td class="date-col">12/23</td>
+                <td class="change-col">空室 → 占有</td>
+                <td class="delta">(在庫 -1)</td>
+              </tr>
+            </table>
+            <div class="pms-check">
+              <input type="checkbox" checked id="chk2"><label for="chk2">適用する</label>
+            </div>
+          </div>
+
+          <!-- Change 3 -->
+          <div class="pms-change">
+            <div class="pms-change-title">変更 3: 在庫・料金の同期 — 予約サイト一元管理経由</div>
+            <div style="font-size: 11px; color: var(--text-mute); margin-bottom: 8px; line-height:1.5;">
+              基幹システム → <strong style="color:var(--navy);">予約サイト一元管理 (手間いらず)</strong> → 各ネット予約サイトへ 在庫・料金 を一括反映。<strong>ネット予約サイトへは直結しない。</strong>
+            </div>
+            <table class="inv-table">
+              <tr>
+                <td class="date-col" style="width: 130px;">12/20-22 スイートB</td>
+                <td class="change-col">売止 → 解除</td>
+              </tr>
+              <tr>
+                <td class="date-col" style="width: 130px;">12/21-23 スイートB</td>
+                <td class="change-col">解除 → 売止</td>
+              </tr>
+            </table>
+            <div style="background:var(--surface);border-radius:5px;padding:8px 10px;margin:8px 0;font-size:10.5px;">
+              <div style="font-weight:700;margin-bottom:5px;color:var(--text-sub);">在庫・料金 反映状況 (予約確定時に在庫を引落／順次反映)</div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0;"><span>🟢 Booking.com</span><span style="color:var(--text-mute);">反映済 0.4s前</span></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0;"><span>🟢 楽天トラベル</span><span style="color:var(--text-mute);">反映済 0.9s前</span></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0;"><span>🟡 じゃらんnet</span><span style="color:var(--amber);">送信中 (取込待ち)</span></div>
+            </div>
+            <div class="pms-check">
+              <input type="checkbox" checked id="chk3"><label for="chk3">予約サイト一元管理へ送信</label>
+            </div>
+          </div>
+
+          <div class="pms-note">
+            <strong style="color:var(--text-sub);">同期のしくみ:</strong> 基幹システム / 予約サイト一元管理 / ネット予約サイト の間で、すべてを一括でやり直す仕組みは<strong>ありません</strong>。データは <strong>少し時間をかけて順次そろえます</strong> — ①予約確定時に在庫を引落、②反映に失敗したら<strong>差分を見つけて再送</strong>、③確定までは<strong>販売停止を維持</strong>、④ネット予約サイト側で起きた<strong>変更は担当者が確認してから取り込み</strong> (自動上書き防止)。反映には30秒〜数分かかるため、満室間際は「1サイトのみ販売」で二重予約を回避。
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Related Actions -->
+  <div style="background:var(--bg);border:1px solid var(--rule-soft);border-radius:6px;padding:14px 20px;box-shadow:0 1px 3px rgba(0,0,0,0.04);margin-bottom:16px;">
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px;">🔗 関連アクション (同時進行中)</div>
+    <div style="display:flex;gap:12px;">
+      <div style="flex:1;padding:10px;border:1px solid var(--rule-lite);border-radius:4px;border-left:3px solid var(--navy);font-size:11px;">
+        <div style="font-weight:600;margin-bottom:3px;">E.C 様 — 英語メール</div>
+        <div style="color:var(--text-mute);">"Late check-in 22:30 + vegetarian dinner" | 🌐 EN | AI翻訳+返信案生成済み</div>
+      </div>
+      <div style="flex:1;padding:10px;border:1px solid var(--rule-lite);border-radius:4px;border-left:3px solid var(--purple);font-size:11px;">
+        <div style="font-weight:600;margin-bottom:3px;">W.J 様 — 中国語メール</div>
+        <div style="color:var(--text-mute);">"接送服务咨询" 送迎+高齢者同伴 | 🌐 ZH | AI翻訳+返信案生成済み</div>
+      </div>
+      <div style="flex:1;padding:10px;border:1px solid var(--rule-lite);border-radius:4px;border-left:3px solid var(--brand);font-size:11px;">
+        <div style="font-weight:600;margin-bottom:3px;">🔴 512号室クレーム — J.W 様</div>
+        <div style="color:var(--text-mute);">隣室騒音+朝食混雑 | 🌐 EN | 期限 11:00 | <a href="mobile_action.html" style="color:var(--brand);font-weight:600;">対応画面→</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approval Flow -->
+  <div class="approval-section">
+    <div class="approval-title">承認フロー — この変更には承認が必要です</div>
+    <div class="approval-row">
+      <div class="approval-flow">
+        <div class="approval-step">
+          <div class="approval-icon done">✓</div>
+          <div class="approval-label">AI 提案</div>
+          <div class="approval-sub">完了</div>
+        </div>
+        <div class="approval-connector done-line"></div>
+        <div class="approval-step">
+          <div class="approval-icon current">●</div>
+          <div class="approval-label">担当者確認</div>
+          <div class="approval-sub" style="color: var(--brand); font-weight: 600;">現在</div>
+        </div>
+        <div class="approval-connector"></div>
+        <div class="approval-step">
+          <div class="approval-icon pending">○</div>
+          <div class="approval-label">支配人承認</div>
+          <div class="approval-sub">メール通知</div>
+        </div>
+        <div class="approval-connector"></div>
+        <div class="approval-step">
+          <div class="approval-icon pending">○</div>
+          <div class="approval-label">基幹システム反映</div>
+          <div class="approval-sub">自動 (推定 30 秒)</div>
+        </div>
+      </div>
+      <div class="approval-hint">
+        💡 <strong>貴社の業務フローに合わせて承認者と通知手段はカスタマイズ可能</strong> — メール / Slack / Teams / LINE WORKS など、既存業務に合わせた設計が可能です。
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer Action Bar -->
+<div class="action-bar">
+  <a class="action-bar-back" href="screen1_dashboard.html">← 戻る</a>
+  <div class="action-bar-spacer"></div>
+  <div class="action-bar-checks">
+    <span class="check-label">申請前の確認:</span>
+    <label><input type="checkbox" checked> 返信文を確認した</label>
+    <label><input type="checkbox" checked> 基幹システムの更新内容を確認した</label>
+  </div>
+  <div class="action-bar-spacer"></div>
+  <button class="btn-save">一時保存</button>
+  <div class="btn-cta-wrap">
+    <button class="btn-cta" onclick="console.log('submit')">☑️ 確認して承認申請</button>
+    <div class="btn-cta-note">申請後、支配人 (鈴木様) にメール通知が送信されます (推定到達 1 分以内)</div>
+  </div>
+</div>
+
+</body>
+</html>

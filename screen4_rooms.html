@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>客室管理(清掃・客室状況ボード)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #FFFFFF; --text: #1A1A1A; --text-sub: #4A4A4A; --text-mute: #8C8C8C;
+  --rule: #D0D0D0; --rule-soft: #E5E5E5; --rule-lite: #F0F0F0; --surface: #F7F7F7;
+  --brand: #C8102E; --brand-lite: #FCE5E8; --brand-soft: #FFF0F2; --brand-dark: #8B0F1F;
+  --navy: #1E3A5F; --navy-lite: #DCE5F0;
+  --amber: #D97706; --amber-lite: #FEF3C7;
+  --green: #15803D; --green-lite: #DCFCE7;
+  --purple: #7C3AED; --purple-lite: #EDE9FE;
+  --teal: #0E7490; --teal-lite: #CFFAFE;
+  --slate: #475569; --slate-lite: #E2E8F0;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif; color: var(--text); background: var(--bg); width: 1440px; min-height: 900px; font-size: 13px; line-height: 1.5; }
+a { text-decoration: none; color: inherit; }
+
+.header { position: fixed; top: 0; left: 0; width: 1440px; height: 56px; background: var(--bg); border-bottom: 1px solid var(--rule-soft); z-index: 100; display: flex; align-items: center; padding: 0 20px; gap: 16px; }
+.header-logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.header-logo .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--brand); }
+.header-logo span { font-size: 16px; font-weight: 700; color: var(--text); }
+.header-facility { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--rule); border-radius: 4px; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.header-search { flex: 1; max-width: 360px; margin: 0 auto; position: relative; }
+.header-search input { width: 100%; height: 34px; border: 1px solid var(--rule); border-radius: 4px; padding: 0 12px 0 34px; font-size: 13px; background: var(--surface); outline: none; font-family: inherit; }
+.header-search::before { content: '\1F50D'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
+.header-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; margin-left: auto; }
+.header-bell { position: relative; font-size: 18px; cursor: pointer; }
+.header-bell .badge-notif { position: absolute; top: -6px; right: -8px; background: var(--brand); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 5px; border-radius: 8px; line-height: 1.3; }
+.header-user { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.header-user-info { text-align: right; }
+.header-user-info .name { font-size: 13px; font-weight: 600; }
+.header-user-info .role { font-size: 11px; color: var(--text-mute); }
+.header-user .arrow { font-size: 10px; color: var(--text-mute); }
+
+.sidebar { position: fixed; top: 56px; left: 0; width: 200px; height: calc(100vh - 56px); background: var(--bg); border-right: 1px solid var(--rule-soft); padding: 12px 0; z-index: 90; overflow-y: auto; }
+.sidebar-item { display: block; padding: 10px 16px; font-size: 13px; color: var(--text-sub); border-left: 3px solid transparent; transition: all .15s; }
+.sidebar-item:hover { background: var(--surface); color: var(--text); }
+.sidebar-item.active { border-left-color: var(--brand); background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+.sidebar-sub { font-size: 10px; color: var(--text-mute); padding: 12px 16px 4px; text-transform: uppercase; letter-spacing: .5px; }
+
+.main { margin-top: 56px; margin-left: 200px; padding: 20px 24px; width: 1240px; }
+.page-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+.page-title { font-size: 19px; font-weight: 700; }
+.page-title .hk-badge { font-size: 11px; font-weight: 700; color: var(--navy); background: var(--navy-lite); padding: 2px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+.page-sub { font-size: 12px; color: var(--text-mute); margin-bottom: 16px; }
+.seg { display:inline-flex; border:1px solid var(--rule); border-radius:5px; overflow:hidden; }
+.seg button { border:none; background:var(--bg); padding:6px 12px; font-size:12px; font-family:inherit; cursor:pointer; color:var(--text-sub); border-right:1px solid var(--rule); }
+.seg button:last-child{border-right:none;}
+.seg button.on { background:var(--navy); color:#fff; font-weight:600; }
+
+.kpi-strip { display: flex; gap: 12px; margin-bottom: 18px; }
+.kpi-card { flex: 1; padding: 13px 14px; border-radius: 6px; background: var(--bg); border: 1px solid var(--rule-soft); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.kpi-card .label { font-size: 10px; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; min-height:26px; line-height:1.3; }
+.kpi-card .value { font-size: 20px; font-weight: 700; }
+.kpi-card .unit { font-size: 11px; font-weight: 400; }
+.kpi-card .sub { font-size: 10px; margin-top: 2px; color: var(--text-mute); }
+.delta-up{color:var(--green);} .delta-dn{color:var(--brand);}
+
+.card { border:1px solid var(--rule-soft); border-radius:8px; background:var(--bg); box-shadow:0 1px 3px rgba(0,0,0,.04); margin-bottom:18px; overflow:hidden; }
+.card-h { padding:11px 16px; border-bottom:1px solid var(--rule-soft); display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.card-h .t { font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px; }
+.card-h .hint { font-size:10px; color:var(--text-mute); font-weight:400; }
+.card-b { padding:14px 16px; }
+.card-b.nopad{ padding:0; }
+
+.topline { display:flex; gap:12px; margin-bottom:12px; }
+.hero { flex: 1.15; background: linear-gradient(135deg, #fff, var(--brand-soft)); border:1px solid var(--brand-lite); border-left:4px solid var(--brand); border-radius:8px; padding:14px 16px; }
+.hero .h { font-size:11px; color:var(--brand-dark); font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
+.hero .v { font-size:30px; font-weight:800; color:var(--brand); line-height:1.12; margin-top:4px; }
+.hero .s { font-size:11px; color:var(--text-sub); margin-top:6px; line-height:1.5; }
+.hero .s b { color: var(--brand-dark); }
+.ops-mini { flex: 1; display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.mini { background:var(--bg); border:1px solid var(--rule-soft); border-radius:8px; padding:11px 12px; }
+.mini .k { font-size:10px; color:var(--text-mute); text-transform:uppercase; letter-spacing:.3px; }
+.mini .v { font-size:18px; font-weight:800; margin-top:2px; }
+.mini .f { font-size:10px; color:var(--text-sub); margin-top:2px; }
+
+.layout { display:flex; gap:18px; }
+.col-left { flex: 0 0 64%; min-width:0; }
+.col-right { flex: 1; min-width:0; display:flex; flex-direction:column; gap:18px; }
+
+.strip { display:flex; gap:6px; flex-wrap:wrap; }
+.status-chip { flex: 1 1 130px; min-width: 130px; border-radius:6px; padding:10px 10px 9px; border:1px solid var(--rule-soft); background: var(--surface); }
+.status-chip .k { font-size:9px; color:var(--text-mute); text-transform:uppercase; letter-spacing:.3px; }
+.status-chip .v { font-size:18px; font-weight:800; line-height:1.1; margin-top:2px; }
+.status-chip .x { font-size:10px; color:var(--text-sub); margin-top:1px; }
+.ip { background: var(--navy-lite); color: var(--navy); }
+.cl { background: var(--green-lite); color: var(--green); }
+.pu { background: var(--amber-lite); color: var(--amber); }
+.di { background: var(--brand-lite); color: var(--brand); }
+.os { background: var(--teal-lite); color: var(--teal); }
+.oo { background: #F1E7FF; color: #6D28D9; }
+
+.legend-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.legend-item { display:inline-flex; align-items:center; gap:6px; font-size:10.5px; color:var(--text-sub); }
+.legend-swatch { width:10px; height:10px; border-radius:2px; border:1px solid transparent; }
+.sw-ip { background: var(--navy-lite); border-color: var(--navy); }
+.sw-cl { background: var(--green-lite); border-color: var(--green); }
+.sw-pu { background: var(--amber-lite); border-color: var(--amber); }
+.sw-di { background: var(--brand-lite); border-color: var(--brand); }
+.sw-os { background: var(--teal-lite); border-color: var(--teal); }
+.sw-oo { background: #F1E7FF; border-color: #6D28D9; }
+
+.board-note { font-size: 11px; color: var(--text-sub); background: var(--surface); border:1px solid var(--rule-soft); border-radius:6px; padding:9px 10px; line-height:1.55; }
+.board-note b { color: var(--brand-dark); }
+
+.grid-legend { display:flex; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.grid-legend .g { font-size:10px; color:var(--text-mute); }
+.grid-legend .g b { color: var(--text); }
+
+.tower { margin-bottom: 14px; }
+.tower-h { display:flex; align-items:center; justify-content:space-between; margin-bottom: 7px; }
+.tower-h .name { font-size:12px; font-weight:700; }
+.tower-h .meta { font-size:10px; color:var(--text-mute); }
+.floor-row { display:grid; grid-template-columns: 52px repeat(8, 1fr); gap:6px; margin-bottom:6px; }
+.floor-tag { display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--text-sub); background:var(--surface); border:1px solid var(--rule-soft); border-radius:6px; min-height:48px; font-weight:700; }
+
+.room-cell { position:relative; min-height:48px; border:1px solid var(--rule-soft); border-radius:6px; padding:6px 7px 5px; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; }
+.room-cell:hover { box-shadow: 0 2px 6px rgba(0,0,0,.08); }
+.room-num { font-size:16px; font-weight:800; line-height:1; }
+.room-status { font-size:9px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; margin-top:1px; }
+.room-meta { display:flex; justify-content:space-between; align-items:center; gap:6px; font-size:9px; color:var(--text-sub); line-height:1.2; }
+.room-meta b { color: var(--text); font-weight:700; }
+.r-icons { position:absolute; top:5px; right:6px; display:flex; gap:3px; align-items:center; }
+.mic { width:14px; height:14px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#fff; }
+.mic-dnd { background: var(--brand); }
+.mic-mu { background: var(--purple); }
+.mic-ln { background: var(--teal); }
+.mic-td { background: var(--amber); color:#fff; }
+.mic-ic { background: var(--navy); }
+.cell-ip { background: var(--navy-lite); color: var(--navy); }
+.cell-cl { background: var(--green-lite); color: var(--green); }
+.cell-pu { background: var(--amber-lite); color: var(--amber); }
+.cell-di { background: var(--brand-lite); color: var(--brand); }
+.cell-os { background: var(--teal-lite); color: var(--teal); }
+.cell-oo { background: #F1E7FF; color: #6D28D9; }
+.cell-vac { border-style: solid; }
+.cell-occ { outline: 1px solid rgba(30,58,95,.18); }
+.occ-tag { position:absolute; left:6px; bottom:6px; font-size:9px; font-weight:700; color:var(--text-sub); }
+.occ-tag b { color: var(--text); }
+.people { position:absolute; left:6px; bottom:6px; font-size:9px; font-weight:700; color:var(--text-sub); }
+.people b { color: var(--text); }
+.status-chip .micro { display:flex; gap:4px; margin-top:4px; }
+
+.subgrid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+.small-list { display:flex; flex-direction:column; gap:8px; }
+.qrow { display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid var(--rule-lite); font-size:11.5px; }
+.qrow:last-child { border-bottom:none; }
+.qrow .l { color:var(--text-sub); }
+.qrow .r { font-weight:700; }
+.badge { font-size:9px; font-weight:700; padding:2px 6px; border-radius:8px; }
+.b-green { background: var(--green-lite); color: var(--green); }
+.b-amber { background: var(--amber-lite); color: var(--amber); }
+.b-red { background: var(--brand-lite); color: var(--brand); }
+.b-navy { background: var(--navy-lite); color: var(--navy); }
+
+.discrepancy { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.disc-card { border:1px solid var(--rule-soft); border-radius:8px; padding:12px; background:var(--bg); }
+.disc-card .k { font-size:10px; color:var(--text-mute); text-transform:uppercase; letter-spacing:.3px; }
+.disc-card .v { font-size:24px; font-weight:800; line-height:1.05; margin-top:4px; }
+.disc-card .s { font-size:10px; color:var(--text-sub); margin-top:3px; line-height:1.4; }
+
+.axis { display:grid; grid-template-columns: repeat(2,1fr); gap:12px; }
+.axis-box { border:1px solid var(--rule-soft); border-radius:8px; padding:12px; background:var(--surface); }
+.axis-box .t { font-size:12px; font-weight:700; }
+.axis-box .m { font-size:10px; color:var(--text-mute); margin-top:2px; }
+.axis-box .bars { display:flex; align-items:end; gap:6px; margin-top:10px; min-height:54px; }
+.axis-box .bar { flex:1; border-radius:4px 4px 0 0; background: var(--navy); position:relative; }
+.axis-box .bar span { position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:10px; font-weight:700; }
+.axis-box .bar.o { background: var(--amber); }
+.axis-box .bar.v { background: var(--green); }
+
+.foot { font-size:10px; color:var(--text-mute); margin-top:6px; line-height:1.6; }
+.pill { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; background:var(--surface); color:var(--text-sub); }
+
+canvas { display:block; max-width:100%; }
+.chart-wrap { position:relative; width:100%; height:200px; }
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="screen1_dashboard.html" class="header-logo"><div class="dot"></div><span>旅館運営システム</span></a>
+  <div class="header-facility">○○リゾート箱根 — 全施設横断ビュー <span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
+  <div class="header-search"><input type="text" placeholder="予約番号・ゲスト名・部屋番号を検索"></div>
+  <div class="header-right">
+    <div class="header-bell">&#x1F514;<span class="badge-notif">12</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item active" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item" href="screen8_reports.html">レポート</a>
+  <div class="sidebar-sub">客室ビュー</div>
+  <a class="sidebar-item active" href="screen4_rooms.html">清掃ボード</a>
+  <a class="sidebar-item" href="screen4_rooms.html">フロア巡回</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室状態の不一致</a>
+  <a class="sidebar-item" href="screen4_rooms.html">夜の客室整え</a>
+  <a class="sidebar-item" href="screen4_rooms.html">仲居の担当割り</a>
+</nav>
+
+<div class="main">
+  <div class="page-head">
+    <div class="page-title">客室管理 <span class="hk-badge">清掃ボード · 営業日 2026/05/30</span></div>
+    <div class="seg">
+      <button class="on">清掃ボード</button>
+      <button>フロア巡回</button>
+      <button>状態の不一致</button>
+      <button>夜の客室整え</button>
+      <button>担当割り</button>
+    </div>
+  </div>
+  <div class="page-sub">客室状態(点検済/清掃済/再清掃前/使用後/一時停止/販売除外)を業界標準のデータ項目に準拠して色・記号・文字で表示。点検未了の部屋はチェックイン不可、状態更新はキー1つ、フロア一括操作は <b>全室で同じ画面・操作</b> で実施。</div>
+
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="label">清掃済の空室 / すぐ販売可</div><div class="value" style="color:var(--green);">34<span class="unit">室</span></div><div class="sub">本館 22 / 別館 8 / 離れ 4</div></div>
+    <div class="kpi-card"><div class="label">在館中の客室</div><div class="value" style="color:var(--navy);">28<span class="unit">室</span></div><div class="sub">人数 61名 / 起こさないで 7室</div></div>
+    <div class="kpi-card"><div class="label">点検 未了</div><div class="value" style="color:var(--amber);">6<span class="unit">室</span></div><div class="sub">チェックイン不可の注記を適用</div></div>
+    <div class="kpi-card"><div class="label">状態の不一致 合計</div><div class="value" style="color:var(--brand);">9<span class="unit">件</span></div><div class="sub">空室のはずが在室 4 / 在室のはずが空室 3 / 人数違い 2</div></div>
+    <div class="kpi-card"><div class="label">夜の客室整え 必要</div><div class="value" style="color:var(--purple);">14<span class="unit">室</span></div><div class="sub">完了 19 / 不要 29</div></div>
+    <div class="kpi-card"><div class="label">キー1つで更新 / 一括操作</div><div class="value" style="color:var(--teal);">清 点 汚 再</div><div class="sub">フロア単位の一括更新と仲居呼出に対応</div></div>
+  </div>
+
+  <div class="topline">
+    <div class="hero">
+      <div class="h">今日の盤面</div>
+      <div class="v">本館・別館・離れをフロア×室番で一望</div>
+      <div class="s"><b>営業日 2026/05/30</b>。6つの状態は色+記号+アイコンを併記。<b>点検未了の部屋はチェックイン不可</b>の注記を常時表示し、朝清掃→夕方の客室整え→夜の状態の不一致照合まで同じ盤面で追跡します。</div>
+    </div>
+    <div class="ops-mini">
+      <div class="mini"><div class="k">清 / 点 / 汚 / 再</div><div class="v">キー1つで更新</div><div class="f">選んだ部屋に即時反映</div></div>
+      <div class="mini"><div class="k">フロア一括</div><div class="v">全室適用</div><div class="f">本館 / 別館 / 離れで同時操作</div></div>
+      <div class="mini"><div class="k">仲居の担当割り</div><div class="v">別管理</div><div class="f">客室の割り当てと分離</div></div>
+      <div class="mini"><div class="k">チェックイン</div><div class="v">点検済が必須</div><div class="f">未点検室は候補から除外</div></div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="col-left">
+      <div class="card">
+        <div class="card-h">
+          <div class="t">客室の状態一覧</div>
+          <div class="hint">室セル内に「起こさないで」「清掃希望」「リネン交換」「客室整え」を表示</div>
+        </div>
+        <div class="card-b">
+          <div class="strip">
+            <div class="status-chip ip"><div class="k">点検済</div><div class="v">18</div><div class="x">販売可・チェックイン可</div></div>
+            <div class="status-chip cl"><div class="k">清掃済</div><div class="v">34</div><div class="x">清掃完了・点検待ち</div></div>
+            <div class="status-chip pu"><div class="k">再清掃前</div><div class="v">6</div><div class="x">軽い手直しが必要</div></div>
+            <div class="status-chip di"><div class="k">使用後</div><div class="v">12</div><div class="x">退室後・未清掃</div></div>
+            <div class="status-chip os"><div class="k">一時停止</div><div class="v">3</div><div class="x">一時的に使用停止</div></div>
+            <div class="status-chip oo"><div class="k">販売除外</div><div class="v">2</div><div class="x">故障等で販売対象外</div></div>
+          </div>
+          <div class="legend-row">
+            <div class="legend-item"><span class="legend-swatch sw-ip"></span>点検済</div>
+            <div class="legend-item"><span class="legend-swatch sw-cl"></span>清掃済</div>
+            <div class="legend-item"><span class="legend-swatch sw-pu"></span>再清掃前</div>
+            <div class="legend-item"><span class="legend-swatch sw-di"></span>使用後</div>
+            <div class="legend-item"><span class="legend-swatch sw-os"></span>一時停止</div>
+            <div class="legend-item"><span class="legend-swatch sw-oo"></span>販売除外</div>
+          </div>
+          <div class="legend-row" style="margin-top:8px;">
+            <div class="legend-item"><span class="pill">空室</span>販売前提の空室</div>
+            <div class="legend-item"><span class="pill">在室 +人数</span>在室状況は別表示</div>
+            <div class="legend-item"><span class="pill">夜の客室整え</span>完了 / 要対応 / 不要</div>
+          </div>
+          <div class="board-note" style="margin-top:10px;"><b>注記:</b> 6つの状態(点検済 / 清掃済 / 再清掃前 / 使用後 / 一時停止 / 販売除外)はまとめずにそのまま表示し、在室状況(空室 / 在室・人数つき)は別の行で表示します。</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <div class="t">本館 / 別館 / 離れ 配置図</div>
+          <div class="hint">フロント・清掃の人数、アイコン、部屋番号を一体表示</div>
+        </div>
+        <div class="card-b">
+          <div class="grid-legend">
+            <div class="g"><b>左下</b> = フロント / 清掃の人数</div>
+            <div class="g"><b>右上</b> = 起こさないで / 清掃希望 / リネン交換 / 客室整え / 点検済</div>
+            <div class="g"><b>太字</b> = 室番</div>
+          </div>
+
+          <div class="tower">
+            <div class="tower-h"><div class="name">本館</div><div class="meta">3階-1階 / 1列8室</div></div>
+            <div class="floor-row">
+              <div class="floor-tag">3F</div>
+              <div class="room-cell cell-cl cell-vac">
+                <div class="r-icons"><span class="mic mic-ln">L</span><span class="mic mic-td">T</span></div>
+                <div class="room-num">301</div><div class="room-status">清掃済 / 空室</div>
+                <div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>静養</span></div>
+              </div>
+              <div class="room-cell cell-ip cell-vac">
+                <div class="r-icons"><span class="mic mic-ic">I</span></div>
+                <div class="room-num">302</div><div class="room-status">点検済 / 空室</div>
+                <div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>入室可</span></div>
+              </div>
+              <div class="room-cell cell-di cell-occ">
+                <div class="r-icons"><span class="mic mic-dnd">D</span><span class="mic mic-mu">M</span></div>
+                <div class="room-num">303</div><div class="room-status">使用後 / 在室</div>
+                <div class="room-meta"><span><b>フロント2</b> / 清掃2</span><span>在館</span></div>
+              </div>
+              <div class="room-cell cell-pu cell-vac">
+                <div class="r-icons"><span class="mic mic-ln">L</span></div>
+                <div class="room-num">304</div><div class="room-status">再清掃前 / 空室</div>
+                <div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>再清掃</span></div>
+              </div>
+              <div class="room-cell cell-os cell-vac">
+                <div class="r-icons"><span class="mic mic-ic">I</span></div>
+                <div class="room-num">305</div><div class="room-status">一時停止 / 空室</div>
+                <div class="room-meta"><span><b>フロント0</b> / 清掃0</span><span>停止</span></div>
+              </div>
+              <div class="room-cell cell-cl cell-vac">
+                <div class="r-icons"><span class="mic mic-td">T</span></div>
+                <div class="room-num">306</div><div class="room-status">清掃済 / 空室</div>
+                <div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>点検前</span></div>
+              </div>
+              <div class="room-cell cell-oo cell-vac">
+                <div class="r-icons"><span class="mic mic-ic">!</span></div>
+                <div class="room-num">307</div><div class="room-status">販売除外 / 空室</div>
+                <div class="room-meta"><span><b>フロント0</b> / 清掃0</span><span>除外</span></div>
+              </div>
+              <div class="room-cell cell-cl cell-occ">
+                <div class="r-icons"><span class="mic mic-dnd">D</span></div>
+                <div class="room-num">308</div><div class="room-status">清掃済 / 在室</div>
+                <div class="room-meta"><span><b>フロント3</b> / 清掃2</span><span>連泊</span></div>
+              </div>
+            </div>
+            <div class="floor-row">
+              <div class="floor-tag">2F</div>
+              <div class="room-cell cell-di cell-occ"><div class="r-icons"><span class="mic mic-dnd">D</span><span class="mic mic-ln">L</span></div><div class="room-num">201</div><div class="room-status">使用後 / 在室</div><div class="room-meta"><span><b>フロント2</b> / 清掃2</span><span>朝退室</span></div></div>
+              <div class="room-cell cell-cl cell-vac"><div class="r-icons"><span class="mic mic-ic">I</span></div><div class="room-num">202</div><div class="room-status">清掃済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>即売可</span></div></div>
+              <div class="room-cell cell-ip cell-vac"><div class="r-icons"><span class="mic mic-ic">I</span></div><div class="room-num">203</div><div class="room-status">点検済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>入室候補</span></div></div>
+              <div class="room-cell cell-pu cell-vac"><div class="r-icons"><span class="mic mic-mu">M</span></div><div class="room-num">204</div><div class="room-status">再清掃前 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>リネン</span></div></div>
+              <div class="room-cell cell-cl cell-occ"><div class="r-icons"><span class="mic mic-td">T</span></div><div class="room-num">205</div><div class="room-status">清掃済 / 在室</div><div class="room-meta"><span><b>フロント1</b> / 清掃1</span><span>入浴中</span></div></div>
+              <div class="room-cell cell-os cell-vac"><div class="r-icons"><span class="mic mic-ic">!</span></div><div class="room-num">206</div><div class="room-status">一時停止 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃0</span><span>保全</span></div></div>
+              <div class="room-cell cell-di cell-occ"><div class="r-icons"><span class="mic mic-dnd">D</span><span class="mic mic-mu">M</span></div><div class="room-num">207</div><div class="room-status">使用後 / 在室</div><div class="room-meta"><span><b>フロント4</b> / 清掃3</span><span>団体</span></div></div>
+              <div class="room-cell cell-cl cell-vac"><div class="r-icons"><span class="mic mic-ln">L</span></div><div class="room-num">208</div><div class="room-status">清掃済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>静かな部屋</span></div></div>
+            </div>
+            <div class="floor-row">
+              <div class="floor-tag">1F</div>
+              <div class="room-cell cell-occ cell-cl"><div class="r-icons"><span class="mic mic-dnd">D</span></div><div class="room-num">101</div><div class="room-status">清掃済 / 在室</div><div class="room-meta"><span><b>フロント2</b> / 清掃2</span><span>夕食前</span></div></div>
+              <div class="room-cell cell-occ cell-di"><div class="r-icons"><span class="mic mic-mu">M</span><span class="mic mic-td">T</span></div><div class="room-num">102</div><div class="room-status">使用後 / 在室</div><div class="room-meta"><span><b>フロント3</b> / 清掃2</span><span>要配膳</span></div></div>
+              <div class="room-cell cell-ip cell-vac"><div class="r-icons"><span class="mic mic-ic">I</span></div><div class="room-num">103</div><div class="room-status">点検済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>可</span></div></div>
+              <div class="room-cell cell-di cell-occ"><div class="r-icons"><span class="mic mic-dnd">D</span></div><div class="room-num">104</div><div class="room-status">使用後 / 在室</div><div class="room-meta"><span><b>フロント1</b> / 清掃1</span><span>在館</span></div></div>
+              <div class="room-cell cell-os cell-vac"><div class="r-icons"><span class="mic mic-ic">!</span></div><div class="room-num">105</div><div class="room-status">一時停止 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃0</span><span>工事</span></div></div>
+              <div class="room-cell cell-cl cell-vac"><div class="r-icons"><span class="mic mic-ln">L</span></div><div class="room-num">106</div><div class="room-status">清掃済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>即売</span></div></div>
+              <div class="room-cell cell-pu cell-vac"><div class="r-icons"><span class="mic mic-td">T</span></div><div class="room-num">107</div><div class="room-status">再清掃前 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>タオル</span></div></div>
+              <div class="room-cell cell-oo cell-vac"><div class="r-icons"><span class="mic mic-ic">!</span></div><div class="room-num">108</div><div class="room-status">販売除外 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃0</span><span>除外</span></div></div>
+            </div>
+          </div>
+
+          <div class="tower">
+            <div class="tower-h"><div class="name">別館</div><div class="meta">2F-1F / 露天付きタイプ</div></div>
+            <div class="floor-row">
+              <div class="floor-tag">2F</div>
+              <div class="room-cell cell-cl cell-vac"><div class="r-icons"><span class="mic mic-ic">I</span></div><div class="room-num">201A</div><div class="room-status">清掃済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>客室係</span></div></div>
+              <div class="room-cell cell-ip cell-vac"><div class="r-icons"><span class="mic mic-ic">I</span></div><div class="room-num">202A</div><div class="room-status">点検済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>点検済</span></div></div>
+              <div class="room-cell cell-di cell-occ"><div class="r-icons"><span class="mic mic-dnd">D</span></div><div class="room-num">203A</div><div class="room-status">使用後 / 在室</div><div class="room-meta"><span><b>フロント2</b> / 清掃2</span><span>2名</span></div></div>
+              <div class="room-cell cell-pu cell-vac"><div class="r-icons"><span class="mic mic-ln">L</span></div><div class="room-num">204A</div><div class="room-status">再清掃前 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>再清掃</span></div></div>
+              <div class="room-cell cell-os cell-vac"><div class="r-icons"><span class="mic mic-ic">!</span></div><div class="room-num">205A</div><div class="room-status">一時停止 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃0</span><span>保守</span></div></div>
+              <div class="room-cell cell-cl cell-occ"><div class="r-icons"><span class="mic mic-mu">M</span></div><div class="room-num">206A</div><div class="room-status">清掃済 / 在室</div><div class="room-meta"><span><b>フロント3</b> / 清掃2</span><span>連泊</span></div></div>
+              <div class="room-cell cell-ip cell-vac"><div class="r-icons"><span class="mic mic-ic">I</span></div><div class="room-num">207A</div><div class="room-status">点検済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>入室候補</span></div></div>
+              <div class="room-cell cell-oo cell-vac"><div class="r-icons"><span class="mic mic-ic">!</span></div><div class="room-num">208A</div><div class="room-status">販売除外 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃0</span><span>除外</span></div></div>
+            </div>
+            <div class="floor-row">
+              <div class="floor-tag">1F</div>
+              <div class="room-cell cell-di cell-occ"><div class="r-icons"><span class="mic mic-dnd">D</span><span class="mic mic-td">T</span></div><div class="room-num">101A</div><div class="room-status">使用後 / 在室</div><div class="room-meta"><span><b>フロント2</b> / 清掃2</span><span>入浴中</span></div></div>
+              <div class="room-cell cell-cl cell-vac"><div class="r-icons"><span class="mic mic-ic">I</span></div><div class="room-num">102A</div><div class="room-status">清掃済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>即売</span></div></div>
+              <div class="room-cell cell-pu cell-vac"><div class="r-icons"><span class="mic mic-ln">L</span></div><div class="room-num">103A</div><div class="room-status">再清掃前 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>補充</span></div></div>
+              <div class="room-cell cell-ip cell-vac"><div class="r-icons"><span class="mic mic-ic">I</span></div><div class="room-num">104A</div><div class="room-status">点検済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>候補</span></div></div>
+              <div class="room-cell cell-os cell-vac"><div class="r-icons"><span class="mic mic-ic">!</span></div><div class="room-num">105A</div><div class="room-status">一時停止 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃0</span><span>停止</span></div></div>
+              <div class="room-cell cell-cl cell-occ"><div class="r-icons"><span class="mic mic-dnd">D</span></div><div class="room-num">106A</div><div class="room-status">清掃済 / 在室</div><div class="room-meta"><span><b>フロント4</b> / 清掃2</span><span>4名</span></div></div>
+              <div class="room-cell cell-di cell-occ"><div class="r-icons"><span class="mic mic-mu">M</span></div><div class="room-num">107A</div><div class="room-status">使用後 / 在室</div><div class="room-meta"><span><b>フロント2</b> / 清掃1</span><span>要仲居</span></div></div>
+              <div class="room-cell cell-oo cell-vac"><div class="r-icons"><span class="mic mic-ic">!</span></div><div class="room-num">108A</div><div class="room-status">販売除外 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃0</span><span>除外</span></div></div>
+            </div>
+          </div>
+
+          <div class="tower">
+            <div class="tower-h"><div class="name">離れ</div><div class="meta">101-108 / 上得意・静かなエリア</div></div>
+            <div class="floor-row">
+              <div class="floor-tag">L</div>
+              <div class="room-cell cell-ip cell-vac"><div class="r-icons"><span class="mic mic-ic">I</span></div><div class="room-num">101H</div><div class="room-status">点検済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>到着前</span></div></div>
+              <div class="room-cell cell-cl cell-occ"><div class="r-icons"><span class="mic mic-dnd">D</span><span class="mic mic-mu">M</span></div><div class="room-num">102H</div><div class="room-status">清掃済 / 在室</div><div class="room-meta"><span><b>フロント2</b> / 清掃2</span><span>VIP</span></div></div>
+              <div class="room-cell cell-di cell-occ"><div class="r-icons"><span class="mic mic-dnd">D</span></div><div class="room-num">103H</div><div class="room-status">使用後 / 在室</div><div class="room-meta"><span><b>フロント1</b> / 清掃1</span><span>記念日</span></div></div>
+              <div class="room-cell cell-pu cell-vac"><div class="r-icons"><span class="mic mic-ln">L</span></div><div class="room-num">104H</div><div class="room-status">再清掃前 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>予備</span></div></div>
+              <div class="room-cell cell-os cell-vac"><div class="r-icons"><span class="mic mic-ic">!</span></div><div class="room-num">105H</div><div class="room-status">一時停止 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃0</span><span>点検待</span></div></div>
+              <div class="room-cell cell-cl cell-vac"><div class="r-icons"><span class="mic mic-td">T</span></div><div class="room-num">106H</div><div class="room-status">清掃済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>即売</span></div></div>
+              <div class="room-cell cell-ip cell-vac"><div class="r-icons"><span class="mic mic-ic">I</span></div><div class="room-num">107H</div><div class="room-status">点検済 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃1</span><span>候補</span></div></div>
+              <div class="room-cell cell-oo cell-vac"><div class="r-icons"><span class="mic mic-ic">!</span></div><div class="room-num">108H</div><div class="room-status">販売除外 / 空室</div><div class="room-meta"><span><b>フロント0</b> / 清掃0</span><span>除外</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="card">
+        <div class="card-h"><div class="t">客室状態の不一致</div><div class="hint">空室のはずが在室 / 在室のはずが空室 / 人数違い を件数バッジで表示</div></div>
+        <div class="card-b">
+          <div class="discrepancy">
+            <div class="disc-card">
+              <div class="k">空室のはずが在室</div>
+              <div class="v">4 <span class="badge b-red">フロント=在室 / 清掃=空室</span></div>
+              <div class="s">フロントの在館記録と清掃側の空室記録が食い違うケース。</div>
+            </div>
+            <div class="disc-card">
+              <div class="k">在室のはずが空室</div>
+              <div class="v">3 <span class="badge b-amber">フロント=空室 / 清掃=在室</span></div>
+              <div class="s">夜間更新や清掃状態の反映遅れによる差分を想定。</div>
+            </div>
+            <div class="disc-card">
+              <div class="k">人数違い</div>
+              <div class="v">2 <span class="badge b-navy">人数の差異</span></div>
+              <div class="s">フロント把握人数と清掃把握人数の差異を即時修正。</div>
+            </div>
+          </div>
+          <div class="board-note" style="margin-top:10px;">状態の不一致は <b>1タップで更新</b> して解消し、誰が・いつ・どの室を修正したかを履歴に残します。</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">夜の客室整え / 仲居の担当割り</div><div class="hint">布団敷きと客室の割り当てを別管理に分離</div></div>
+        <div class="card-b">
+          <div class="subgrid">
+            <div class="axis-box">
+              <div class="t">夜の客室整えの状況</div>
+              <div class="m">完了 / 要対応 / 不要</div>
+              <div class="bars">
+                <div class="bar v" style="height:38px;"><span>19</span></div>
+                <div class="bar o" style="height:22px;"><span>14</span></div>
+                <div class="bar" style="height:10px;background:var(--rule);"><span style="color:var(--text-sub);">29</span></div>
+              </div>
+            </div>
+            <div class="axis-box">
+              <div class="t">担当の分離</div>
+              <div class="m">客室の割り当て / 仲居の担当割り</div>
+              <div class="bars">
+                <div class="bar" style="height:34px;"><span>客室</span></div>
+                <div class="bar o" style="height:46px;"><span>仲居</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="small-list" style="margin-top:10px;">
+            <div class="qrow"><div class="l">仲居 #12</div><div class="r">担当 8室 / 2組入浴中</div></div>
+            <div class="qrow"><div class="l">仲居 #07</div><div class="r">布団敷き 要対応 5室</div></div>
+            <div class="qrow"><div class="l">仲居 #04</div><div class="r">応援待機 / 現在地の送信 有効</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">チェックイン制御</div><div class="hint">点検未了の部屋は候補外</div></div>
+        <div class="card-b">
+          <div class="board-note">チェックインの可否は <b>点検済</b> を前提に判定します。清掃済や再清掃前のままでは受け付けず、部屋の割り当て候補から自動で除外します。</div>
+          <div class="small-list" style="margin-top:10px;">
+            <div class="qrow"><div class="l">チェックイン候補室</div><div class="r">点検済 18室 / 清掃済 34室</div></div>
+            <div class="qrow"><div class="l">受付不可の理由</div><div class="r">未点検 / 清掃中 / 保全中</div></div>
+            <div class="qrow"><div class="l">操作キー</div><div class="r">清=清掃済 / 点=点検済 / 汚=使用後 / 再=再清掃前</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">キー1つで更新・フロア一括操作</div><div class="hint">操作方法の説明を明示</div></div>
+        <div class="card-b">
+          <div class="chart-wrap"><canvas id="statusMix"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ctx = document.getElementById('statusMix');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['点検済', '清掃済', '再清掃前', '使用後', '一時停止', '販売除外'],
+    datasets: [{
+      label: '室数',
+      data: [18, 34, 6, 12, 3, 2],
+      backgroundColor: ['#DCE5F0', '#DCFCE7', '#FEF3C7', '#FCE5E8', '#CFFAFE', '#F1E7FF'],
+      borderColor: ['#1E3A5F', '#15803D', '#D97706', '#C8102E', '#0E7490', '#6D28D9'],
+      borderWidth: 1.2,
+      borderRadius: 5
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: true }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#4A4A4A', font: { size: 11, weight: '600' } } },
+      y: { beginAtZero: true, grid: { color: '#F0F0F0' }, ticks: { color: '#8C8C8C', font: { size: 10 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>

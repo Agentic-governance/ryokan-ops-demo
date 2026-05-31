@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>ダッシュボード</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+  --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+  --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+  --navy:#1E3A5F;--navy-lite:#DCE5F0;
+  --amber:#D97706;--amber-lite:#FEF3C7;
+  --green:#15803D;--green-lite:#DCFCE7;
+  --purple:#7C3AED;--purple-lite:#EDE9FE;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;color:var(--text);background:var(--bg);width:1440px;min-height:900px;}
+a{text-decoration:none;color:inherit;}
+
+/* Header */
+.header{height:56px;border-bottom:1px solid var(--rule-soft);display:flex;align-items:center;padding:0 24px;gap:16px;background:var(--bg);position:fixed;top:0;left:0;right:0;z-index:100;}
+.header-logo{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;flex-shrink:0;}
+.header-logo .dot{width:12px;height:12px;background:var(--brand);border-radius:50%;}
+.header-facility{display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--rule);border-radius:4px;font-size:13px;color:var(--text-sub);cursor:pointer;flex-shrink:0;}
+.header-facility:hover{border-color:var(--text-mute);}
+.header-search{flex:0 0 360px;margin:0 auto;position:relative;}
+.header-search input{width:100%;padding:8px 12px 8px 34px;border:1px solid var(--rule-soft);border-radius:4px;font-size:13px;background:var(--surface);color:var(--text);outline:none;}
+.header-search input:focus{border-color:var(--brand);}
+.header-search::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;}
+.header-right{display:flex;align-items:center;gap:16px;flex-shrink:0;}
+.header-notif{position:relative;font-size:18px;cursor:pointer;}
+.header-notif .notif-badge{position:absolute;top:-6px;right:-8px;background:var(--brand);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:8px;line-height:1.4;}
+.header-user{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 8px;border-radius:4px;}
+.header-user:hover{background:var(--surface);}
+.header-user-name{font-size:13px;font-weight:600;}
+.header-user-role{font-size:11px;color:var(--text-mute);}
+
+/* Sidebar */
+.sidebar{position:fixed;top:56px;left:0;width:200px;height:calc(100% - 56px);background:var(--bg);border-right:1px solid var(--rule-soft);padding:16px 0;z-index:90;}
+.sidebar-item{display:flex;align-items:center;padding:10px 20px;font-size:13px;color:var(--text-sub);cursor:pointer;border-left:3px solid transparent;transition:background 0.15s;}
+.sidebar-item:hover{background:var(--surface);}
+.sidebar-item.active{border-left-color:var(--brand);background:var(--brand-soft);color:var(--brand);font-weight:700;}
+
+/* Main */
+.main{margin-top:56px;margin-left:200px;padding:24px;width:1240px;min-height:844px;}
+
+/* KPI */
+.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:20px;}
+.kpi-card{background:var(--bg);border:1px solid var(--rule-soft);border-radius:6px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.03);}
+.kpi-label{font-size:11px;color:var(--text-mute);margin-bottom:4px;white-space:nowrap;}
+.kpi-value{font-size:28px;font-weight:700;line-height:1.2;margin-bottom:4px;}
+.kpi-value .unit{font-size:13px;font-weight:600;margin-left:2px;}
+.kpi-delta{font-size:11px;display:flex;align-items:center;gap:3px;}
+.kpi-delta.up{color:var(--green);}
+.kpi-delta.down-good{color:var(--green);}
+
+/* Section titles */
+.section-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* Row layouts */
+.row{display:flex;gap:16px;margin-bottom:20px;}
+.col-65{flex:0 0 calc(65% - 8px);}
+.col-35{flex:0 0 calc(35% - 8px);}
+.col-50{flex:0 0 calc(50% - 8px);}
+
+/* Cards */
+.card{background:var(--bg);border:1px solid var(--rule-soft);border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.03);}
+.card-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--rule-lite);}
+.card-head h3{font-size:13px;font-weight:700;}
+.card-body{padding:16px;}
+
+/* Chart wrappers (fixed-height, relative) */
+.chart-wrap{position:relative;width:100%;height:200px;}
+.chart-wrap.donut{height:90px;width:90px;flex-shrink:0;}
+.chart-wrap.channel{height:120px;}
+.chart-wrap canvas{max-width:100%;}
+
+/* Chart tabs */
+.chart-tabs{display:flex;gap:4px;}
+.chart-tab{padding:3px 10px;font-size:11px;border-radius:4px;cursor:pointer;border:1px solid var(--rule-soft);background:var(--bg);color:var(--text-mute);}
+.chart-tab.active{background:var(--brand);color:#fff;border-color:var(--brand);}
+
+/* Donut legend */
+.donut-legend{display:flex;flex-direction:column;gap:5px;margin-top:6px;}
+.dl-item{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-sub);}
+.dl-dot{width:8px;height:8px;border-radius:50%;margin-right:6px;flex-shrink:0;}
+.dl-left{display:flex;align-items:center;}
+.dl-val{font-weight:700;color:var(--text);}
+
+/* AI Nudge Cards (tech-touch) */
+.ai-actions{display:flex;flex-direction:column;gap:10px;}
+.nudge{position:relative;padding:11px 12px 11px 16px;border:1px solid var(--rule-soft);border-radius:6px;transition:all 0.15s;background:var(--bg);}
+.nudge::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:6px 0 0 6px;}
+.nudge.urgent::before{background:var(--brand);}
+.nudge.today::before{background:var(--amber);}
+.nudge.suggest::before{background:var(--navy);}
+.nudge.good::before{background:var(--green);}
+.nudge:hover{border-color:var(--text-mute);}
+.nudge-top{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.nudge-aibadge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:600;color:var(--text-mute);background:var(--surface);border:1px solid var(--rule-soft);padding:1px 6px;border-radius:10px;}
+.nudge-prio{font-size:10px;font-weight:700;padding:1px 7px;border-radius:3px;}
+.nudge-prio.urgent{background:var(--brand-lite);color:var(--brand-dark);}
+.nudge-prio.today{background:var(--amber-lite);color:var(--amber);}
+.nudge-prio.suggest{background:var(--navy-lite);color:var(--navy);}
+.nudge-prio.good{background:var(--green-lite);color:var(--green);}
+.nudge-msg{font-size:13px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:3px;}
+.nudge-why{font-size:11px;color:var(--text-sub);line-height:1.4;margin-bottom:3px;}
+.nudge-rec{font-size:11px;color:var(--text);line-height:1.4;margin-bottom:5px;}
+.nudge-basis{font-size:10px;color:var(--text-mute);margin-bottom:8px;}
+.nudge-btns{display:flex;gap:6px;}
+.nudge-btn{font-size:11px;font-weight:600;padding:5px 12px;border-radius:4px;cursor:pointer;border:1px solid var(--rule);}
+.nudge-btn.primary{background:var(--brand);color:#fff;border-color:var(--brand);}
+.nudge-btn.primary:hover{background:var(--brand-dark);}
+.nudge-btn.secondary{background:var(--bg);color:var(--text-sub);}
+.nudge-btn.secondary:hover{border-color:var(--text-mute);}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:8px 12px;font-size:10px;font-weight:600;color:var(--text-mute);text-transform:uppercase;letter-spacing:0.04em;border-bottom:1px solid var(--rule-soft);background:var(--surface);}
+td{padding:10px 12px;font-size:12px;border-bottom:1px solid var(--rule-lite);color:var(--text-sub);}
+tr.data-row:hover{background:var(--surface);}
+tr.data-row{cursor:pointer;}
+
+/* Badges */
+.badge{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:600;white-space:nowrap;}
+.b-mail{background:var(--navy-lite);color:var(--navy);}
+.b-phone{background:var(--brand-lite);color:var(--brand-dark);}
+.b-ota{background:var(--purple-lite);color:var(--purple);}
+.b-maint{background:var(--amber-lite);color:var(--amber);}
+.b-ai{background:var(--green-lite);color:var(--green);}
+.b-hold{background:var(--rule-lite);color:var(--text-mute);}
+.b-status{background:var(--amber-lite);color:var(--amber);}
+
+/* Action table header */
+.action-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--rule-soft);}
+.action-title{font-size:13px;}
+.action-title strong{font-weight:700;}
+.action-title .count{color:var(--brand);font-weight:700;}
+.action-filters{display:flex;align-items:center;gap:6px;}
+.filter-tab{padding:3px 10px;font-size:11px;border-radius:4px;cursor:pointer;border:1px solid var(--rule-soft);background:var(--bg);color:var(--text-mute);}
+.filter-tab.active{background:var(--text);color:#fff;border-color:var(--text);}
+.filter-tab:hover:not(.active){border-color:var(--text-mute);}
+.sort-select{padding:3px 8px;font-size:11px;border:1px solid var(--rule-soft);border-radius:4px;color:var(--text-sub);background:var(--bg);cursor:pointer;}
+
+.detail-link{color:var(--text-mute);font-size:11px;font-weight:600;cursor:pointer;}
+.detail-link:hover{color:var(--brand);}
+
+/* Health bar */
+.health-bar{display:flex;gap:12px;padding:12px 16px;}
+.health-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-sub);}
+.health-dot{width:8px;height:8px;border-radius:50%;}
+.health-dot.ok{background:var(--green);}
+.health-dot.warn{background:var(--amber);}
+.health-dot.err{background:var(--brand);}
+
+/* Facility table */
+.facility-table td{padding:8px 10px;font-size:12px;}
+.facility-table .risk-bar{height:6px;border-radius:3px;background:var(--rule-lite);width:60px;display:inline-block;overflow:hidden;vertical-align:middle;}
+.facility-table .risk-fill{height:100%;border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-logo"><span class="dot"></span><span>旅館運営システム</span></div>
+  <div class="header-facility">
+    <span>○○リゾート箱根 — 全施設横断ビュー</span>
+    <span style="font-size:11px;color:var(--text-mute);">&#9662;</span>
+  </div>
+  <div class="header-search"><input type="text" placeholder="予約番号・イニシャル・部屋番号を検索"></div>
+  <div class="header-right">
+    <a href="mobile_today.html" style="padding:4px 12px;border:1px solid var(--rule);border-radius:4px;font-size:11px;color:var(--text-sub);cursor:pointer;display:flex;align-items:center;gap:4px;">📱 モバイル版</a>
+    <div class="header-notif">🔔<span class="notif-badge">12</span></div>
+    <div class="header-user">
+      <div><div class="header-user-name">山田太郎</div><div class="header-user-role">支配人</div></div>
+      <span style="font-size:11px;color:var(--text-mute);">&#9662;</span>
+    </div>
+  </div>
+</header>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <a class="sidebar-item active" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item" href="screen8_reports.html">レポート</a>
+</nav>
+
+<!-- Main -->
+<main class="main">
+
+  <!-- KPI Strip - 6 cards -->
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <div class="kpi-label">稼働率 (今夜)</div>
+      <div class="kpi-value" style="color:var(--navy);">82<span class="unit">%</span></div>
+      <div class="kpi-delta up">▲ +2% (目標比)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">1室あたり売上</div>
+      <div class="kpi-value" style="color:var(--green);">¥23,288</div>
+      <div class="kpi-delta up">▲ +6.2% 前週比</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">平均客室単価</div>
+      <div class="kpi-value" style="color:var(--navy);">¥28,400</div>
+      <div class="kpi-delta up">▲ +¥1,200 前月比</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">本日チェックイン</div>
+      <div class="kpi-value" style="color:var(--navy);">23<span class="unit">件</span></div>
+      <div class="kpi-delta up">▲ +3 前日比</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">予約サイト一元管理 同期率</div>
+      <div class="kpi-value" style="color:var(--green);">98.2<span class="unit">%</span></div>
+      <div class="kpi-delta down-good">▲ +0.4% 前日比</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">未対応AIアクション</div>
+      <div class="kpi-value" style="color:var(--brand);">8<span class="unit">件</span></div>
+      <div class="kpi-delta" style="color:var(--amber);">⚠ 要対応</div>
+    </div>
+  </div>
+
+  <!-- Row 1: Chart + AI Actions -->
+  <div class="row">
+    <!-- Main Chart -->
+    <div class="col-65">
+      <div class="card">
+        <div class="card-head">
+          <h3>予約数推移</h3>
+          <div class="chart-tabs">
+            <span class="chart-tab active">7日間</span>
+            <span class="chart-tab">30日間</span>
+          </div>
+        </div>
+        <div class="card-body" style="padding:12px 16px;">
+          <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Priority Actions -->
+    <div class="col-35">
+      <div class="card">
+        <div class="card-head">
+          <h3>🤖 AI優先アクション</h3>
+          <span class="badge" style="background:var(--brand-lite);color:var(--brand-dark);">8件</span>
+        </div>
+        <div class="card-body" style="padding:10px;">
+          <div class="ai-actions">
+
+            <!-- Nudge 1: 至急（当日対応・赤帯） -->
+            <div class="nudge urgent">
+              <div class="nudge-top">
+                <span class="nudge-aibadge">🤖 AI確認</span>
+                <span class="nudge-prio urgent">至急</span>
+              </div>
+              <div class="nudge-msg">別館302の空調を、今夜分の販売から外しましょう。</div>
+              <div class="nudge-why">センサーが異音を検知しています。このままご案内すると、ご滞在中の不具合とクレームにつながります。</div>
+              <div class="nudge-rec">12時までに販売を止め、保全担当へ点検を依頼すると安心です。今夜の該当予約2件は別室へのご移動を提案できます。</div>
+              <div class="nudge-basis">根拠: 同型機の故障パターン3件と一致 / 週末の見込み損失 約¥96,000</div>
+              <div class="nudge-btns">
+                <a href="screen6_maintenance.html" class="nudge-btn primary">対象予約を見る</a>
+                <span class="nudge-btn secondary">後で</span>
+              </div>
+            </div>
+
+            <!-- Nudge 2: 今日中（黄帯） -->
+            <div class="nudge today">
+              <div class="nudge-top">
+                <span class="nudge-aibadge">🤖 AI確認</span>
+                <span class="nudge-prio today">今日中</span>
+              </div>
+              <div class="nudge-msg">到着がまだ確認できないお客様が4組いらっしゃいます。</div>
+              <div class="nudge-why">ご連絡がないまま当日を迎えると、お部屋とお食事の準備が無駄になり、他のお客様をお断りした分の機会損失にもつながります。</div>
+              <div class="nudge-rec">17時までに4組へ到着予定の確認メッセージをお送りすると、当日の段取りが立てやすくなります。文面の候補をご用意しています。</div>
+              <div class="nudge-basis">根拠: 到着未確認 4組 / 影響額の目安 約¥192,000</div>
+              <div class="nudge-btns">
+                <a href="screen3_reservations.html" class="nudge-btn primary">対象予約を見る</a>
+                <span class="nudge-btn secondary">文面を見る</span>
+              </div>
+            </div>
+
+            <!-- Nudge 3: 改善提案（青帯） -->
+            <div class="nudge suggest">
+              <div class="nudge-top">
+                <span class="nudge-aibadge">🤖 AI確認</span>
+                <span class="nudge-prio suggest">確認推奨</span>
+              </div>
+              <div class="nudge-msg">12/24〜26は料金を見直す余地がありそうです。</div>
+              <div class="nudge-why">紅葉ライトアップで予約の動きが活発になっており、今の料金は周辺施設より少し低めです。</div>
+              <div class="nudge-rec">3日間を約12%引き上げる候補を表示しています。最終確認は支配人が行ってください。問題なければそのまま反映できます。</div>
+              <div class="nudge-basis">根拠: 当該期間の需要 +32% / 期待増収 約+¥420,000</div>
+              <div class="nudge-btns">
+                <a href="screen7_marketing.html" class="nudge-btn primary">対象予約を見る</a>
+                <span class="nudge-btn secondary">候補を見る</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Facility Performance + Mini Charts -->
+  <div class="row">
+    <!-- Facility Performance -->
+    <div class="col-50">
+      <div class="card">
+        <div class="card-head">
+          <h3>施設別パフォーマンス</h3>
+          <span style="font-size:11px;color:var(--text-mute);">今週</span>
+        </div>
+        <table class="facility-table">
+          <thead>
+            <tr><th>施設</th><th>稼働率</th><th>前週比</th><th>ネット予約サイト比率</th><th>リスク</th></tr>
+          </thead>
+          <tbody>
+            <tr class="data-row">
+              <td style="font-weight:600;">本館</td>
+              <td>86%</td>
+              <td style="color:var(--green);">▲ +4%</td>
+              <td>55%</td>
+              <td><span class="risk-bar"><span class="risk-fill" style="width:25%;background:var(--green);"></span></span> 低</td>
+            </tr>
+            <tr class="data-row">
+              <td style="font-weight:600;">別館</td>
+              <td>74%</td>
+              <td style="color:var(--brand);">▼ -3%</td>
+              <td>62%</td>
+              <td><span class="risk-bar"><span class="risk-fill" style="width:60%;background:var(--amber);"></span></span> 中</td>
+            </tr>
+            <tr class="data-row">
+              <td style="font-weight:600;">離れ</td>
+              <td>92%</td>
+              <td style="color:var(--green);">▲ +8%</td>
+              <td>38%</td>
+              <td><span class="risk-bar"><span class="risk-fill" style="width:15%;background:var(--green);"></span></span> 低</td>
+            </tr>
+            <tr class="data-row">
+              <td style="font-weight:600;">ヴィラ</td>
+              <td>100%</td>
+              <td style="color:var(--green);">— 維持</td>
+              <td>20%</td>
+              <td><span class="risk-bar"><span class="risk-fill" style="width:10%;background:var(--green);"></span></span> 低</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Mini Charts -->
+    <div class="col-50">
+      <div style="display:flex;gap:12px;height:100%;">
+        <!-- Donut -->
+        <div class="card" style="flex:1;">
+          <div class="card-head"><h3>予約ステータス</h3></div>
+          <div class="card-body" style="padding:10px 14px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="chart-wrap donut"><canvas id="donutChart"></canvas></div>
+              <div class="donut-legend" style="flex:1;">
+                <div class="dl-item"><div class="dl-left"><span class="dl-dot" style="background:var(--green);"></span>確定</div><span class="dl-val">78%</span></div>
+                <div class="dl-item"><div class="dl-left"><span class="dl-dot" style="background:var(--amber);"></span>仮押さえ</div><span class="dl-val">12%</span></div>
+                <div class="dl-item"><div class="dl-left"><span class="dl-dot" style="background:var(--rule);"></span>キャンセル待ち</div><span class="dl-val">10%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Channel -->
+        <div class="card" style="flex:1;">
+          <div class="card-head"><h3>チャネル別</h3></div>
+          <div class="card-body" style="padding:8px 14px;"><div class="chart-wrap channel"><canvas id="channelChart"></canvas></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OTA/PMS Health -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-head">
+      <h3>連携の状態 — 基幹システム ⇄ 予約サイト一元管理 ⇄ ネット予約サイト</h3>
+      <span style="font-size:11px;color:var(--text-mute);">反映の間隔 30秒〜数分 / 順次反映 &nbsp;<a href="screen_connectivity.html" style="color:var(--brand);font-weight:600;">連携詳細→</a></span>
+    </div>
+    <!-- topology line: OTAは必ずサイトコントローラー経由(直結しない) -->
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 14px 2px;font-size:11px;flex-wrap:wrap;">
+      <span style="font-weight:700;color:var(--navy);background:var(--navy-lite);padding:4px 10px;border-radius:5px;">基幹システム (宿泊管理)</span>
+      <span style="color:var(--text-mute);">⇄ 双方向 ⇄</span>
+      <span style="font-weight:700;color:var(--brand);background:var(--brand-soft);padding:4px 10px;border-radius:5px;">予約サイト一元管理 (手間いらず)</span>
+      <span style="color:var(--text-mute);">— 空室・料金の反映 / 予約データ →</span>
+      <span style="color:var(--text-sub);">Booking.com · 楽天トラベル · じゃらんnet · 一休.com · 公式直予約</span>
+    </div>
+    <div class="health-bar">
+      <div class="health-item"><span class="health-dot ok"></span><strong style="font-size:11px;">基幹システム⇄予約サイト一元管理 (双方向)</strong> 正常 (最終 1分前)</div>
+      <div class="health-item"><span class="health-dot ok"></span><strong style="font-size:11px;">Booking.com</strong> 空室・料金 反映済 (0.8分前)</div>
+      <div class="health-item"><span class="health-dot ok"></span><strong style="font-size:11px;">楽天トラベル</strong> 空室・料金 反映済 (1.2分前)</div>
+      <div class="health-item"><span class="health-dot warn"></span><strong style="font-size:11px;">じゃらんnet</strong> 在庫差分1件 (和室) — 再送中</div>
+      <div class="health-item"><span class="health-dot warn"></span><strong style="font-size:11px;">予約データ取込待ち</strong> 変更2件 (要 手動再取込)</div>
+      <div class="health-item"><span class="health-dot err"></span><strong style="font-size:11px;">料金の一致</strong> Booking 1件 逸脱</div>
+    </div>
+  </div>
+
+  <!-- Action Table -->
+  <div class="card">
+    <div class="action-header">
+      <div class="action-title">
+        <strong>本日のアクション</strong> — 要対応 <span class="count">12 件</span> / 完了 7 件 (累計 19 件)
+      </div>
+      <div class="action-filters">
+        <span class="filter-tab active">全て</span>
+        <span class="filter-tab">要対応</span>
+        <span class="filter-tab">完了</span>
+        <select class="sort-select"><option>時刻順</option><option>緊急度順</option><option>種別順</option></select>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:55px;">時刻</th>
+          <th style="width:110px;">種別</th>
+          <th>詳細</th>
+          <th style="width:45px;">言語</th>
+          <th style="width:65px;">関連</th>
+          <th style="width:70px;">影響額</th>
+          <th style="width:65px;">ステータス</th>
+          <th style="width:45px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="data-row" style="background:var(--brand-soft);"><td>08:41</td><td><span class="badge b-phone">🔴 クレーム</span></td><td><strong>J.W 様</strong> (#R-2026-1341) — 512号室 隣室騒音+朝食混雑。即時対応要</td><td>🌐 英語</td><td>別館512</td><td style="font-weight:600;color:var(--brand);">-¥144,000</td><td><span class="badge" style="background:var(--brand-lite);color:var(--brand-dark);">🔴 緊急</span></td><td><a class="detail-link" href="mobile_action.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>09:23</td><td><span class="badge b-mail">📧 メール変更</span></td><td>T.I 様 (#R-2026-1289) — チェックイン日変更 12/20→12/21</td><td>🇯🇵 日本語</td><td>スイートB</td><td style="font-weight:600;">¥48,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>09:45</td><td><span class="badge b-phone">📞 キャンセル</span></td><td>S. 様 (#R-2026-1304) — 急病でキャンセル希望</td><td>🇯🇵 日本語</td><td>和室C</td><td style="font-weight:600;">¥36,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>09:58</td><td><span class="badge b-mail">🌐 英語メール</span></td><td><strong>E.C 様</strong> — "Late check-in 22:30 + vegetarian dinner request"</td><td>🌐 英語</td><td>ツインA</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>10:12</td><td><span class="badge b-mail">🌐 中国語メール</span></td><td><strong>W.J 様</strong> — "接送服务咨询" 東京駅からの送迎+高齢者同伴</td><td>🌐 中国語</td><td>和室特別</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>10:30</td><td><span class="badge b-mail">🌐 韓国語メール</span></td><td><strong>K.M 様</strong> — "온천 이용 문의" タトゥー温泉利用+家族風呂予約</td><td>🌐 韓国語</td><td>ツインB</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>10:45</td><td><span class="badge" style="background:var(--purple-lite);color:var(--purple);">👥 団体調整</span></td><td><strong>青葉商事 研修旅行</strong> 38名/14室 — 未確定: 3名到着時間、飲み放題有無</td><td>🇯🇵 日本語</td><td>本館2F</td><td style="font-weight:600;color:var(--green);">+¥684,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen3_reservations.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>10:55</td><td><span class="badge b-maint">🔧 保全アラート</span></td><td>別館302 エアコン異音 (センサー検知) — 同型機3件故障パターン一致</td><td>—</td><td>別館302</td><td style="font-weight:600;color:var(--brand);">-¥96,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen6_maintenance.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>11:10</td><td><span class="badge b-ota">🟪 予約サイト自動</span></td><td>Booking.com 自動メッセージ — 到着時間確認リクエスト (3件未回答)</td><td>—</td><td>—</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen3_reservations.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>11:32</td><td><span class="badge b-ai">💰 AI価格提案</span></td><td>12/24-26 +12%値上げ提案 — 紅葉ライトアップ需要+32%上昇中</td><td>—</td><td>全棟</td><td style="font-weight:600;color:var(--green);">+¥420,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen7_marketing.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>11:45</td><td><span class="badge b-hold">⏰ 仮押さえ期限</span></td><td>T.K 様 — 18:00 までに本予約確定要</td><td>🇯🇵 日本語</td><td>スイートA</td><td style="font-weight:600;">¥56,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>12:05</td><td><span class="badge" style="background:var(--amber-lite);color:var(--amber);">🍽️ 特別対応</span></td><td>R-24018 — 甲殻類アレルギー+ベビーベッド+記念日ケーキ手配 (12/20泊)</td><td>🇯🇵 日本語</td><td>和室D</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen3_reservations.html">詳細→</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<script>
+const today = new Date();
+const labels = [];
+for (let i = 0; i < 7; i++) { const d = new Date(today); d.setDate(d.getDate()+i); labels.push((d.getMonth()+1)+'/'+d.getDate()); }
+
+new Chart(document.getElementById('mainChart').getContext('2d'), {
+  type:'bar',
+  data:{
+    labels: labels,
+    datasets:[
+      {type:'line',label:'新規予約',data:[12,15,8,18,22,16,11],borderColor:'#C8102E',backgroundColor:'rgba(200,16,46,0.08)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#C8102E',tension:0.3,fill:false,order:1},
+      {type:'line',label:'純増減',data:[10,14,5,17,20,15,9],borderColor:'#1E3A5F',backgroundColor:'transparent',borderWidth:3,pointRadius:3,pointBackgroundColor:'#1E3A5F',tension:0.3,fill:false,order:0},
+      {type:'bar',label:'キャンセル',data:[2,1,3,1,2,1,2],backgroundColor:'rgba(208,208,208,0.5)',borderColor:'#D0D0D0',borderWidth:1,borderRadius:3,order:2}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:12,font:{size:10}}}},scales:{y:{beginAtZero:true,max:50,grid:{color:'#F0F0F0'},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}
+});
+
+new Chart(document.getElementById('donutChart').getContext('2d'), {
+  type:'doughnut',
+  data:{labels:['確定','仮押さえ','キャンセル待ち'],datasets:[{data:[78,12,10],backgroundColor:['#15803D','#D97706','#D0D0D0'],borderWidth:0,cutout:'65%'}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+});
+
+new Chart(document.getElementById('channelChart').getContext('2d'), {
+  type:'bar',
+  data:{labels:['自社HP','Booking','楽天','じゃらん'],datasets:[{data:[42,28,18,12],backgroundColor:['#C8102E','#1E3A5F','#7C3AED','#D97706'],borderRadius:3,barThickness:14}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.raw+'%'}}}},scales:{x:{beginAtZero:true,max:50,grid:{color:'#F0F0F0'},ticks:{font:{size:10},callback:function(v){return v+'%'}}},y:{grid:{display:false},ticks:{font:{size:10}}}}}
+});
+</script>
+
+</body>
+</html>

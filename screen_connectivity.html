@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>連携アーキテクチャ (基幹システム ⇄ 予約サイト一元管理 ⇄ ネット予約サイト)</title>
+<style>
+:root {
+  --bg: #FFFFFF; --text: #1A1A1A; --text-sub: #4A4A4A; --text-mute: #8C8C8C;
+  --rule: #D0D0D0; --rule-soft: #E5E5E5; --rule-lite: #F0F0F0; --surface: #F7F7F7;
+  --brand: #C8102E; --brand-lite: #FCE5E8; --brand-soft: #FFF0F2; --brand-dark: #8B0F1F;
+  --navy: #1E3A5F; --navy-lite: #DCE5F0;
+  --amber: #D97706; --amber-lite: #FEF3C7;
+  --green: #15803D; --green-lite: #DCFCE7;
+  --purple: #7C3AED; --purple-lite: #EDE9FE; --teal:#0E7490;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif; color: var(--text); background: var(--bg); width: 1440px; min-height: 900px; font-size: 13px; line-height: 1.5; }
+a { text-decoration: none; color: inherit; }
+.header { position: fixed; top: 0; left: 0; width: 1440px; height: 56px; background: var(--bg); border-bottom: 1px solid var(--rule-soft); z-index: 100; display: flex; align-items: center; padding: 0 20px; gap: 16px; }
+.header-logo { display: flex; align-items: center; gap: 8px; }
+.header-logo .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--brand); }
+.header-logo span { font-size: 16px; font-weight: 700; }
+.header-facility { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--rule); border-radius: 4px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+.header-search { flex: 1; max-width: 360px; margin: 0 auto; position: relative; }
+.header-search input { width: 100%; height: 34px; border: 1px solid var(--rule); border-radius: 4px; padding: 0 12px 0 34px; font-size: 13px; background: var(--surface); outline: none; font-family: inherit; }
+.header-search::before { content: '\1F50D'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; }
+.header-right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+.header-bell { position: relative; font-size: 18px; }
+.header-bell .badge-notif { position: absolute; top: -6px; right: -8px; background: var(--brand); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 5px; border-radius: 8px; }
+.header-user { display: flex; align-items: center; gap: 8px; }
+.header-user-info { text-align: right; } .header-user-info .name { font-size: 13px; font-weight: 600; } .header-user-info .role { font-size: 11px; color: var(--text-mute); }
+.sidebar { position: fixed; top: 56px; left: 0; width: 200px; height: calc(100vh - 56px); background: var(--bg); border-right: 1px solid var(--rule-soft); padding: 12px 0; z-index: 90; overflow-y: auto; }
+.sidebar-item { display: block; padding: 10px 16px; font-size: 13px; color: var(--text-sub); border-left: 3px solid transparent; }
+.sidebar-item:hover { background: var(--surface); color: var(--text); }
+.sidebar-item.active { border-left-color: var(--brand); background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+.sidebar-sub { font-size: 10px; color: var(--text-mute); padding: 12px 16px 4px; text-transform: uppercase; letter-spacing: .5px; }
+.main { margin-top: 56px; margin-left: 200px; padding: 20px 24px; width: 1240px; }
+.page-title { font-size: 19px; font-weight: 700; }
+.page-title .b { font-size: 11px; font-weight: 700; color: var(--navy); background: var(--navy-lite); padding: 2px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+.page-sub { font-size: 12px; color: var(--text-mute); margin: 4px 0 16px; }
+.card { border:1px solid var(--rule-soft); border-radius:8px; background:var(--bg); box-shadow:0 1px 3px rgba(0,0,0,.04); margin-bottom:18px; overflow:hidden; }
+.card-h { padding:11px 16px; border-bottom:1px solid var(--rule-soft); display:flex; align-items:center; justify-content:space-between; }
+.card-h .t { font-size:13px; font-weight:700; }
+.card-h .hint { font-size:10px; color:var(--text-mute); }
+.card-b { padding:16px; }
+.cols { display:flex; gap:18px; }
+
+/* topology */
+.topo { display:flex; align-items:stretch; gap:0; }
+.node { border-radius:10px; padding:14px; display:flex; flex-direction:column; justify-content:center; }
+.node .nt { font-size:13px; font-weight:700; } .node .nd { font-size:10px; color:var(--text-mute); margin-top:2px; }
+.node-pms { flex:0 0 200px; background:var(--navy-lite); border:1px solid #b9c9dd; }
+.node-pms .nt{ color:var(--navy); }
+.node-sc { flex:0 0 230px; background:var(--brand-soft); border:1px solid var(--brand-lite); }
+.node-sc .nt{ color:var(--brand); }
+.node-ota { flex:1; background:var(--surface); border:1px solid var(--rule-soft); }
+.ota-pill{ display:inline-block; font-size:11px; font-weight:600; background:#fff; border:1px solid var(--rule-soft); border-radius:14px; padding:4px 10px; margin:3px 4px 3px 0; }
+.arrows { flex:0 0 150px; display:flex; flex-direction:column; justify-content:center; gap:6px; padding:0 8px; }
+.arrows.narrow{ flex:0 0 130px; }
+.arrow-line { font-size:9.5px; color:var(--text-sub); background:var(--surface); border-radius:5px; padding:4px 7px; border-left:3px solid var(--rule); }
+.arrow-line b{ display:block; font-size:9px; color:var(--text); }
+.arrow-line.ok{ border-left-color:var(--green); } .arrow-line.warn{ border-left-color:var(--amber); }
+.meta-row{ display:flex; gap:14px; margin-top:14px; padding-top:12px; border-top:1px solid var(--rule-lite); font-size:11px; flex-wrap:wrap; }
+.meta-row .m{ } .meta-row .m .mk{ font-size:9.5px; color:var(--text-mute); } .meta-row .m .mv{ font-size:14px; font-weight:700; }
+
+/* timeline */
+.tl-res{ display:flex; align-items:center; gap:8px; font-size:11px; padding:6px 0; border-bottom:1px solid var(--rule-lite); }
+table.g{ width:100%; border-collapse:collapse; font-size:11px; }
+table.g th{ text-align:left; font-size:9.5px; color:var(--text-mute); text-transform:uppercase; padding:7px 8px; border-bottom:1px solid var(--rule-soft); }
+table.g td{ padding:8px; border-bottom:1px solid var(--rule-lite); vertical-align:top; }
+table.g tr:last-child td{ border-bottom:none; }
+code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:10.5px; }
+.gen{ font-size:9px; font-weight:700; padding:1px 6px; border-radius:8px; }
+.gen-new{ background:var(--green-lite); color:var(--green); } .gen-chg{ background:var(--amber-lite); color:var(--amber); } .gen-cxl{ background:var(--brand-lite); color:var(--brand); }
+.manual{ font-size:9.5px; color:var(--amber); font-weight:700; }
+.auto{ font-size:9.5px; color:var(--green); font-weight:700; }
+.btn-sm { padding: 5px 11px; border-radius: 5px; font-size: 10.5px; font-weight: 600; cursor: pointer; font-family: inherit; border: none; }
+.btn-amber{ background:var(--amber); color:#fff; } .btn-out{ background:var(--bg); color:var(--text-sub); border:1px solid var(--rule); }
+
+/* inventory ledger */
+.led-row{ display:flex; justify-content:space-between; align-items:center; font-size:12px; padding:6px 0; border-bottom:1px solid var(--rule-lite); }
+.led-row.tot{ border-top:2px solid var(--navy); border-bottom:none; font-weight:700; margin-top:4px; padding-top:8px; }
+.led-row .op{ color:var(--text-mute); } .led-row .v{ font-weight:600; }
+.led-row .v.neg{ color:var(--brand); } .led-row .v.pos{ color:var(--green); }
+.cap-bar{ height:24px; border-radius:5px; background:var(--rule-lite); position:relative; overflow:hidden; margin:6px 0; }
+.cap-bar i{ position:absolute; left:0; top:0; bottom:0; border-radius:5px; display:flex; align-items:center; padding-left:8px; color:#fff; font-size:10px; font-weight:700; }
+.foot-note{ font-size:10px; color:var(--text-mute); margin-top:10px; line-height:1.6; }
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="screen1_dashboard.html" class="header-logo"><div class="dot"></div><span>旅館運営システム</span></a>
+  <div class="header-facility">○○リゾート箱根 — 全施設横断ビュー <span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
+  <div class="header-search"><input type="text" placeholder="予約番号・連携コード・部屋タイプを検索"></div>
+  <div class="header-right">
+    <div class="header-bell">&#x1F514;<span class="badge-notif">3</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
+  </div>
+</header>
+<nav class="sidebar">
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item" href="screen8_reports.html">レポート</a>
+  <div class="sidebar-sub">連携</div>
+  <a class="sidebar-item active" href="screen_connectivity.html">連携アーキテクチャ</a>
+  <a class="sidebar-item" href="screen_connectivity.html">予約データ取込状況</a>
+  <a class="sidebar-item" href="screen_connectivity.html">マスタ変換</a>
+</nav>
+
+<div class="main">
+  <div class="page-title">連携アーキテクチャ <span class="b">基幹システム ⇄ 予約サイト一元管理 ⇄ ネット予約サイト</span></div>
+  <div class="page-sub">ネット予約サイトは基幹システムに直結しない。予約サイト一元管理が中間で在庫・料金を各ネット予約サイトへ配信し、予約は通信データで取込む。一括でまとめて処理する仕組みは無く、各システムの内容は時間差で順次そろう。</div>
+
+  <!-- Topology -->
+  <div class="card">
+    <div class="card-h">
+      <div class="t">&#x1F517; 連携の全体図 &amp; 流れ別の状態</div>
+      <div class="hint">在庫の大もと: 双方向連携=基幹システム / 一方向連携=予約サイト一元管理 &nbsp;|&nbsp; 反映の間隔 30秒〜数分</div>
+    </div>
+    <div class="card-b">
+      <div class="topo">
+        <div class="node node-pms">
+          <div class="nt">基幹システム / 宿泊管理</div>
+          <div class="nd">フロント・会計・宿帳<br>電話/直予約 入力<br><span style="color:var(--navy);font-weight:700;">在庫の大もと (双方向連携)</span></div>
+        </div>
+        <div class="arrows narrow">
+          <div class="arrow-line ok"><b>① 在庫・料金 配信 →</b>在庫/料金 最終 1.2分前 / 遅延 72秒</div>
+          <div class="arrow-line ok"><b>② 予約取込 ←</b>通信データ 取込待ち 2件</div>
+          <div class="arrow-line ok"><b>③ 基幹システム 返信 →</b>確認番号 返却済</div>
+          <div class="arrow-line warn"><b>④ 双方向 残室/料金</b>電話予約 反映 5-20分</div>
+        </div>
+        <div class="node node-sc">
+          <div class="nt">予約サイト一元管理</div>
+          <div class="nd">手間いらず (TEMAIRAZU)<br>在庫 / 料金 / 予約 / 分析<br>各ネット予約サイトへ一括配信</div>
+        </div>
+        <div class="arrows">
+          <div class="arrow-line ok"><b>在庫・料金 配信 →</b>Booking 0.8分 / 楽天 1.2分</div>
+          <div class="arrow-line warn"><b>差分照合 / 再送</b>じゃらん 在庫差分1件 再送中</div>
+          <div class="arrow-line ok"><b>予約データ ←</b>新規/変更/取消</div>
+        </div>
+        <div class="node node-ota">
+          <div class="nt" style="font-size:11px;color:var(--text-sub);">ネット予約サイト / 販売窓口</div>
+          <div style="margin-top:8px;">
+            <span class="ota-pill">楽天トラベル</span>
+            <span class="ota-pill">じゃらんnet</span>
+            <span class="ota-pill">一休.com</span>
+            <span class="ota-pill">Booking.com</span>
+            <span class="ota-pill">Expedia</span>
+            <span class="ota-pill">Agoda</span>
+            <span class="ota-pill">Yahoo!トラベル</span>
+            <span class="ota-pill" style="border-color:var(--green);color:var(--green);">公式直予約 (予約エンジン)</span>
+          </div>
+        </div>
+      </div>
+      <div class="meta-row">
+        <div class="m"><div class="mk">最終 在庫・料金 配信成功</div><div class="mv">1.2分前</div></div>
+        <div class="m"><div class="mk">平均遅延</div><div class="mv">72<span style="font-size:10px;">秒</span></div></div>
+        <div class="m"><div class="mk">未処理 予約データ</div><div class="mv" style="color:var(--amber);">2<span style="font-size:10px;">件</span></div></div>
+        <div class="m"><div class="mk">本日 手動介入</div><div class="mv">3<span style="font-size:10px;">件</span></div></div>
+        <div class="m"><div class="mk">エラー再送</div><div class="mv" style="color:var(--amber);">1<span style="font-size:10px;">件</span></div></div>
+        <div class="m"><div class="mk">サイト間の料金不一致</div><div class="mv" style="color:var(--brand);">1<span style="font-size:10px;">件</span></div></div>
+      </div>
+      <div class="foot-note">&#x26A0;&#xFE0F; <b>全部まとめて一度に処理し、失敗したら全件取り消す仕組みは存在しない。</b> 各システムの内容は時間差で順次そろう — 予約確定時に在庫を引き落とし、失敗は差分を検知して再送、確定まで売止を維持。満室間際は「1サイトのみ販売」で売りすぎ(重複予約)を回避。TL-リンカーン「在庫を全サイトで共有」のときだけ予約確定と在庫引き落としが同時に起き、最も確実。</div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <!-- Reservation import timeline -->
+    <div style="flex:0 0 56%;min-width:0;">
+      <div class="card">
+        <div class="card-h">
+          <div class="t">&#x1F4E5; 予約取込の流れ (1予約単位)</div>
+          <div class="hint">変更通知は自動上書きせず手動で再取込</div>
+        </div>
+        <div class="card-b" style="padding:0;">
+          <table class="g">
+            <thead>
+              <tr><th style="padding-left:16px;">ネット予約サイト予約番号</th><th>予約サイト一元管理 通知番号</th><th>基幹システム確認番号</th><th>世代</th><th style="padding-right:16px;">取込</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding-left:16px;"><code>RKT-7782041</code><div style="font-size:9.5px;color:var(--text-mute);">楽天 / W.J 様 2名</div></td>
+                <td><code>SC-99214</code><div style="font-size:9px;color:var(--text-mute);">重複防止番号: a1f9..c2</div></td>
+                <td><code>R-2026-1310</code></td>
+                <td><span class="gen gen-new">新規 g1</span></td>
+                <td style="padding-right:16px;"><span class="auto">自動取込済</span></td>
+              </tr>
+              <tr>
+                <td style="padding-left:16px;"><code>BDC-5520198</code><div style="font-size:9.5px;color:var(--text-mute);">Booking / W.J 様 2名</div></td>
+                <td><code>SC-99220</code><div style="font-size:9px;color:var(--text-mute);">重複防止番号: 7b30..e1</div></td>
+                <td><code>R-2026-1289</code></td>
+                <td><span class="gen gen-chg">変更 g3</span><div style="font-size:9px;color:var(--text-mute);">人数 2→3 / 日程変更</div></td>
+                <td style="padding-right:16px;"><span class="manual">要 手動再取込</span><div style="margin-top:4px;"><button class="btn-sm btn-amber">再取り込み</button></div></td>
+              </tr>
+              <tr>
+                <td style="padding-left:16px;"><code>JLN-3391756</code><div style="font-size:9.5px;color:var(--text-mute);">じゃらん / 青葉商事 14室</div></td>
+                <td><code>SC-99231</code><div style="font-size:9px;color:var(--text-mute);">重複防止番号: cc81..9a</div></td>
+                <td><code>R-2026-1295</code></td>
+                <td><span class="gen gen-chg">変更 g2</span><div style="font-size:9px;color:var(--text-mute);">取消が変更より先着 → 順序照合</div></td>
+                <td style="padding-right:16px;"><span class="manual">要 確認</span></td>
+              </tr>
+              <tr>
+                <td style="padding-left:16px;"><code>IKY-1180443</code><div style="font-size:9.5px;color:var(--text-mute);">一休 / S.M 様 2名</div></td>
+                <td><code>SC-99240</code><div style="font-size:9px;color:var(--text-mute);">重複防止番号: 02de..7f</div></td>
+                <td>—</td>
+                <td><span class="gen gen-cxl">取消 g1</span></td>
+                <td style="padding-right:16px;"><span class="auto">自動取込済</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="foot-note" style="padding:0 16px 14px;">予約は[基本情報/部屋泊/宿泊者/同伴者/料金明細/食事/備考/決済/取消規定]のまとまり。重複防止用の識別番号と世代番号(g1/g2..)で、重複や順序の逆転(取消が変更より先に届く)を吸収。<b>変更通知の手動再取込</b>はデータの勝手な上書きを防ぐ実運用の動き。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inventory ledger -->
+    <div style="flex:1;min-width:0;">
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F4D2; 在庫台帳 (本館和室 / 木曜)</div></div>
+        <div class="card-b">
+          <div class="led-row"><span>物理室数</span><span class="v">24</span></div>
+          <div class="led-row"><span class="op">− 故障で使用不可</span><span class="v neg">2</span></div>
+          <div class="led-row"><span class="op">− 清掃不可</span><span class="v neg">1</span></div>
+          <div class="led-row"><span class="op">− 滞在中 (連泊)</span><span class="v neg">8</span></div>
+          <div class="led-row"><span class="op">− 団体おさえ (青葉商事)</span><span class="v neg">4</span></div>
+          <div class="led-row"><span class="op">− ネット予約サイト向け割当</span><span class="v neg">3</span></div>
+          <div class="led-row"><span class="op">+ 締切後の在庫戻し</span><span class="v pos">2</span></div>
+          <div class="led-row tot"><span>販売可能数</span><span class="v" style="color:var(--navy);">8 室</span></div>
+          <div class="foot-note">故障で使用不可=在庫から除外(稼働率/1室あたり売上に影響) / 清掃不可=在庫には残り販売可能。混同しない。</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="t">&#x1F37D;&#xFE0F; 客室在庫 vs 夕食提供能力</div></div>
+        <div class="card-b">
+          <div style="font-size:10px;color:var(--text-mute);">「空室があるから売れる」ではない — 厨房/夕食席の提供能力が販売室数を決める</div>
+          <div style="font-size:10.5px;margin-top:8px;">客室 販売可能</div>
+          <div class="cap-bar"><i style="width:100%;background:var(--navy);">8室 / 16名</i></div>
+          <div style="font-size:10.5px;">夕食席 残 (18:00-19:00枠)</div>
+          <div class="cap-bar"><i style="width:60%;background:var(--amber);">38席</i></div>
+          <div style="font-size:10.5px;">仲居 配膳キャパ</div>
+          <div class="cap-bar"><i style="width:75%;background:var(--green);">余裕</i></div>
+          <div class="foot-note">&#x1F916; 夕食席が客室在庫を下回る場合、AIは食事なしプラン/時間枠調整/売止を提案。人泊2食の提供能力で販売可能室数が変動。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Master conversion matrix -->
+  <div class="card">
+    <div class="card-h">
+      <div class="t">&#x1F504; マスタ変換の対応表 (ネット予約サイトの部屋タイプ → 予約サイト一元管理 → 基幹システム → プラン/料金/食事)</div>
+      <div class="hint">部屋タイプと平均客室単価だけでは足りない — 1泊2食/子供区分/食事数/文字変換が運用の手間を左右する</div>
+    </div>
+    <div class="card-b" style="padding:0;">
+      <table class="g">
+        <thead>
+          <tr>
+            <th style="padding-left:16px;">ネット予約サイトの部屋タイプ</th><th>予約サイト一元管理の部屋タイプ</th><th>基幹システムの部屋タイプ</th><th>プランコード</th><th>料金コード</th><th>食事区分</th><th>大人/小学生/幼児</th><th style="padding-right:16px;">文字変換</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding-left:16px;">【楽天】本館和室10畳</td><td><code>HONKAN-W10</code></td><td><code>HWA</code></td><td><code>RAK-1N2S</code></td><td><code>RACK_W</code></td><td>1泊2食 (1名あたり)</td><td>¥25,000 / 70% / 50%</td><td style="padding-right:16px;">半角ｶﾅ→全角</td>
+          </tr>
+          <tr>
+            <td style="padding-left:16px;">【じゃらん】離れ露天付</td><td><code>HANARE-ONS</code></td><td><code>HRO</code></td><td><code>JLN-KAISEKI</code></td><td><code>PREMIUM</code></td><td>1泊2食 (懐石)</td><td>¥55,000 / 区分A / 区分C</td><td style="padding-right:16px;">機種依存文字 除去</td>
+          </tr>
+          <tr>
+            <td style="padding-left:16px;">【Booking】Japanese Suite</td><td><code>SUITE-B</code></td><td><code>STB</code></td><td><code>BDC-HB</code></td><td><code>RACK_S</code></td><td>朝夕食付き → 1泊2食</td><td>¥48,000 / 子供A / 幼児</td><td style="padding-right:16px;">英字氏名→基幹システムの姓名</td>
+          </tr>
+          <tr>
+            <td style="padding-left:16px;">【一休】別館和洋室</td><td><code>BEKKAN-WY</code></td><td><code>BWY</code></td><td><code>IKY-1N2S</code></td><td><code>RACK_WY</code></td><td>1泊2食 (大人1名あたり)</td><td>¥32,000 / 70% / 無料</td><td style="padding-right:16px;">絵文字 除去</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="foot-note" style="padding:10px 16px 14px;">子供区分: A/B=食事+寝具、C=寝具のみ (ネット予約サイトごとに体系が異なる)。入湯税 ¥150/人/泊は固定額の頭割(消費税対象外・現地徴収)で別建て。料金ランクは [部屋 × 夕食 × 季節 × 曜日 × 1室人数] で十数種。</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

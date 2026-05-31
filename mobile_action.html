@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アクション詳細</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+    --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+    --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+    --navy:#1E3A5F;--navy-lite:#DCE5F0;
+    --amber:#D97706;--amber-lite:#FEF3C7;
+    --green:#15803D;--green-lite:#DCFCE7;
+    --purple:#7C3AED;--purple-lite:#EDE9FE;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;
+    background:#F0F0F0;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:20px 0;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .phone-frame {
+    width:375px;
+    min-height:812px;
+    background:var(--bg);
+    border-radius:40px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow:hidden;
+    position:relative;
+  }
+
+  /* Status Bar */
+  .status-bar {
+    height:44px;
+    background:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+  }
+  .status-bar .time { font-size:14px; font-weight:700; }
+  .status-bar .carrier { font-size:11px; opacity:0.85; letter-spacing:0.3px; }
+  .status-bar .icons { font-size:12px; letter-spacing:2px; }
+
+  /* App Header */
+  .app-header {
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    border-bottom:1px solid var(--rule-soft);
+    background:var(--bg);
+  }
+  .app-header .back {
+    font-size:14px;
+    font-weight:600;
+    color:var(--brand);
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    min-width:60px;
+  }
+  .app-header .back:active { opacity:0.7; }
+  .app-header .title {
+    font-size:16px;
+    font-weight:700;
+    color:var(--text);
+  }
+  .app-header .menu {
+    font-size:20px;
+    color:var(--text-mute);
+    cursor:pointer;
+    min-width:60px;
+    text-align:right;
+    letter-spacing:2px;
+  }
+
+  /* Content */
+  .content {
+    padding-bottom:140px;
+    overflow-y:auto;
+  }
+
+  /* Priority Banner */
+  .priority-banner {
+    background:linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+    color:#fff;
+    padding:12px 16px;
+    font-size:13px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .priority-banner .countdown {
+    margin-left:auto;
+    background:rgba(255,255,255,0.2);
+    padding:3px 10px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:700;
+  }
+
+  /* Guest Info Card */
+  .guest-card {
+    margin:16px;
+    border:1px solid var(--rule-soft);
+    border-radius:14px;
+    padding:16px;
+  }
+  .guest-card .room-row {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .guest-card .room {
+    font-size:22px;
+    font-weight:700;
+    color:var(--navy);
+  }
+  .guest-card .floor {
+    font-size:12px;
+    color:var(--text-mute);
+    background:var(--surface);
+    padding:3px 10px;
+    border-radius:8px;
+    font-weight:500;
+  }
+  .guest-card .guest-name {
+    font-size:17px;
+    font-weight:700;
+    color:var(--text);
+    margin-bottom:2px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .guest-card .guest-name .flag { font-size:16px; }
+  .guest-card .info-grid {
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:4px 12px;
+    margin-top:10px;
+    font-size:13px;
+  }
+  .guest-card .info-grid .label {
+    color:var(--text-mute);
+    font-weight:500;
+  }
+  .guest-card .info-grid .value {
+    color:var(--text);
+    font-weight:500;
+  }
+  .badge-first {
+    display:inline-block;
+    font-size:11px;
+    font-weight:600;
+    padding:3px 8px;
+    border-radius:6px;
+    background:var(--navy-lite);
+    color:var(--navy);
+    margin-top:8px;
+  }
+
+  /* Complaint Card */
+  .complaint-card {
+    margin:0 16px 16px;
+    border:1px solid var(--rule-soft);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .complaint-card .card-header {
+    padding:12px 16px;
+    background:var(--surface);
+    font-size:13px;
+    font-weight:600;
+    color:var(--text-sub);
+    border-bottom:1px solid var(--rule-soft);
+  }
+  .complaint-card .card-body {
+    padding:16px;
+  }
+  .complaint-card .original {
+    font-size:13px;
+    line-height:1.7;
+    color:var(--text);
+    white-space:pre-line;
+    font-style:italic;
+  }
+  .complaint-card .translation-badge {
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-size:11px;
+    font-weight:600;
+    color:var(--purple);
+    background:var(--purple-lite);
+    padding:4px 10px;
+    border-radius:8px;
+    margin:14px 0 8px;
+  }
+  .complaint-card .translation {
+    font-size:13px;
+    line-height:1.7;
+    color:var(--text-sub);
+    background:var(--surface);
+    padding:12px;
+    border-radius:10px;
+  }
+
+  /* AI Proposal Card (Nudge) */
+  .ai-card {
+    margin:0 16px 16px;
+    border:1px solid var(--rule-soft);
+    border-radius:14px;
+    border-left:4px solid var(--brand); /* 赤=当日対応 */
+    overflow:hidden;
+  }
+  .ai-card .card-header {
+    padding:12px 16px 8px;
+    background:var(--bg);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border-bottom:none;
+  }
+  .ai-card .card-header .ai-tag {
+    font-size:10px;
+    font-weight:600;
+    color:var(--text-mute);
+    background:var(--surface);
+    padding:2px 8px;
+    border-radius:6px;
+    letter-spacing:0.2px;
+  }
+  .ai-card .card-header .prio {
+    font-size:11px;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:8px;
+    background:var(--brand-lite);
+    color:var(--brand);
+  }
+  .ai-card .card-body {
+    padding:4px 16px 16px;
+  }
+  .ai-card .nudge-situation {
+    font-size:16px;
+    font-weight:700;
+    color:var(--text);
+    line-height:1.4;
+    margin-bottom:8px;
+  }
+  .ai-card .nudge-impact {
+    font-size:13px;
+    color:var(--text-sub);
+    line-height:1.6;
+    margin-bottom:10px;
+  }
+  .ai-card .nudge-action {
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--text);
+    line-height:1.6;
+    background:var(--surface);
+    padding:12px 14px;
+    border-radius:10px;
+  }
+  .ai-card .nudge-basis {
+    font-size:11px;
+    color:var(--text-mute);
+    margin-top:8px;
+    line-height:1.5;
+  }
+
+  /* Checkboxes */
+  .action-check {
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid var(--rule-lite);
+  }
+  .action-check:last-of-type { border-bottom:none; }
+  .action-check .checkbox {
+    width:22px; height:22px;
+    border-radius:6px;
+    background:var(--green);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    font-weight:700;
+    flex-shrink:0;
+    margin-top:1px;
+  }
+  .action-check .check-label {
+    font-size:14px;
+    font-weight:600;
+    color:var(--text);
+  }
+  .action-check .check-desc {
+    font-size:12px;
+    color:var(--text-mute);
+    margin-top:2px;
+    line-height:1.4;
+  }
+
+  /* Reply Draft */
+  .reply-section {
+    margin-top:14px;
+    padding-top:14px;
+    border-top:1px solid var(--rule-soft);
+  }
+  .reply-section .reply-label {
+    font-size:13px;
+    font-weight:600;
+    color:var(--text-sub);
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .reply-section .reply-body {
+    font-size:12px;
+    line-height:1.8;
+    color:var(--text);
+    background:var(--surface);
+    padding:14px;
+    border-radius:10px;
+    white-space:pre-line;
+    border:1px solid var(--rule-lite);
+  }
+
+  /* Related Info */
+  .related-card {
+    margin:0 16px 16px;
+    border:1px solid var(--rule-soft);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .related-card .card-header {
+    padding:12px 16px;
+    background:var(--surface);
+    font-size:13px;
+    font-weight:600;
+    color:var(--text-sub);
+    border-bottom:1px solid var(--rule-soft);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .related-card .card-header .toggle { font-size:14px; color:var(--text-mute); }
+  .related-card .card-body {
+    padding:14px 16px;
+  }
+  .related-item {
+    padding:8px 0;
+    border-bottom:1px solid var(--rule-lite);
+    font-size:13px;
+    line-height:1.6;
+    color:var(--text-sub);
+  }
+  .related-item:last-child { border-bottom:none; }
+  .related-item .ri-label {
+    font-weight:600;
+    color:var(--text);
+    display:block;
+    margin-bottom:2px;
+  }
+
+  /* Fixed Bottom Action Bar */
+  .bottom-action-bar {
+    position:sticky;
+    bottom:0;
+    left:0; right:0;
+    background:rgba(255,255,255,0.95);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--rule-soft);
+    padding:12px 16px;
+    padding-bottom:32px;
+  }
+  .btn-complete {
+    width:100%;
+    padding:14px 0;
+    border:none;
+    border-radius:12px;
+    background:var(--green);
+    color:#fff;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:inherit;
+    margin-bottom:8px;
+  }
+  .btn-complete:active { opacity:0.85; }
+  .btn-hold {
+    width:100%;
+    padding:14px 0;
+    border:1.5px solid var(--rule);
+    border-radius:12px;
+    background:var(--bg);
+    color:var(--text-sub);
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .btn-hold:active { background:var(--surface); }
+  .bottom-note {
+    text-align:center;
+    font-size:11px;
+    color:var(--text-mute);
+    margin-top:8px;
+    line-height:1.4;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span class="time">15:42</span>
+    <span class="carrier">&#9679;&#9679;&#9679; リゾート箱根</span>
+    <span class="icons">&#9632;&#9632;&#9632;&#9632;&#9632;</span>
+  </div>
+
+  <!-- App Header -->
+  <div class="app-header">
+    <a href="mobile_today.html" class="back">&#8249; 戻る</a>
+    <span class="title">アクション詳細</span>
+    <span class="menu">&#8943;</span>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Priority Banner -->
+    <div class="priority-banner">
+      <span>&#128308; 高優先度 &mdash; 期限 11:00</span>
+      <span class="countdown">残り 1時間18分</span>
+    </div>
+
+    <!-- Guest Info Card -->
+    <div class="guest-card">
+      <div class="room-row">
+        <span class="room">Room 512</span>
+        <span class="floor">別館5F</span>
+      </div>
+      <div class="guest-name">
+        J.W 様 <span class="flag">&#127482;&#127480;</span>
+      </div>
+      <div class="info-grid">
+        <span class="label">経路</span>
+        <span class="value">Expedia</span>
+        <span class="label">チェックイン</span>
+        <span class="value">12/15 &rarr; 12/18 (3泊)</span>
+        <span class="label">料金</span>
+        <span class="value">&yen;144,000</span>
+      </div>
+      <span class="badge-first">初回利用</span>
+    </div>
+
+    <!-- Complaint Content -->
+    <div class="complaint-card">
+      <div class="card-header">&#128233; 苦情 &mdash; Room 512</div>
+      <div class="card-body">
+        <div class="original">Subject: Noise complaint - Room 512
+
+Dear staff,
+
+The noise from the adjacent room (Room 510) kept me awake until 2am last night. Additionally, the breakfast area was extremely crowded this morning with wait times over 20 minutes.
+
+I expected better from a resort of this caliber. Please address this immediately.
+
+J.W 様</div>
+        <div class="translation-badge">&#129302; AI翻訳</div>
+        <div class="translation">隣室(510号室)からの騒音で昨夜2時まで眠れませんでした。また、今朝の朝食会場は大変混雑しており、20分以上の待ち時間がありました。このクラスのリゾートとしては期待以下です。至急対応をお願いします。</div>
+      </div>
+    </div>
+
+    <!-- AI Proposal (Nudge) -->
+    <div class="ai-card">
+      <div class="card-header">
+        <span class="ai-tag">&#129302; AI確認</span>
+        <span class="prio">&#128308; 至急</span>
+      </div>
+      <div class="card-body">
+        <!-- 1行目: 状況 -->
+        <div class="nudge-situation">512号室のお客様から、騒音と朝食混雑のお申し出があります。</div>
+        <!-- 2行目: なぜ重要か -->
+        <div class="nudge-impact">初回ご利用の海外のお客様で、すでに「至急対応を」とのお声です。今日中に動かないと、口コミ評価に響くおそれがあります。</div>
+        <!-- 3行目: 推奨アクション -->
+        <div class="nudge-action">&#128205; 静かな角部屋 518号室(清掃済・空室)へ、本日14:00以降のお部屋替えをご案内するとよさそうです。あわせて支配人名義のお詫びと、次回10%のご優待もご用意できます。</div>
+        <!-- 補足: 根拠数値 -->
+        <div class="nudge-basis">根拠: 隣室510号室は注意連絡済 / 朝食混雑は本日チェックアウト18件が集中（明日以降は通常見込み）</div>
+
+        <!-- 返信案(補助・折りたたみ) -->
+        <div class="reply-section">
+          <div class="reply-label">&#128221; お詫び返信の文面案（送信前に支配人がご確認ください）</div>
+          <div class="reply-body">Dear J.W 様,
+
+Thank you for bringing this to our attention. I sincerely apologize for the inconvenience.
+
+We have arranged the following:
+&#8226; Room transfer to 518 (corner room, quieter floor) - available from 14:00 today
+&#8226; Complimentary breakfast upgrade for the remainder of your stay
+&#8226; 10% discount on your next visit
+
+Please contact the front desk at your convenience, and we will assist with the room transfer.
+
+Warm regards,
+Taro Yamada, General Manager</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Info -->
+    <div class="related-card">
+      <div class="card-header">
+        <span>&#128269; 関連情報</span>
+        <span class="toggle">&#9660;</span>
+      </div>
+      <div class="card-body">
+        <div class="related-item">
+          <span class="ri-label">510号室ゲスト</span>
+          S. 様グループ (4名, 宴会後) &rarr; フロントから注意連絡済み
+        </div>
+        <div class="related-item">
+          <span class="ri-label">朝食混雑</span>
+          本日チェックアウト18件集中 &rarr; 明日以降は通常に戻る見込み
+        </div>
+        <div class="related-item">
+          <span class="ri-label">518号室</span>
+          空室・清掃完了・角部屋・高層階
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- Fixed Bottom Action Bar -->
+  <div class="bottom-action-bar">
+    <button class="btn-complete">対応完了</button>
+    <button class="btn-hold">一時保留</button>
+    <div class="bottom-note">対応完了で支配人承認済みとして基幹システムに記録されます</div>
+  </div>
+
+</div><!-- /phone-frame -->
+
+</body>
+</html>
