@@ -456,10 +456,10 @@
       <div class="risk-card">
         <div class="top">
           <div>
-            <div class="name">売止リスク見込み</div>
+            <div class="name" data-guide="【売止リスク見込み】設備トラブルのせいで売れなくなりそうな客室の量です。室泊は1部屋1泊を1と数えた延べ数で、48hは今後48時間ぶんの見込みを表します。">売止リスク見込み</div>
             <div class="value">34<small> 室泊 / 48h</small></div>
           </div>
-          <span class="badge">収益影響 ¥1.08M</span>
+          <span class="badge" data-guide="【収益への影響】この設備トラブルを放置した場合に、見込まれる売上の減少額です。金額が大きいほど優先して対応する目安になります。">収益影響 ¥1.08M</span>
         </div>
         <div class="risk-list">
           <div class="risk-item"><span>温泉循環ポンプ#2（大浴場 男湯）</span><b>22室泊 / ¥0.7M</b></div>
@@ -481,11 +481,11 @@
               <div class="order-no">#RM-302</div>
               <div class="order-asset">302号室 エアコン異音・冷え不良</div>
             </div>
-            <span class="chip hidden">防護 / 住宅系</span>
+            <span class="chip hidden" data-guide="【ふだん見落としやすい設備】客室や住まいに近い場所にあって、普段は意識されにくいけれど安全に関わる設備という印です。見落とさないよう色分けで目立たせています。">防護 / 住宅系</span>
           </div>
           <div class="order-meta">
-            <span class="chip rpn">優先度 245</span>
-            <span class="chip pf">故障まで 残2日</span>
+            <span class="chip rpn" data-guide="【優先度の点数】どれだけ急いで対応すべきかを点数にしたものです。故障した時の影響の大きさや起こりやすさをもとに自動計算され、点数が高いほど先に手をつける目安になります。">優先度 245</span>
+            <span class="chip pf" data-guide="【故障までの目安日数】このまま放置した場合に、あと何日ほどで実際の故障につながりそうかという予測です。日数が少ないほど早めの着手が必要です。">故障まで 残2日</span>
             <span class="chip safe">影響: 営業</span>
           </div>
           <div class="order-notes">QRスキャンで設備履歴・前回点検・使用部品を即表示。写真添付で完了報告、異音再発時は同一設備へ再起票。</div>
@@ -524,7 +524,7 @@
           <div class="order-meta">
             <span class="chip rpn">優先度 210</span>
             <span class="chip pf">故障まで 残1日</span>
-            <span class="chip photo">写真必須</span>
+            <span class="chip photo" data-guide="【写真が必須の作業】完了の報告をするには現場の写真を必ず添える必要があります。写真がないと作業の証拠が残らないため、報告は受け付けられません。">写真必須</span>
           </div>
           <div class="order-notes">レジオネラ安全ループの値を先に押さえる。点検記録と写真添付がない完了報告は無効扱い。</div>
         </div>
@@ -560,11 +560,11 @@
 
       <div class="safety-card">
         <div class="safety-head">
-          <div class="t">&#9851; 循環温度 / 残留塩素</div>
+          <div class="t" data-guide="【お湯の安全チェック】大浴場のお湯を循環させる温度と、消毒に使う塩素の残り具合をまとめて見るパネルです。お客さまが安心して入浴できる状態かを確認します。">&#9851; 循環温度 / 残留塩素</div>
           <span class="pill-ok">適合 / 監視中</span>
         </div>
 
-        <div class="temp-band">
+        <div class="temp-band" data-guide="【温度の安全帯グラフ】お湯の温度がどの範囲にあるかを色で示した帯です。赤い部分は雑菌が増えやすい危険な温度帯で、黒い線が今の浴槽の温度を表します。線が赤帯から外れていれば安心です。">
           <span class="lbl" style="left:0%;">15&deg;C</span>
           <span class="lbl" style="left:20%;">20&deg;C</span>
           <span class="lbl" style="left:50%;">35&deg;C</span>
@@ -591,7 +591,7 @@
     </div>
 
     <div class="section">
-      <div class="section-title">防護設備の作動試験 期限 <span class="count">法定・予防</span></div>
+      <div class="section-title" data-guide="【防護設備の作動試験の期限】火事や停電など、いざという時に動くべき設備が本当に動くかを試す点検の締め切り一覧です。法律で義務付けられたものもあり、期限を過ぎないよう管理します。">防護設備の作動試験 期限 <span class="count">法定・予防</span></div>
 
       <div class="order-card">
         <div class="order-bar red"></div>
@@ -640,26 +640,51 @@
   </div>
 
   <div class="bottom-nav">
-    <a class="nav-tab active" href="mobile_maintenance.html">
+    <a class="nav-tab active" href="mobile_maintenance.html" data-guide="【作業】今日対応すべき修理や点検の一覧を見る画面です。いま開いているのがこの画面です。">
       <span class="icon">&#128736;</span>
       <span class="label-text">作業</span>
     </a>
-    <a class="nav-tab" href="#">
+    <a class="nav-tab" href="#" data-guide="【設備】館内の機器や設備ごとの情報を見る画面です。過去の点検や修理の履歴を設備単位で確認できます。">
       <span class="icon">&#128295;</span>
       <span class="label-text">設備</span>
     </a>
-    <a class="nav-tab" href="#">
+    <a class="nav-tab" href="#" data-guide="【QR】設備に貼られた二次元コードをカメラで読み取る画面です。読み取るとその設備の履歴や点検記録がすぐに表示されます。">
       <span class="icon">&#128247;</span>
       <span class="label-text">QR</span>
     </a>
-    <a class="nav-tab" href="#">
+    <a class="nav-tab" href="#" data-guide="【引継ぎ】次の担当者へ申し送りする画面です。まだ終わっていない作業や、写真の撮り忘れだけが残るようまとめられます。">
       <span class="icon">&#128203;</span>
       <span class="label-text">引継ぎ</span>
     </a>
   </div>
 </div>
 
-<button class="fab" aria-label="QRスキャン">&#128247;</button>
+<button class="fab" aria-label="QRスキャン" data-guide="【撮影・QR読み取りボタン】押すとカメラが立ち上がり、設備の二次元コードを読み取ったり、作業の写真を撮ったりできます。作業の起点となるボタンです。">&#128247;</button>
 
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

@@ -232,7 +232,7 @@ canvas{ max-width:100%; }
   <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
   <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
   <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
-  <a class="sidebar-item active" href="screen7_marketing.html">マーケティング分析</a>
+  <a class="sidebar-item active" href="screen7_marketing.html" data-guide="【マーケティング分析】集客や宣伝、料金の状況をまとめて見る画面です。お客様がどこから予約に来ているか、どの宣伝が売上につながっているかを確認し、AIの提案を受け取れます。">マーケティング分析</a>
   <a class="sidebar-item" href="screen8_reports.html">レポート</a>
   <div class="sidebar-sub">マーケティング表示</div>
   <a class="sidebar-item active" href="screen7_marketing.html">AI自動運用</a>
@@ -255,18 +255,18 @@ canvas{ max-width:100%; }
 
   <!-- KPI strip: revenue-focused, not vanity -->
   <div class="kpi-strip">
-    <div class="kpi-card"><div class="label">上積み直販売上<br>(AI寄与・今月)</div><div class="value" style="color:var(--green);">&#165;3.2<span class="unit">M</span></div><div class="sub delta-up">&#9650; +18% vs 前月</div></div>
+    <div class="kpi-card" data-guide="【上積みの直販売上】予約サイトを通さず、宿の公式サイトから直接いただいた予約のうち、AIの提案によって今月増えた分の売上です。Mは百万円のことで、ここでは320万円を表します。多いほど手数料を払わずに稼げています。"><div class="label">上積み直販売上<br>(AI寄与・今月)</div><div class="value" style="color:var(--green);">&#165;3.2<span class="unit">M</span></div><div class="sub delta-up">&#9650; +18% vs 前月</div></div>
     <div class="kpi-card"><div class="label">集客費控除後の<br>1室あたり売上</div><div class="value" style="color:var(--navy);">&#165;21,400</div><div class="sub delta-up">&#9650; +6.2%</div></div>
-    <div class="kpi-card"><div class="label">予約サイト手数料控除後<br>平均客室単価</div><div class="value">&#165;24,800</div><div class="sub">直販 &#165;31,200 / 予約サイト &#165;26,100</div></div>
+    <div class="kpi-card" data-guide="【手数料を引いた後の1部屋あたり単価】予約サイトに支払う手数料を差し引いた、客室1部屋あたりの実際の手取り単価です。公式サイト経由の方が手数料がかからない分、手取りが高くなります。"><div class="label">予約サイト手数料控除後<br>平均客室単価</div><div class="value">&#165;24,800</div><div class="sub">直販 &#165;31,200 / 予約サイト &#165;26,100</div></div>
     <div class="kpi-card"><div class="label">予約完了率<br>(公式サイトの成約率)</div><div class="value" style="color:var(--purple);">4.8<span class="unit">%</span></div><div class="sub delta-up">&#9650; +0.9pt (多言語ページ)</div></div>
-    <div class="kpi-card"><div class="label">キャンセル調整後<br>広告費用対効果</div><div class="value" style="color:var(--green);">6.2<span class="unit">x</span></div><div class="sub delta-up">&#9650; 予算再配分後</div></div>
+    <div class="kpi-card" data-guide="【広告の費用対効果】広告に使ったお金に対して、何倍の売上が返ってきたかを表します。6.2倍は、広告費1万円につき6万2千円の売上があったという意味です。キャンセル分は差し引いて計算しています。"><div class="label">キャンセル調整後<br>広告費用対効果</div><div class="value" style="color:var(--green);">6.2<span class="unit">x</span></div><div class="sub delta-up">&#9650; 予算再配分後</div></div>
     <div class="kpi-card"><div class="label">SNS問合せ<br>&rarr;予約化率</div><div class="value">11.3<span class="unit">%</span></div><div class="sub">統合受信箱 / 多言語</div></div>
   </div>
 
   <!-- ===== Tech-touch nudges: situation + action + 1 button (max 3) ===== -->
   <div class="nudges" style="margin-bottom:18px;">
     <!-- Nudge 1: underbooked Thursday — show sales candidates (today's action) -->
-    <div class="nudge today">
+    <div class="nudge today" data-guide="【AIからの提案カード】AIが状況を見つけて対処案を出します。あくまで提案で、実行するかどうかは支配人が判断します。「今日中」は今日のうちに見ておくとよい案件、「至急」はすぐ対応した方がよい案件を表します。">
       <div class="nudge-top">
         <span class="nudge-ai">&#x1F916; AI確認</span>
         <span class="nudge-pri pri-today">今日中</span>
@@ -276,7 +276,7 @@ canvas{ max-width:100%; }
       <div class="nudge-line3">週末向けの広告予算を木曜に回す案を用意しました。台湾・首都圏のお客様に向けると、木曜 +9室・直販売上 +&#165;225,000 が見込めます。</div>
       <div class="nudge-meta">根拠: 木曜 直販52% / 前後の週末 99〜100% / 紅葉の地域需要 +32%</div>
       <div class="nudge-act">
-        <button class="btn-sm btn-purple">販売の候補を見る</button>
+        <button class="btn-sm btn-purple" data-guide="【販売の候補を見る】AIが用意した、空いている木曜を埋めるための具体的な案(誰に向けて、いくらで案内するか)を一覧で確認できます。押しても自動では実行されず、確認して選ぶ画面が開きます。">販売の候補を見る</button>
         <button class="btn-sm btn-out">後で</button>
       </div>
     </div>
@@ -326,7 +326,7 @@ canvas{ max-width:100%; }
         <div class="card-h"><div class="t">&#x26A0;&#xFE0F; インバウンド需要リスク (市場別)</div><span class="src">インバウンド需要分析 (外部データ連携)</span></div>
         <div class="card-b">
           <div style="display:flex;gap:14px;align-items:center;margin-bottom:10px;">
-            <div style="flex:0 0 auto;text-align:center;">
+            <div style="flex:0 0 auto;text-align:center;" data-guide="【インバウンド需要リスク】海外からのお客様が予定どおり来てくれるかの不安度を100点満点で表したものです。点が高いほど、特定の国に偏っていたりキャンセルが多かったりして、急に予約が減る心配がある状態です。42点は中くらいの注意が必要なことを示します。">
               <div style="font-size:30px;font-weight:800;color:var(--amber);line-height:1;">42<span style="font-size:13px;color:var(--text-mute);">/100</span></div>
               <div style="font-size:10px;font-weight:700;color:var(--amber);">中リスク</div>
               <div style="font-size:9.5px;color:var(--brand);">&#9650; +5 今週</div>
@@ -355,7 +355,7 @@ canvas{ max-width:100%; }
     <!-- CCDM tourism media signals -->
     <div style="flex:1;min-width:0;">
       <div class="card">
-        <div class="card-h"><div class="t">&#x1F4DA; 観光メディア需要シグナル</div><span class="src">記事群(外部データ連携)：17カ国・SNS4・予約サイト8・日次 / 1,946万件</span></div>
+        <div class="card-h" data-guide="【観光メディア需要シグナル】世界の観光記事や口コミ、SNSで箱根がどれだけ話題になっているかを集めたものです。記事が増えてから実際の予約が増えるまで3〜6か月の時差があるため、先回りして準備するための早めの手がかりになります。"><div class="t">&#x1F4DA; 観光メディア需要シグナル</div><span class="src">記事群(外部データ連携)：17カ国・SNS4・予約サイト8・日次 / 1,946万件</span></div>
         <div class="card-b">
           <div class="foot-note" style="margin:0 0 10px;font-size:10.5px;color:var(--navy);"><b>記事量 → 予約は3〜6ヶ月先行。</b> 世界の観光メディア/予約サイトのレビュー/SNS/ガイドブックから箱根の需要を先読み(記事増加から予約までの先行期間)。</div>
           <div style="font-size:10px;font-weight:700;color:var(--text-sub);margin-bottom:5px;">箱根 記事量トレンド(過去12ヶ月) <span style="color:var(--green);">&#9650; 上昇</span></div>
@@ -408,7 +408,7 @@ canvas{ max-width:100%; }
         <div class="card-b">
           <div class="cols" style="gap:16px;">
             <div style="flex:0 0 150px;">
-              <div class="chart-wrap donut"><canvas id="chChart"></canvas></div>
+              <div class="chart-wrap donut" data-guide="【流入経路の円グラフ】お客様がどの入り口から予約に至ったかの内訳です。公式サイトや楽天トラベル、じゃらんなど、経路ごとの予約件数の割合を色分けで表しています。公式サイト経由が多いほど手数料を節約できています。"><canvas id="chChart"></canvas></div>
             </div>
             <div style="flex:1;min-width:0;">
               <table class="tbl">
@@ -431,7 +431,7 @@ canvas{ max-width:100%; }
 
       <!-- Funnel -->
       <div class="card">
-        <div class="card-h"><div class="t">&#x1F500; 予約までの流れ (公式サイト)</div><span class="src">GA4 経路分析</span></div>
+        <div class="card-h" data-guide="【予約までの流れ】公式サイトに来たお客様が、ページを見る→空室を調べる→料金を確認→予約完了、と進む各段階で何人残っているかを表します。棒が短くなるほど途中でやめた人が多い段階で、ここを改善すると予約が増えます。"><div class="t">&#x1F500; 予約までの流れ (公式サイト)</div><span class="src">GA4 経路分析</span></div>
         <div class="card-b">
           <div class="fn"><div class="fl">サイト閲覧</div><div class="fb" style="width:100%;background:var(--navy);">100%</div><div class="fv">21,390</div></div>
           <div class="fn"><div class="fl">空室検索</div><div class="fb" style="width:62%;background:#2c5078;">62%</div><div class="fv">13,260 <span class="tag-dn">-38%</span></div></div>
@@ -448,7 +448,7 @@ canvas{ max-width:100%; }
       <div class="card">
         <div class="card-h"><div class="t">&#x1F3AF; 有料広告 — 広告費用対効果 / 予算消化ペース</div><span class="src">Google Ads / Meta</span></div>
         <div class="card-b">
-          <div class="chart-wrap bars"><canvas id="roasChart"></canvas></div>
+          <div class="chart-wrap bars" data-guide="【広告ごとの費用対効果】紅葉や貸切風呂など、宣伝のテーマごとに、広告費が何倍の売上になって返ってきたかを横棒で比べています。棒が長いほど効率がよい広告で、AIはそこへ予算を多めに回します。"><canvas id="roasChart"></canvas></div>
           <div class="mini-kpi" style="margin-top:12px;">
             <div class="mk"><div class="mv">2.1%</div><div class="ml">クリック率</div></div>
             <div class="mk"><div class="mv">&#165;94</div><div class="ml">1クリック単価</div></div>
@@ -465,7 +465,7 @@ canvas{ max-width:100%; }
         <div class="card-b">
           <div style="font-size:10px;color:var(--text-mute);margin-bottom:6px;">競合宿の料金比較 (木曜21日 / 1泊2食 2名1室)</div>
           <div class="comp-row"><span>当館 (公式直販)</span><span class="cp">&#165;25,000</span><span class="parity-ok">基準</span></div>
-          <div class="comp-row"><span>当館 (Booking.com)</span><span class="cp" style="color:var(--brand);">&#165;23,000</span><span class="parity-bad">&#9660; 価格の足並みの乱れ -8%</span></div>
+          <div class="comp-row" data-guide="【価格の足並みの乱れ】同じ部屋なのに、予約サイトでの表示価格が公式サイトより安くなっている状態です。安い予約サイト側にお客様が流れ、手数料の負担が増えてしまうため、価格をそろえる必要があります。"><span>当館 (Booking.com)</span><span class="cp" style="color:var(--brand);">&#165;23,000</span><span class="parity-bad">&#9660; 価格の足並みの乱れ -8%</span></div>
           <div class="comp-row"><span>競合A 強羅温泉</span><span class="cp">&#165;28,400</span><span>+14%</span></div>
           <div class="comp-row"><span>競合B 仙石原</span><span class="cp">&#165;26,800</span><span>+7%</span></div>
           <div class="comp-row"><span>競合C 湯本</span><span class="cp">&#165;22,500</span><span>-10%</span></div>
@@ -487,7 +487,7 @@ canvas{ max-width:100%; }
       <div class="card">
         <div class="card-h"><div class="t">&#x1F4AC; ソーシャル / SNS</div><span class="src">Hootsuite / Sprout 相当</span></div>
         <div class="card-b">
-          <div style="font-size:10px;font-weight:700;color:var(--text-sub);margin-bottom:6px;">SNSの声の収集 — 感情分析 (多言語)</div>
+          <div style="font-size:10px;font-weight:700;color:var(--text-sub);margin-bottom:6px;" data-guide="【SNSの声の感情分析】SNS上の口コミを言語ごとに集め、好意的・どちらでもない・否定的の割合を帯で示しています。緑が好意的、灰色がどちらでもない、赤が否定的です。緑が多いほど評判がよい状態です。">SNSの声の収集 — 感情分析 (多言語)</div>
           <div class="lang-row"><span class="fl">&#x1F1EF;&#x1F1F5; 日本語</span><div class="senti"><span class="pos" style="width:78%;"></span><span class="neu" style="width:15%;"></span><span class="neg" style="width:7%;"></span></div><span class="vol">1,240</span></div>
           <div class="lang-row"><span class="fl">&#x1F1EC;&#x1F1E7; 英語</span><div class="senti"><span class="pos" style="width:71%;"></span><span class="neu" style="width:20%;"></span><span class="neg" style="width:9%;"></span></div><span class="vol">486</span></div>
           <div class="lang-row"><span class="fl">&#x1F1F9;&#x1F1FC; 繁体字</span><div class="senti"><span class="pos" style="width:82%;"></span><span class="neu" style="width:13%;"></span><span class="neg" style="width:5%;"></span></div><span class="vol">312 &#9650;</span></div>
@@ -545,7 +545,7 @@ canvas{ max-width:100%; }
           <div class="rev">
             <div class="rev-h"><span class="rev-src src-google">Google</span><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733; 5.0</span></div>
             <div class="rev-txt">「紅葉の時期に最高。また来ます。」(繁体字/自動翻訳)</div>
-            <div class="rev-ai">&#x1F916; 自動返信送信済 (繁体字, 口調:カジュアル) — 高評価は自動、低評価は人による承認を必須に。</div>
+            <div class="rev-ai" data-guide="【AIの返信案と自動返信】AIが口コミへの返信文を下書きします。高い評価への返信はAIが自動で送り、低い評価への返信は支配人が内容を確認して承認するまで送られません。最終判断は人が行う仕組みです。">&#x1F916; 自動返信送信済 (繁体字, 口調:カジュアル) — 高評価は自動、低評価は人による承認を必須に。</div>
           </div>
         </div>
       </div>
@@ -593,5 +593,30 @@ new Chart(document.getElementById('roasChart'),{
     scales:{ x:{ grid:{color:'#F0F0F0'}, ticks:{callback:v=>v+'x'} }, y:{ grid:{display:false} } } }
 });
 </script>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

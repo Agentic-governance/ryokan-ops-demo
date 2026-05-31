@@ -200,7 +200,7 @@ button, input, textarea { font: inherit; }
 
 <div class="main">
   <div class="page-head">
-    <div class="page-title">承認待ち一覧 <span class="ai-badge">&#128737; 基幹システムに書き込む前の確認</span></div>
+    <div class="page-title">承認待ち一覧 <span class="ai-badge" data-guide="【書き込む前の確認】予約や会計など大もとのデータを書き換える操作は、ここで支配人などが確認してから反映されます。間違いを未然に防ぐための関所です。">&#128737; 基幹システムに書き込む前の確認</span></div>
     <div class="seg">
       <button class="on">承認待ち</button>
       <button>却下済</button>
@@ -211,7 +211,7 @@ button, input, textarea { font: inherit; }
   <div class="page-sub">予約・会計など元データの正しさを守るため、金額・在庫・顧客データの変更は必ずここを通す。営業日 <b>2026/05/30</b>。権限のない操作は自動で無効化され、却下には理由の入力が必須。</div>
 
   <div class="nudge-wrap">
-    <div class="nudge n-red">
+    <div class="nudge n-red" data-guide="【AIの提案(至急)】AIが急ぎの案件を見つけてお知らせします。提案であり、承認するかどうかの最終判断は人が行います。赤い帯は最も急ぎを表します。">
       <div class="nudge-head"><span class="nudge-ai">&#128737; AI確認</span><span class="nudge-pri p-red">至急</span></div>
       <div class="nudge-l1">対応期限を過ぎた承認が 2 件あります</div>
       <div class="nudge-l2">夜勤からの伝票取消(¥28,400)が支配人の上限を超えたまま 42分 止まっています。長く保留するとお客様の請求確定が遅れます。</div>
@@ -232,7 +232,7 @@ button, input, textarea { font: inherit; }
         <button class="btn-sm btn-navy">優先順で確認</button>
       </div>
     </div>
-    <div class="nudge n-blue">
+    <div class="nudge n-blue" data-guide="【AIの提案(まとめ承認)】内容の似た低リスクの案件を、AIがまとめて確認できるように候補としてご提案します。1件ずつ開く手間が省けます。最終確認は支配人が行います。">
       <div class="nudge-head"><span class="nudge-ai">&#128737; AI確認</span><span class="nudge-pri p-blue">確認推奨</span></div>
       <div class="nudge-l1">同じ種類の低リスクな割引 3 件はまとめて承認できます</div>
       <div class="nudge-l2">いずれも上限内・理由ありの料金変更です。1件ずつ開く手間を省けます。候補を表示しますので、最終確認は支配人が行います。</div>
@@ -247,9 +247,9 @@ button, input, textarea { font: inherit; }
   <div class="kpi-strip">
     <div class="kpi-card"><div class="label">本日 承認件数</div><div class="value" style="color:var(--green);">14</div><div class="sub delta-up">+3 vs 昨日</div></div>
     <div class="kpi-card"><div class="label">本日 却下件数</div><div class="value" style="color:var(--brand);">3</div><div class="sub">証憑不足 / 規定外</div></div>
-    <div class="kpi-card"><div class="label">承認金額合計</div><div class="value">¥382,000</div><div class="sub">締め後修正 1件含む</div></div>
-    <div class="kpi-card"><div class="label">未処理の上位者送り</div><div class="value" style="color:var(--amber);">5</div><div class="sub delta-up">上限の80%到達 2件</div></div>
-    <div class="kpi-card"><div class="label">対応期限の超過</div><div class="value" style="color:var(--brand);">2</div><div class="sub">最長 42分経過</div></div>
+    <div class="kpi-card" data-guide="【承認金額合計】本日承認した金額の合計です。一日の締め処理を終えた後に直した分(締め後修正)も含めて表示しています。"><div class="label">承認金額合計</div><div class="value">¥382,000</div><div class="sub">締め後修正 1件含む</div></div>
+    <div class="kpi-card" data-guide="【上位者送り】自分の決められる金額を超えるなどの理由で、より上の役職の人へ判断を回した案件のうち、まだ処理されていない件数です。"><div class="label">未処理の上位者送り</div><div class="value" style="color:var(--amber);">5</div><div class="sub delta-up">上限の80%到達 2件</div></div>
+    <div class="kpi-card" data-guide="【対応期限の超過】決められた時間内に確認できず、期限を過ぎてしまった件数です。長く放っておくとお客様の請求確定が遅れるため、早めの対応が必要です。"><div class="label">対応期限の超過</div><div class="value" style="color:var(--brand);">2</div><div class="sub">最長 42分経過</div></div>
   </div>
 
   <div class="cols">
@@ -264,12 +264,12 @@ button, input, textarea { font: inherit; }
             <div class="filter-item on"><div class="filter-left"><div class="filter-ico">💴</div><div><div class="filter-name">料金の個別変更</div><div class="filter-note">平均客室単価 / 割引率の変更</div></div></div><div class="filter-badge">6</div></div>
             <div class="filter-item"><div class="filter-left"><div class="filter-ico">🏷️</div><div><div class="filter-name">無料・優待割引</div><div class="filter-note">無料宿泊 / 招待</div></div></div><div class="filter-badge">4</div></div>
             <div class="filter-item"><div class="filter-left"><div class="filter-ico">↩️</div><div><div class="filter-name">返金</div><div class="filter-note">返金 / 取消返金</div></div></div><div class="filter-badge">2</div></div>
-            <div class="filter-item"><div class="filter-left"><div class="filter-ico">⛔</div><div><div class="filter-name">伝票取消</div><div class="filter-note">会計明細の取消 / 伝票取消</div></div></div><div class="filter-badge">1</div></div>
-            <div class="filter-item"><div class="filter-left"><div class="filter-ico">🛎️</div><div><div class="filter-name">無断不泊の課金</div><div class="filter-note">全泊分 / 予約金のみ</div></div></div><div class="filter-badge">3</div></div>
+            <div class="filter-item" data-guide="【伝票取消】一度発行した会計の伝票を取り消す操作です。金額が大きく間違いも起こりやすいため、必ず確認を通す対象です。"><div class="filter-left"><div class="filter-ico">⛔</div><div><div class="filter-name">伝票取消</div><div class="filter-note">会計明細の取消 / 伝票取消</div></div></div><div class="filter-badge">1</div></div>
+            <div class="filter-item" data-guide="【無断不泊の課金】予約があったのに連絡なく来館されなかったお客様への料金請求です。宿泊代の全額を請求するか、予約時のお預かり金だけにするかを選びます。"><div class="filter-left"><div class="filter-ico">🛎️</div><div><div class="filter-name">無断不泊の課金</div><div class="filter-note">全泊分 / 予約金のみ</div></div></div><div class="filter-badge">3</div></div>
             <div class="filter-item"><div class="filter-left"><div class="filter-ico">⬆️</div><div><div class="filter-name">無料の客室格上げ</div><div class="filter-note">客室タイプの変更</div></div></div><div class="filter-badge">2</div></div>
             <div class="filter-item"><div class="filter-left"><div class="filter-ico">👥</div><div><div class="filter-name">団体料金</div><div class="filter-note">団体枠 / 申込締切</div></div></div><div class="filter-badge">5</div></div>
             <div class="filter-item"><div class="filter-left"><div class="filter-ico">💳</div><div><div class="filter-name">与信限度超過</div><div class="filter-note">限度額超過分の支払い</div></div></div><div class="filter-badge">4</div></div>
-            <div class="filter-item"><div class="filter-left"><div class="filter-ico">🤖</div><div><div class="filter-name">元データ修正・AIアクション</div><div class="filter-note">AI提案の書き込み前の確認</div></div></div><div class="filter-badge">7</div></div>
+            <div class="filter-item" data-guide="【AIによる元データ修正】AIが提案した予約・会計データの修正です。承認するまでは実際のデータには書き込まれません。中身を見て問題なければ承認します。"><div class="filter-left"><div class="filter-ico">🤖</div><div><div class="filter-name">元データ修正・AIアクション</div><div class="filter-note">AI提案の書き込み前の確認</div></div></div><div class="filter-badge">7</div></div>
           </div>
           <div class="note" style="margin-top:10px;">承認権限: 会計担当 ¥10,000 / 主任 ¥30,000 / 支配人 ¥100,000 / 総支配人 上限なし。自分の申請は自分で承認できない。</div>
         </div>
@@ -347,7 +347,7 @@ button, input, textarea { font: inherit; }
             <div class="approval-card">
               <div class="approval-top">
                 <div>
-                  <div class="approval-title">⛔ 伝票取消 <span class="chip chip-red">上限超</span></div>
+                  <div class="approval-title">⛔ 伝票取消 <span class="chip chip-red" data-guide="【上限超】この案件の金額が、ご自身で承認できる上限を超えていることを表します。自分では承認できないため、上の役職の人へ回す必要があります。">上限超</span></div>
                   <div class="approval-meta">対象: 304 / 会計明細 45688 / 申請者: 夜勤 結城 / 経過 41分</div>
                 </div>
                 <div style="text-align:right;">
@@ -419,7 +419,7 @@ button, input, textarea { font: inherit; }
             </div>
 
             <div>
-              <div class="card-h" style="padding-left:0;padding-right:0;border-bottom:none;">
+              <div class="card-h" style="padding-left:0;padding-right:0;border-bottom:none;" data-guide="【変更履歴】この案件について、誰がいつ何をしたかを時系列で残した記録です。後から経緯を確認でき、不正やミスの追跡にも使えます。">
                 <div class="t">変更履歴</div>
                 <span class="src">担当者 / 日付・時刻 / 操作種別 / 内容 / 端末IPアドレス</span>
               </div>
@@ -445,7 +445,7 @@ button, input, textarea { font: inherit; }
               </div>
             </div>
 
-            <div class="reject-wrap">
+            <div class="reject-wrap" data-guide="【却下理由(必須)】申請を認めないときの理由をここで選びます。証憑不足はお客様の署名や根拠書類が足りないこと、二重計上は同じ料金を重ねて付けてしまったことを指します。理由がないと却下できません。">
               <label>却下理由 <span class="req">必須</span></label>
               <select>
                 <option>証憑不足</option>
@@ -459,8 +459,8 @@ button, input, textarea { font: inherit; }
             </div>
 
             <div class="action-box">
-              <button class="btn-sm btn-navy">承認</button>
-              <button class="btn-sm btn-red">却下</button>
+              <button class="btn-sm btn-navy" data-guide="【承認】押すと、この申請内容が予約・会計の本データに反映されます。内容と金額を確かめてから押してください。">承認</button>
+              <button class="btn-sm btn-red" data-guide="【却下】この申請を認めないときに押します。却下する理由を選ばないと押せない仕組みになっています。">却下</button>
             </div>
             <div class="note">キーボード操作: <span class="kbd">J</span>/<span class="kbd">K</span> 移動, <span class="kbd">A</span> 承認, <span class="kbd">R</span> 却下, <span class="kbd">E</span> 上位者送り。権限のない操作は自動で無効化。</div>
             <div class="right-perm">自分の承認上限: <b>支配人 ¥100,000</b> / 低リスク・同じ種類のみまとめて承認可</div>
@@ -470,5 +470,30 @@ button, input, textarea { font: inherit; }
     </div>
   </div>
 </div>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

@@ -155,7 +155,7 @@ table{width:100%;border-collapse:collapse}
 
 <nav class="sidebar">
   <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
-  <a class="sidebar-item active" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item active" href="screen3_reservations.html" data-guide="【予約管理】今いる画面です。ご予約の一覧確認、空室の照会、ネット予約サイトからのデータ取り込み、在庫のズレ合わせなどをまとめて行えます。">予約管理</a>
   <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
   <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
   <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
@@ -180,13 +180,13 @@ table{width:100%;border-collapse:collapse}
   <div class="kpi-strip">
     <div class="kpi-card"><div class="label">本日 到着予定</div><div class="value" style="color:var(--navy)">18<span class="unit">件</span></div><div class="sub delta-up">うち団体 1 / VIP 3</div></div>
     <div class="kpi-card"><div class="label">チェックイン済</div><div class="value" style="color:var(--green)">26<span class="unit">件</span></div><div class="sub delta-up">本館和室・別館が中心</div></div>
-    <div class="kpi-card"><div class="label">予約サイト一元管理／基幹システム 差異</div><div class="value" style="color:var(--brand)">4<span class="unit">室</span></div><div class="sub delta-dn">売止反映遅延 2 / 変更未取込 2</div></div>
-    <div class="kpi-card"><div class="label">予約データ取込エラー</div><div class="value" style="color:var(--amber)">7<span class="unit">件</span></div><div class="sub">新規 2 / 変更 3 / キャンセル 2</div></div>
-    <div class="kpi-card"><div class="label">高リスク予約</div><div class="value" style="color:var(--purple)">5<span class="unit">件</span></div><div class="sub">無断不泊の予兆 / 与信 / 団体名簿未完</div></div>
-    <div class="kpi-card"><div class="label">1泊2食 需要上限</div><div class="value" style="color:var(--teal)">120<span class="unit">名</span></div><div class="sub">本日夕食 96 名、残 24</div></div>
+    <div class="kpi-card" data-guide="【予約サイトと自館システムのズレ】ネット予約サイトに出ている空室数と、館内の予約システムが持つ在庫数が食い違っている部屋数です。数が多いほど二重予約や売り逃しの恐れがあるため、早めの確認をおすすめします。"><div class="label">予約サイト一元管理／基幹システム 差異</div><div class="value" style="color:var(--brand)">4<span class="unit">室</span></div><div class="sub delta-dn">売止反映遅延 2 / 変更未取込 2</div></div>
+    <div class="kpi-card" data-guide="【取り込めなかった予約】ネット予約サイトから届いた予約を館内システムに自動で取り込む際、うまく登録できなかった件数です。番号の重複や部屋タイプの不一致などが原因で、放置すると予約が反映されません。"><div class="label">予約データ取込エラー</div><div class="value" style="color:var(--amber)">7<span class="unit">件</span></div><div class="sub">新規 2 / 変更 3 / キャンセル 2</div></div>
+    <div class="kpi-card" data-guide="【注意が必要な予約】当日に来館されない恐れや、支払い・団体名簿が整っていないなど、確認しておきたい予約の件数です。早めに連絡や準備をしておくと当日の混乱を防げます。"><div class="label">高リスク予約</div><div class="value" style="color:var(--purple)">5<span class="unit">件</span></div><div class="sub">無断不泊の予兆 / 与信 / 団体名簿未完</div></div>
+    <div class="kpi-card" data-guide="【夕食を出せる人数の上限】調理場や配膳がさばける夕食の最大人数です。1泊2食とは1泊につき夕食と朝食が付くプランのこと。残り人数を見ながら追加の予約や食事の受け入れ可否を判断できます。"><div class="label">1泊2食 需要上限</div><div class="value" style="color:var(--teal)">120<span class="unit">名</span></div><div class="sub">本日夕食 96 名、残 24</div></div>
   </div>
 
-  <div class="banner">
+  <div class="banner" data-guide="【在庫のズレのお知らせ】ネット予約サイト側の残室数と、館内システムの在庫数が合っていないことを知らせる帯です。ズレた部屋数とその理由が表示されます。">
     <div><strong>予約サイト一元管理の残室 58</strong> vs <strong>基幹システム在庫 54</strong>。差異 4 室を検知。売止解除 2 件と変更データ 2 件が未反映です。</div>
     <div class="action-row">
       <button class="btn-sm btn-navy">ワンクリック再同期</button>
@@ -221,7 +221,7 @@ table{width:100%;border-collapse:collapse}
             <table class="reservations">
               <thead>
                 <tr>
-                  <th>#予約ID</th><th>基幹システム 滞在番号</th><th>予約サイト 受付番号</th><th>氏名(言語旗)</th><th>施設</th><th>チェックイン-アウト</th><th>室タイプ</th><th>人泊</th><th>食事区分</th><th>夕食時刻</th><th>市場/流入元/料金プラン</th><th>支払</th><th>同期状態</th><th>状態</th><th>リスク</th>
+                  <th>#予約ID</th><th>基幹システム 滞在番号</th><th>予約サイト 受付番号</th><th>氏名(言語旗)</th><th>施設</th><th>チェックイン-アウト</th><th>室タイプ</th><th data-guide="【人泊（じんぱく）】何名が何泊するかをまとめた言い方です。大人と子供の人数が表示され、この人数に応じて食事や布団、入湯税が自動で計算されます。">人泊</th><th>食事区分</th><th>夕食時刻</th><th>市場/流入元/料金プラン</th><th>支払</th><th data-guide="【同期状態】ネット予約サイトの情報と館内システムが一致しているかを示します。同期済なら一致、変更未取込やエラーは取り込みが済んでおらず確認が必要です。">同期状態</th><th>状態</th><th data-guide="【リスク】その予約で気をつけたい点です。支払いの確認が必要、当日来館されない恐れ、団体名簿が未完など、対応の優先度を見分けられます。">リスク</th>
                 </tr>
               </thead>
               <tbody>
@@ -247,7 +247,7 @@ table{width:100%;border-collapse:collapse}
                   <td class="resv-id">R260530-007</td><td>S-88027</td><td>JR-909155</td><td class="guest">S.Y 様 <span class="lang-flag jp">JP</span></td><td>124号室</td><td>05/30-06/03 (4)</td><td>本館和室</td><td>大2 / 子A2 B0 C0</td><td>1泊2食</td><td>18:30</td><td>じゃらん / ネット予約サイト / JAL-HP</td><td>現地</td><td class="sync-ok">同期済</td><td><span class="status st-checkin">チェックイン済</span></td><td><span class="risk risk-mid">子供食 2 名</span></td>
                 </tr>
                 <tr>
-                  <td class="resv-id">R260530-008</td><td>S-88028</td><td>AG-335709</td><td class="guest">S.M 様 <span class="lang-flag en">EN</span></td><td>701号室</td><td>05/30-06/01 (2)</td><td>ヴィラ</td><td>大2 / 子A0 B0 C0</td><td>1泊2食</td><td>19:30</td><td>Agoda / ネット予約サイト / AGD-VIL</td><td>事前決済</td><td class="sync-ok">同期済</td><td><span class="status st-noshow">無断不泊</span></td><td><span class="risk risk-hi">直前キャンセル懸念</span></td>
+                  <td class="resv-id">R260530-008</td><td>S-88028</td><td>AG-335709</td><td class="guest">S.M 様 <span class="lang-flag en">EN</span></td><td>701号室</td><td>05/30-06/01 (2)</td><td>ヴィラ</td><td>大2 / 子A0 B0 C0</td><td>1泊2食</td><td>19:30</td><td>Agoda / ネット予約サイト / AGD-VIL</td><td>事前決済</td><td class="sync-ok">同期済</td><td><span class="status st-noshow" data-guide="【無断不泊（むだんふはく）】ご予約があったのに、連絡もなくお越しにならなかった状態です。お部屋の取り扱いやキャンセル料の確認が必要になります。">無断不泊</span></td><td><span class="risk risk-hi">直前キャンセル懸念</span></td>
                 </tr>
                 <tr>
                   <td class="resv-id">R260530-009</td><td>S-88029</td><td>FI-228010</td><td class="guest">M.B 様 <span class="lang-flag en">EN</span></td><td>204号室</td><td>05/31-06/02 (2)</td><td>本館和室</td><td>大1 / 子A0 B0 C0</td><td>素泊</td><td>--</td><td>公式 / 直販 / WEB-SAVE</td><td>事前決済</td><td class="sync-ok">同期済</td><td><span class="status st-wait">空き待ち</span></td><td><span class="risk risk-low">候補待ち</span></td>
@@ -287,7 +287,7 @@ table{width:100%;border-collapse:collapse}
 
       <div class="grid-2">
         <div class="card">
-          <div class="card-h">
+          <div class="card-h" data-guide="【空室の一覧表】横が日付、縦が部屋の種類です。マスの数字が空いている部屋数で、赤い×印は販売を止めている日、最低◯泊はその日数以上の連泊でないと予約できないことを表します。">
             <div class="t">空室照会グリッド</div>
             <div class="hint">横 = 日付10日 / 縦 = 室タイプ / セル = 空室数 + 売止赤× + 最低連泊数</div>
           </div>
@@ -358,7 +358,7 @@ table{width:100%;border-collapse:collapse}
         </div>
 
         <div class="card">
-          <div class="card-h">
+          <div class="card-h" data-guide="【取り込み待ちの予約】ネット予約サイトから届いた新規・変更・キャンセルのうち、まだ館内システムに反映できていないものを理由別にまとめた一覧です。ここで原因を確認して取り込みをやり直せます。">
             <div class="t">予約データ取込パネル</div>
             <div class="hint">新規 / 変更 / キャンセル / エラー理由グループ</div>
           </div>
@@ -413,11 +413,11 @@ table{width:100%;border-collapse:collapse}
             <div class="kv"><div class="k">室タイプ</div><div class="v">別館和洋室 / 512号室</div></div>
             <div class="kv"><div class="k">人泊</div><div class="v">大人2 / 子供A0 B0 C0</div></div>
             <div class="kv"><div class="k">食事</div><div class="v">1泊2食 / 18:30</div></div>
-            <div class="kv"><div class="k">課税</div><div class="v">入湯税 ¥150 × 2名 = ¥300</div></div>
+            <div class="kv" data-guide="【入湯税（にゅうとうぜい）】温泉に入るお客様にかかる地方税で、ここでは1名あたり150円です。12歳未満のお子様は免除されます。宿泊人数に応じて自動で計算されます。"><div class="k">課税</div><div class="v">入湯税 ¥150 × 2名 = ¥300</div></div>
           </div>
           <div class="sec">
             <div class="st">連動注記</div>
-            <div class="flow">人数変更を行うと <b>食事プラン</b>、<b>入湯税</b>、<b>布団数</b>、<b>仲居配膳数</b> が自動で再計算されます。<br>例: 大人 2 名 → 料理 2 名分、布団 2 組、配膳 2 名。</div>
+            <div class="flow" data-guide="【人数を変えると連動する項目】宿泊人数を変更すると、お食事の数・入湯税・お布団の数・仲居さんの配膳人数が自動で計算し直されます。配膳とは客室や宴会場へお料理をお運びすることです。手作業での修正は不要です。">人数変更を行うと <b>食事プラン</b>、<b>入湯税</b>、<b>布団数</b>、<b>仲居配膳数</b> が自動で再計算されます。<br>例: 大人 2 名 → 料理 2 名分、布団 2 組、配膳 2 名。</div>
           </div>
           <div class="sec">
             <div class="st">支払・同期・状態</div>
@@ -439,5 +439,30 @@ table{width:100%;border-collapse:collapse}
     </div>
   </div>
 </div>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

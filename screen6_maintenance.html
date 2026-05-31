@@ -264,7 +264,7 @@ table.rpn tr:hover td{ background:var(--surface); }
   <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
   <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
   <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
-  <a class="sidebar-item active" href="screen6_maintenance.html">保全管理</a>
+  <a class="sidebar-item active" href="screen6_maintenance.html" data-guide="【保全管理】温泉・給湯・空調・電気など館内の設備を見守る画面です。壊れる前に予兆をつかみ、点検の順番や時期を整えます。">保全管理</a>
   <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
   <a class="sidebar-item" href="screen8_reports.html">レポート</a>
   <div class="sidebar-sub">保全ビュー</div>
@@ -290,7 +290,7 @@ table.rpn tr:hover td{ background:var(--surface); }
 
   <!-- KPI strip -->
   <div class="kpi-strip">
-    <div class="kpi-card">
+    <div class="kpi-card" data-guide="【設備の不調で売れなくなりそうな客室(48時間以内)】このまま手を打たないと、今後2日のうちに設備の不調で販売できなくなりそうな客室の延べ数です。下に見込みの売上影響額も出ます。数が大きいほど早めの対応が必要です。">
       <div class="label">設備起因の売止リスク(48h)</div>
       <div class="value" style="color:var(--brand);">34<span class="unit">室泊</span></div>
       <div class="sub">推定収益影響 &#165;1.08M</div>
@@ -300,17 +300,17 @@ table.rpn tr:hover td{ background:var(--surface); }
       <div class="value" style="color:var(--amber);">87<span class="unit">/100</span></div>
       <div class="sub delta-dn">&#9660; 4pt (温泉ポンプ#2)</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" data-guide="【壊れる前に気づけた割合】設備の不具合のうち、完全に止まってしまう前に予兆をつかんで先に手を打てた割合です。高いほど、急なトラブルでお客様に迷惑をかけずに済んでいることを表します。">
       <div class="label">予兆をつかめた割合</div>
       <div class="value" style="color:var(--green);">92<span class="unit">%</span></div>
       <div class="sub">予兆を検知→故障前に処置</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" data-guide="【先手の対応で防げた損失額】設備が止まる前に手を打ったことで、今四半期に防げたと見られる損失の合計です。返金や口コミ低下による損失を避けられた効果を金額で示しています。">
       <div class="label">回避した停止リスク額</div>
       <div class="value" style="color:var(--navy);">&#165;4.7<span class="unit">M</span></div>
       <div class="sub">今四半期 / 返金+口コミ回避</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" data-guide="【レジオネラ対策の合格率】お湯を循環させる浴槽で、レジオネラという菌が増えないための基準を満たしている系統の割合です。100パーセントなら全ての浴槽が基準を満たしている状態です。">
       <div class="label">レジオネラ対策 適合率</div>
       <div class="value" style="color:var(--green);">100<span class="unit">%</span></div>
       <div class="sub">循環式浴槽6系統 適合</div>
@@ -335,12 +335,12 @@ table.rpn tr:hover td{ background:var(--surface); }
       <div style="margin-top:10px;font-size:10.5px;color:var(--text-sub);">「空室があるから売れる」ではない — 厨房・夕食席・温泉・設備の処理能力が販売できる室数を頭打ちにする</div>
     </div>
 
-    <div class="legio-card">
+    <div class="legio-card" data-guide="【レジオネラ安全管理】お湯を循環させる大浴場で、菌が増えないよう温度や塩素などを常に見張る欄です。普段は目に見えないリスクなので、当館で最も優先して管理しています。">
       <div class="legio-head">
         <div class="t">&#x267A;&#xFE0F; レジオネラ安全管理 <span style="font-size:10px;color:var(--text-mute);font-weight:400;">大浴場 男湯 (循環式) — 普段は気づけない安全リスク</span></div>
         <span class="pill-ok">適合 / 監視中</span>
       </div>
-      <div class="tband" title="レジオネラ増殖危険帯">
+      <div class="tband" title="レジオネラ増殖危険帯" data-guide="【菌が増えやすい温度の帯】赤い帯はレジオネラ菌が増えやすいおよそ25〜45度の範囲です。黒い印が今の浴槽の温度を示します。入浴に適した温度はこの危険帯のすぐ近くなので、塩素や循環温度で抑えています。">
         <span class="lbl" style="left:0%;">15&deg;C</span>
         <span class="lbl" style="left:20%;">20&deg;C</span>
         <span class="lbl" style="left:50%;">35&deg;C</span>
@@ -385,7 +385,7 @@ table.rpn tr:hover td{ background:var(--surface); }
               <tr>
                 <td><div class="asset-name">温泉熱交換器 (男湯)</div><div class="asset-mode">スケール付着 &rarr; 給湯温度維持不能 &rarr; 大浴場売止+衛生</div></td>
                 <td><span class="sod"><span style="background:#b91c1c;">9</span><span style="background:#d97706;">5</span><span style="background:#b91c1c;">8</span></span></td>
-                <td><span class="rpn-v" style="color:var(--brand);">360</span></td>
+                <td data-guide="【優先度の点数】左の3つの色つき数字(影響の大きさ・起こりやすさ・気づきにくさ)を掛け合わせた総合点です。数が大きいほど優先して対応すべき設備で、当館ではおおむね100以上を重点対象としています。"><span class="rpn-v" style="color:var(--brand);">360</span></td>
                 <td><span class="cons cons-safety">安全</span></td>
                 <td><span style="font-size:10px;">温度・圧力を監視</span></td>
               </tr>
@@ -393,7 +393,7 @@ table.rpn tr:hover td{ background:var(--surface); }
                 <td><div class="asset-name">消火ポンプ (非常用)</div><div class="asset-mode">いざという時に起動せず &rarr; 火災時 止まる（普段は気づけない）</div></td>
                 <td><span class="sod"><span style="background:#b91c1c;">10</span><span style="background:#16a34a;">2</span><span style="background:#b91c1c;">9</span></span></td>
                 <td><span class="rpn-v" style="color:var(--brand);">180</span></td>
-                <td><span class="cons cons-hidden">防護</span></td>
+                <td data-guide="【影響の区分】その設備が不調になったときに何に響くかを表します。安全はお客様の安全に関わるもの、防護は火災時など いざという時のための備え、運用は営業への支障、非運用は止まっても軽微なものです。"><span class="cons cons-hidden">防護</span></td>
                 <td><span style="font-size:10px;">定期作動試験</span></td>
               </tr>
               <tr>
@@ -439,7 +439,7 @@ table.rpn tr:hover td{ background:var(--surface); }
       <!-- P-F countdown -->
       <div class="card">
         <div class="card-h">
-          <div class="t">&#x23F1;&#xFE0F; 予兆〜故障までの猶予 カウントダウン</div>
+          <div class="t" data-guide="【予兆から故障までの残り時間】不調の兆しに気づいてから完全に壊れるまでの残り日数の目安です。点検はこの残り時間のおよそ半分のうちに行うようにし、間に合うかどうかも一緒に表示します。">&#x23F1;&#xFE0F; 予兆〜故障までの猶予 カウントダウン</div>
           <div class="hint">予兆を検知してから故障までの残り日数 / 点検間隔は猶予のおよそ半分に設定</div>
         </div>
         <div class="card-b">
@@ -588,7 +588,7 @@ table.rpn tr:hover td{ background:var(--surface); }
       <div style="margin-bottom:18px;display:flex;flex-direction:column;gap:10px;">
 
         <!-- ナッジ1: 至急 / 赤 — 温泉ポンプ予兆 -->
-        <div class="nudge bar-red">
+        <div class="nudge bar-red" data-guide="【AIの提案(至急)】システムが見つけたいちばん急ぎの対応案です。あくまで候補で、自動では実行しません。最終的にやるかどうかは支配人がボタンで判断します。">
           <div class="nudge-top"><span class="nudge-ai">&#x1F916; AI確認</span><span class="nudge-pri p-now">至急</span></div>
           <div class="nudge-msg">大浴場・男湯の温泉ポンプが連休初日に止まる見込みです</div>
           <div class="nudge-why">そのままだと連休初日に男湯を閉めることになり、22室泊の返金とお客様の不満につながります。</div>
@@ -601,7 +601,7 @@ table.rpn tr:hover td{ background:var(--surface); }
         </div>
 
         <!-- ナッジ2: 今日中 / 黄 — 消火ポンプ作動試験 期限超過(再発防止に点検登録) -->
-        <div class="nudge bar-amber">
+        <div class="nudge bar-amber" data-guide="【AIの提案(今日中)】今日のうちに片付けたい対応案です。期限を過ぎた点検などを知らせます。これも候補で、実施するかは人が判断します。">
           <div class="nudge-top"><span class="nudge-ai">&#x1F916; AI確認</span><span class="nudge-pri p-today">今日中</span></div>
           <div class="nudge-msg">消火ポンプの作動試験が13日過ぎています</div>
           <div class="nudge-why">いざという時に動くかは試験でしか分かりません。火災時に止まると人命・営業停止に直結します。</div>
@@ -631,13 +631,13 @@ table.rpn tr:hover td{ background:var(--surface); }
       <!-- Hidden-failure test schedule -->
       <div class="card">
         <div class="card-h">
-          <div class="t">&#x1F575;&#xFE0F; 防護設備の作動試験</div>
+          <div class="t" data-guide="【いざという時の設備の動作確認】消火ポンプや非常用発電機など、普段は使わないが緊急時に動かなければ困る設備を、定期的に実際に動かして確認する欄です。これを定期作動試験と呼びます。">&#x1F575;&#xFE0F; 防護設備の作動試験</div>
         </div>
         <div class="card-b">
           <div style="font-size:10.5px;color:var(--text-sub);margin-bottom:8px;line-height:1.5;">普段の運転では「いざという時に動くか」が分からない予備系・防護系。重なった故障を防ぐため<b>定期作動試験</b>が欠かせません。</div>
           <div class="hf-row">
             <div class="hf-l"><div class="n">消火ポンプ 起動試験</div><div class="d">前回 73日前 / 周期 60日</div></div>
-            <span class="hf-due due-over">期限超過 13日</span>
+            <span class="hf-due due-over" data-guide="【点検期限の状態】点検の期限に対する状況を色で示します。赤は期限を過ぎているもの、黄は期限が近いもの、緑は問題ないものです。赤は早めの対応が必要です。">期限超過 13日</span>
           </div>
           <div class="hf-row">
             <div class="hf-l"><div class="n">非常用発電機 負荷試験</div><div class="d">前回 27日前 / 周期 30日</div></div>
@@ -769,5 +769,30 @@ new Chart(document.getElementById('stratDonut'),{
   options:{ responsive:true, maintainAspectRatio:false, cutout:'72%', plugins:{legend:{display:false},tooltip:{enabled:true}} }
 });
 </script>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

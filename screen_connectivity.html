@@ -107,7 +107,7 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
   <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
   <a class="sidebar-item" href="screen8_reports.html">レポート</a>
   <div class="sidebar-sub">連携</div>
-  <a class="sidebar-item active" href="screen_connectivity.html">連携アーキテクチャ</a>
+  <a class="sidebar-item active" href="screen_connectivity.html" data-guide="【連携アーキテクチャ】基幹システム・予約サイト一元管理・ネット予約サイトの三者が、在庫や料金や予約をどうやり取りしているかを一目で確認できる画面です。">連携アーキテクチャ</a>
   <a class="sidebar-item" href="screen_connectivity.html">予約データ取込状況</a>
   <a class="sidebar-item" href="screen_connectivity.html">マスタ変換</a>
 </nav>
@@ -124,7 +124,7 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
     </div>
     <div class="card-b">
       <div class="topo">
-        <div class="node node-pms">
+        <div class="node node-pms" data-guide="【基幹システム】フロント・会計・宿帳を扱う、宿の中心となる仕組みです。在庫(売れる部屋数)や料金の大もとはここで管理し、電話や直接の予約もここに入力します。">
           <div class="nt">基幹システム / 宿泊管理</div>
           <div class="nd">フロント・会計・宿帳<br>電話/直予約 入力<br><span style="color:var(--navy);font-weight:700;">在庫の大もと (双方向連携)</span></div>
         </div>
@@ -134,7 +134,7 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
           <div class="arrow-line ok"><b>③ 基幹システム 返信 →</b>確認番号 返却済</div>
           <div class="arrow-line warn"><b>④ 双方向 残室/料金</b>電話予約 反映 5-20分</div>
         </div>
-        <div class="node node-sc">
+        <div class="node node-sc" data-guide="【予約サイト一元管理】各ネット予約サイトの在庫・料金・予約をまとめて取り扱う中継の仕組みです。基幹システムの内容を各サイトへ一度に配信し、入った予約を受け取って基幹システムへ渡します。">
           <div class="nt">予約サイト一元管理</div>
           <div class="nd">手間いらず (TEMAIRAZU)<br>在庫 / 料金 / 予約 / 分析<br>各ネット予約サイトへ一括配信</div>
         </div>
@@ -143,7 +143,7 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
           <div class="arrow-line warn"><b>差分照合 / 再送</b>じゃらん 在庫差分1件 再送中</div>
           <div class="arrow-line ok"><b>予約データ ←</b>新規/変更/取消</div>
         </div>
-        <div class="node node-ota">
+        <div class="node node-ota" data-guide="【ネット予約サイト】楽天トラベルやじゃらんなど、お客様が予約に使う各販売窓口です。基幹システムとは直接つながらず、必ず予約サイト一元管理を通してやり取りします。">
           <div class="nt" style="font-size:11px;color:var(--text-sub);">ネット予約サイト / 販売窓口</div>
           <div style="margin-top:8px;">
             <span class="ota-pill">楽天トラベル</span>
@@ -160,10 +160,10 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
       <div class="meta-row">
         <div class="m"><div class="mk">最終 在庫・料金 配信成功</div><div class="mv">1.2分前</div></div>
         <div class="m"><div class="mk">平均遅延</div><div class="mv">72<span style="font-size:10px;">秒</span></div></div>
-        <div class="m"><div class="mk">未処理 予約データ</div><div class="mv" style="color:var(--amber);">2<span style="font-size:10px;">件</span></div></div>
+        <div class="m" data-guide="【未処理の予約データ】ネット予約サイトから届いたものの、まだ基幹システムに取り込めていない予約の数です。数が増えたら早めに取り込み作業を行ってください。"><div class="mk">未処理 予約データ</div><div class="mv" style="color:var(--amber);">2<span style="font-size:10px;">件</span></div></div>
         <div class="m"><div class="mk">本日 手動介入</div><div class="mv">3<span style="font-size:10px;">件</span></div></div>
-        <div class="m"><div class="mk">エラー再送</div><div class="mv" style="color:var(--amber);">1<span style="font-size:10px;">件</span></div></div>
-        <div class="m"><div class="mk">サイト間の料金不一致</div><div class="mv" style="color:var(--brand);">1<span style="font-size:10px;">件</span></div></div>
+        <div class="m" data-guide="【エラー再送】各サイトへの配信に失敗し、もう一度送り直している件数です。残っている間はその内容がサイトに反映されていない可能性があります。"><div class="mk">エラー再送</div><div class="mv" style="color:var(--amber);">1<span style="font-size:10px;">件</span></div></div>
+        <div class="m" data-guide="【サイト間の料金不一致】同じ部屋の料金が、サイトごとに食い違っている件数です。お客様の不信や売りすぎにつながるため、見つけたら早めに確認してください。"><div class="mk">サイト間の料金不一致</div><div class="mv" style="color:var(--brand);">1<span style="font-size:10px;">件</span></div></div>
       </div>
       <div class="foot-note">&#x26A0;&#xFE0F; <b>全部まとめて一度に処理し、失敗したら全件取り消す仕組みは存在しない。</b> 各システムの内容は時間差で順次そろう — 予約確定時に在庫を引き落とし、失敗は差分を検知して再送、確定まで売止を維持。満室間際は「1サイトのみ販売」で売りすぎ(重複予約)を回避。TL-リンカーン「在庫を全サイトで共有」のときだけ予約確定と在庫引き落としが同時に起き、最も確実。</div>
     </div>
@@ -195,7 +195,7 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
                 <td><code>SC-99220</code><div style="font-size:9px;color:var(--text-mute);">重複防止番号: 7b30..e1</div></td>
                 <td><code>R-2026-1289</code></td>
                 <td><span class="gen gen-chg">変更 g3</span><div style="font-size:9px;color:var(--text-mute);">人数 2→3 / 日程変更</div></td>
-                <td style="padding-right:16px;"><span class="manual">要 手動再取込</span><div style="margin-top:4px;"><button class="btn-sm btn-amber">再取り込み</button></div></td>
+                <td style="padding-right:16px;"><span class="manual">要 手動再取込</span><div style="margin-top:4px;"><button class="btn-sm btn-amber" data-guide="【再取り込み】予約の変更内容を手作業で取り込み直すボタンです。押すと最新の内容に更新されます。自動で勝手に書き換えないのは、誤った上書きを防ぐためです。">再取り込み</button></div></td>
               </tr>
               <tr>
                 <td style="padding-left:16px;"><code>JLN-3391756</code><div style="font-size:9.5px;color:var(--text-mute);">じゃらん / 青葉商事 14室</div></td>
@@ -230,7 +230,7 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
           <div class="led-row"><span class="op">− 団体おさえ (青葉商事)</span><span class="v neg">4</span></div>
           <div class="led-row"><span class="op">− ネット予約サイト向け割当</span><span class="v neg">3</span></div>
           <div class="led-row"><span class="op">+ 締切後の在庫戻し</span><span class="v pos">2</span></div>
-          <div class="led-row tot"><span>販売可能数</span><span class="v" style="color:var(--navy);">8 室</span></div>
+          <div class="led-row tot" data-guide="【販売可能数】物理的な部屋数から、使えない部屋や予約済み・取り置き分を差し引いた、今まだ売れる部屋数です。この数字が各サイトに配信されます。"><span>販売可能数</span><span class="v" style="color:var(--navy);">8 室</span></div>
           <div class="foot-note">故障で使用不可=在庫から除外(稼働率/1室あたり売上に影響) / 清掃不可=在庫には残り販売可能。混同しない。</div>
         </div>
       </div>
@@ -241,11 +241,11 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
           <div style="font-size:10px;color:var(--text-mute);">「空室があるから売れる」ではない — 厨房/夕食席の提供能力が販売室数を決める</div>
           <div style="font-size:10.5px;margin-top:8px;">客室 販売可能</div>
           <div class="cap-bar"><i style="width:100%;background:var(--navy);">8室 / 16名</i></div>
-          <div style="font-size:10.5px;">夕食席 残 (18:00-19:00枠)</div>
+          <div style="font-size:10.5px;" data-guide="【夕食席の残り】その時間帯に夕食をお出しできる残り席数です。部屋が空いていても、夕食の席が足りなければそれ以上は受けられません。">夕食席 残 (18:00-19:00枠)</div>
           <div class="cap-bar"><i style="width:60%;background:var(--amber);">38席</i></div>
           <div style="font-size:10.5px;">仲居 配膳キャパ</div>
           <div class="cap-bar"><i style="width:75%;background:var(--green);">余裕</i></div>
-          <div class="foot-note">&#x1F916; 夕食席が客室在庫を下回る場合、AIは食事なしプラン/時間枠調整/売止を提案。人泊2食の提供能力で販売可能室数が変動。</div>
+          <div class="foot-note" data-guide="【AIの提案】これはAIによる提案です。最終判断は人が行います。夕食の席が部屋数に足りないとき、食事なしプランへの切替や時間枠の調整、販売の一時停止などをおすすめします。">&#x1F916; 夕食席が客室在庫を下回る場合、AIは食事なしプラン/時間枠調整/売止を提案。人泊2食の提供能力で販売可能室数が変動。</div>
         </div>
       </div>
     </div>
@@ -254,7 +254,7 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
   <!-- Master conversion matrix -->
   <div class="card">
     <div class="card-h">
-      <div class="t">&#x1F504; マスタ変換の対応表 (ネット予約サイトの部屋タイプ → 予約サイト一元管理 → 基幹システム → プラン/料金/食事)</div>
+      <div class="t" data-guide="【マスタ変換の対応表】各ネット予約サイトの部屋タイプや料金の呼び名を、自社の基幹システムの呼び名にそろえる対応表です。呼び方がずれると予約の取り違えが起きるため、ここで突き合わせます。">&#x1F504; マスタ変換の対応表 (ネット予約サイトの部屋タイプ → 予約サイト一元管理 → 基幹システム → プラン/料金/食事)</div>
       <div class="hint">部屋タイプと平均客室単価だけでは足りない — 1泊2食/子供区分/食事数/文字変換が運用の手間を左右する</div>
     </div>
     <div class="card-b" style="padding:0;">
@@ -266,7 +266,7 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
         </thead>
         <tbody>
           <tr>
-            <td style="padding-left:16px;">【楽天】本館和室10畳</td><td><code>HONKAN-W10</code></td><td><code>HWA</code></td><td><code>RAK-1N2S</code></td><td><code>RACK_W</code></td><td>1泊2食 (1名あたり)</td><td>¥25,000 / 70% / 50%</td><td style="padding-right:16px;">半角ｶﾅ→全角</td>
+            <td style="padding-left:16px;">【楽天】本館和室10畳</td><td><code>HONKAN-W10</code></td><td><code>HWA</code></td><td><code>RAK-1N2S</code></td><td><code>RACK_W</code></td><td data-guide="【1泊2食】一泊につき夕食と朝食が付くプランのことです。一名あたりの料金で表します。旅館で最も一般的な売り方です。">1泊2食 (1名あたり)</td><td>¥25,000 / 70% / 50%</td><td style="padding-right:16px;">半角ｶﾅ→全角</td>
           </tr>
           <tr>
             <td style="padding-left:16px;">【じゃらん】離れ露天付</td><td><code>HANARE-ONS</code></td><td><code>HRO</code></td><td><code>JLN-KAISEKI</code></td><td><code>PREMIUM</code></td><td>1泊2食 (懐石)</td><td>¥55,000 / 区分A / 区分C</td><td style="padding-right:16px;">機種依存文字 除去</td>
@@ -279,10 +279,35 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
           </tr>
         </tbody>
       </table>
-      <div class="foot-note" style="padding:10px 16px 14px;">子供区分: A/B=食事+寝具、C=寝具のみ (ネット予約サイトごとに体系が異なる)。入湯税 ¥150/人/泊は固定額の頭割(消費税対象外・現地徴収)で別建て。料金ランクは [部屋 × 夕食 × 季節 × 曜日 × 1室人数] で十数種。</div>
+      <div class="foot-note" style="padding:10px 16px 14px;" data-guide="【入湯税と子供区分】入湯税は温泉地で一人ひとりにかかる税金で、ここでは一泊150円。宿泊料金とは別に現地でいただきます。子供区分は、食事や布団の有無で料金を分ける仕組みで、サイトごとに呼び方が異なります。">子供区分: A/B=食事+寝具、C=寝具のみ (ネット予約サイトごとに体系が異なる)。入湯税 ¥150/人/泊は固定額の頭割(消費税対象外・現地徴収)で別建て。料金ランクは [部屋 × 夕食 × 季節 × 曜日 × 1室人数] で十数種。</div>
     </div>
   </div>
 
 </div>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

@@ -413,31 +413,31 @@
   </div>
 
   <div class="content">
-    <div class="hero">
+    <div class="hero" data-guide="【連携の全体像】ネット予約サイトと当館の予約システムを、間に立つ予約一元管理の仕組みを通してつなぐ構成です。この画面1枚で、予約の取り込み・在庫や料金の反映・販売停止や再開・在庫のズレや料金の警告をまとめて確認できます。">
       <div class="kicker">営業日 2026/05/30</div>
       <div class="headline">○○リゾート箱根の連携は、ネット予約サイトへ直接つながず、手間いらず（予約サイト一元管理）を通して統制。</div>
       <div class="sub">新規/変更/取消の予約データ取込、予約サイト一元管理の在庫・料金反映、売止/再販、予約サイト一元管理の残室と基幹システム在庫の不一致、Booking.comの料金差（公式より安い）警告をこの1画面で確認。</div>
     </div>
 
     <div class="quick-stats">
-      <div class="stat-card">
+      <div class="stat-card" data-guide="【取込待ち】各予約サイトから届いた予約のうち、まだ当館のシステムへ取り込めていない件数です。数字が増えたら早めに処理してください。うち変更の予約が2件あることを示しています。">
         <div class="value red">7</div>
         <div class="label">取込待ち</div>
         <div class="delta">変更 2件</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" data-guide="【平均遅延】在庫や料金を変えてから各予約サイトに反映されるまでの平均時間です。72秒は正常な範囲で、間に立つ予約一元管理の仕組みを通って届いています。">
         <div class="value amber">72s</div>
         <div class="label">平均遅延</div>
         <div class="delta" style="color:var(--amber);">予約サイト一元管理経由</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" data-guide="【差異】当館のシステム上の空室数と、予約サイト側の空室数が食い違っている件数です。今は1件あり、合わせ直す（再同期）必要があります。">
         <div class="value">1</div>
         <div class="label">差異</div>
         <div class="delta" style="color:var(--brand);">再同期要</div>
       </div>
     </div>
 
-    <div class="parity-banner">
+    <div class="parity-banner" data-guide="【料金差の警告】Booking.comに出ている料金が、当館の公式サイトより8パーセント安くなっていることを知らせる警告です。安すぎる売り方になっていないか確認し、必要なら料金をそろえてください。自動では直りません。">
       <div class="t">Booking.com 料金差（公式より安い）警告 -8%</div>
       <div class="d">公式サイトより8%安い在庫を検知。ネット予約サイトへ直接つながず、予約サイト一元管理を通して一括是正する前提で確認してください。</div>
     </div>
@@ -448,7 +448,7 @@
           <div class="icon navy">&#128229;</div>
           <div class="meta">
             <div class="title-row">
-              <div class="title">予約データ取込状況</div>
+              <div class="title" data-guide="【予約データ取込状況】各予約サイトから届いた予約を、新規・変更・取消に分けて当館のシステムへ取り込む欄です。とくに変更の予約は自動で入らないため、ここで取り込み忘れがないか確認します。">予約データ取込状況</div>
               <div class="state warn">取込待ち 7件</div>
             </div>
             <div class="desc">新規 / 変更 / 取消 を分離。変更の予約データは手動での再取込が必要。</div>
@@ -483,14 +483,14 @@
                   <div class="code">変更 / BDC-5520198</div>
                   <div class="sub">Booking / 人数 2→3、日程変更 / 手動での再取込が必要</div>
                 </div>
-                <div class="badge amber">要 手動再取込</div>
+                <div class="badge amber" data-guide="【要 手動再取込】内容が変わった予約で、手作業での取り込み直しが必要なことを示します。下の再取り込みボタンを押すまで確定しません。">要 手動再取込</div>
               </div>
               <div class="metric-grid">
                 <div class="metric"><div class="k">差分</div><div class="v amber">人数変更</div></div>
                 <div class="metric"><div class="k">操作</div><div class="v red">再取込待ち</div></div>
               </div>
               <div class="cta-row">
-                <button class="btn primary">再取り込み</button>
+                <button class="btn primary" data-guide="【再取り込み】変わった予約内容を当館のシステムに取り込み直すボタンです。押すと最新の人数や日程が反映され、取込待ちから外れます。">再取り込み</button>
                 <button class="btn secondary">詳細</button>
               </div>
             </div>
@@ -517,7 +517,7 @@
           <div class="icon brand">&#128736;</div>
           <div class="meta">
             <div class="title-row">
-              <div class="title">予約サイト一元管理の連携状況</div>
+              <div class="title" data-guide="【予約サイト一元管理の連携状況】複数のネット予約サイトの在庫と料金を、一つの仕組みでまとめて更新する欄です。各サイトへ正しく届いているか、反映の遅れやエラーがないかを確認します。">予約サイト一元管理の連携状況</div>
               <div class="state ok">在庫・料金 反映中</div>
             </div>
             <div class="desc">手間いらずを通して各ネット予約サイトへ在庫・料金を反映。遅延秒と再送を見える化。</div>
@@ -580,7 +580,7 @@
           <div class="icon amber">&#128273;</div>
           <div class="meta">
             <div class="title-row">
-              <div class="title">販売停止 / 再販を1タップ</div>
+              <div class="title" data-guide="【販売停止・再販を1タップ】満室にしたい部屋の販売を全予約サイトで一気に止めたり、再び売り出したりできる欄です。サイトごとに個別操作する手間を省きます。">販売停止 / 再販を1タップ</div>
               <div class="state bad">全サイト手仕舞い</div>
             </div>
             <div class="desc">1タップで全サイト即時手仕舞い。登録確認を抜かさない運用。</div>
@@ -607,8 +607,8 @@
                 <div class="metric"><div class="k">操作</div><div class="v red">即時登録</div></div>
               </div>
               <div class="cta-row">
-                <button class="btn primary">全サイト売止</button>
-                <button class="btn ghost">サイトへ登録</button>
+                <button class="btn primary" data-guide="【全サイト売止】押すと、この部屋の販売をすべての予約サイトで即座に停止します。これ以上の予約を受けたくないときに使います。">全サイト売止</button>
+                <button class="btn ghost" data-guide="【サイトへ登録】売り止めや再販の内容を、最終的に各予約サイト側へ反映させる仕上げの操作です。ここまで行って初めて完了します。">サイトへ登録</button>
               </div>
             </div>
             <div class="list-item">
@@ -638,7 +638,7 @@
           <div class="icon green">&#128200;</div>
           <div class="meta">
             <div class="title-row">
-              <div class="title">在庫の不一致 &amp; 料金差（公式より安い）</div>
+              <div class="title" data-guide="【在庫の不一致と料金差】予約サイト側の空室数と当館の空室数が食い違っていないか、料金が公式より安くなっていないかを見張る欄です。ズレや警告があればここで気づけます。">在庫の不一致 &amp; 料金差（公式より安い）</div>
               <div class="state warn">再同期 1件</div>
             </div>
             <div class="desc">予約サイト一元管理の残室と基幹システム在庫のズレを常時表示。Booking -8% 警告を併記。</div>
@@ -666,7 +666,7 @@
                 <div class="metric"><div class="k">対応</div><div class="v green">再同期</div></div>
               </div>
               <div class="cta-row">
-                <button class="btn primary">再同期</button>
+                <button class="btn primary" data-guide="【再同期】予約サイト側と当館側で食い違っている空室数を、押すだけで正しい数にそろえ直す操作です。差異を解消したいときに使います。">再同期</button>
                 <button class="btn secondary">差分確認</button>
               </div>
             </div>
@@ -721,5 +721,30 @@
   });
 </script>
 
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

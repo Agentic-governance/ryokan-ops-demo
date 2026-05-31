@@ -516,7 +516,7 @@
           <h1>支配人 / 会計向け 日次レポート</h1>
           <div class="meta">営業日 <strong>2026/05/30</strong> / 朝礼・シフト交代でそのまま共有</div>
         </div>
-        <div class="pill">本日締め済 1件</div>
+        <div class="pill" data-guide="【締め状況】その日の会計を確定（締め）した件数です。締め済みになると、その日の数字はこのレポートに固定され、あとから変わりません。">本日締め済 1件</div>
       </div>
       <div class="hero-actions">
         <button class="btn btn-primary">PDFワンタップ共有</button>
@@ -537,12 +537,12 @@
           <div class="value">81 / 37</div>
           <div class="sub">レイトアウト 6件</div>
         </div>
-        <div class="summary-card amber">
+        <div class="summary-card amber" data-guide="【稼働率】使えるお部屋のうち、何割が埋まったかを示します。下の定員稼働率は、お部屋ではなく定員（泊まれる人数）に対する埋まり具合です。">
           <div class="label">稼働率</div>
           <div class="value">84.3%</div>
           <div class="sub">定員稼働率 88.9%</div>
         </div>
-        <div class="summary-card brand">
+        <div class="summary-card brand" data-guide="【売上】その日の確定売上の合計です。宿泊代・お食事・館内での追加のお支払いをすべて足した金額を表します。">
           <div class="label">売上</div>
           <div class="value">¥3.24M</div>
           <div class="sub">宿泊 / 食事 / 追加売上 合算</div>
@@ -553,7 +553,7 @@
     <div class="section">
       <div class="section-title">税サマリー <span class="count">3層表示</span></div>
       <div class="stack">
-        <div class="tax-tier tax-1">
+        <div class="tax-tier tax-1" data-guide="【入湯税】温泉に泊まったお客様からお預かりし、市町村へ納める税金です。お一人一泊あたり決まった額（ここでは150円）で計算します。小さなお子様などは自動で対象から外れます。">
           <div class="head">
             <div class="ttl">入湯税</div>
             <span class="tag red">人泊 × ¥150</span>
@@ -561,7 +561,7 @@
           <div class="num">¥186,000</div>
           <div class="meta">対象人泊 1,240 / 免除件数 14 / 12歳未満は自動除外</div>
         </div>
-        <div class="tax-tier tax-2">
+        <div class="tax-tier tax-2" data-guide="【宿泊税】一部の自治体で、宿泊料金に応じてお預かりする税金です。料金が安い帯と高い帯で税額が分かれるため、件数ごとに分けて集計しています。">
           <div class="head">
             <div class="ttl">宿泊税</div>
             <span class="tag amber">料金帯別</span>
@@ -574,7 +574,7 @@
             <div class="mini"><div class="k">税額</div><div class="v">¥13.4K</div></div>
           </div>
         </div>
-        <div class="tax-tier tax-3">
+        <div class="tax-tier tax-3" data-guide="【消費税】料金に含まれる消費税です。料金に税込で入っているもの（内税）と、別に上乗せするもの（外税）に分けて表示しています。お預かりした税金と店が負担する分はきちんと分けて計上します。">
           <div class="head">
             <div class="ttl">消費税</div>
             <span class="tag navy">内税 / 外税</span>
@@ -589,11 +589,11 @@
       <div class="section-title">監査バランス <span class="count">借方 = 貸方</span></div>
       <div class="audit-box">
         <div class="audit-head">
-          <div class="left">
+          <div class="left" data-guide="【試算表（借方＝貸方）】その日のお金の動きが左右でぴったり合っているかを確認する表です。左（借方）と右（貸方）の合計が同じなら、計算に抜け漏れがないという目安になります。">
             <div class="ttl">試算表（借方=貸方）</div>
             <div class="sub">最終締め後の固定表示（客室・税の計上後）</div>
           </div>
-          <div class="audit-state ok">緑判定 一致</div>
+          <div class="audit-state ok" data-guide="【一致の判定】左右の合計が合っていれば緑で「一致」と表示されます。もし合わない場合は赤で知らせ、確認が必要なことが分かります。">緑判定 一致</div>
         </div>
         <div class="audit-body">
           <div class="balance-row">
@@ -608,7 +608,7 @@
               <div class="m">現金 / 請求 / 税負担</div>
             </div>
           </div>
-          <div class="waterfall">
+          <div class="waterfall" data-guide="【お金の増減グラフ】前日の残高から始まり、売上や入金などで増えたり減ったりして、当日の残高になるまでの流れを棒で表します。左から順に読むと、その日に何でお金が動いたかが分かります。">
             <div class="wf-col"><div class="wf-bar" style="height:22px;background:var(--navy)">+4.8</div><div class="wf-label">前日残</div></div>
             <div class="wf-col"><div class="wf-bar" style="height:52px;background:var(--green)">+12.6</div><div class="wf-label">売上</div></div>
             <div class="wf-col"><div class="wf-bar" style="height:34px;background:var(--teal)">-8.9</div><div class="wf-label">入金</div></div>
@@ -631,12 +631,12 @@
     <div class="section">
       <div class="section-title">経営の主要指標 <span class="count">平均客室単価 / 1室あたり売上 / 定員稼働率</span></div>
       <div class="kpi-strip">
-        <div class="kpi-card">
+        <div class="kpi-card" data-guide="【平均客室単価】売れたお部屋1室あたりの平均料金です。空室は計算に入れず、実際に泊まったお部屋だけで割った金額になります。">
           <div class="label">平均客室単価</div>
           <div class="value navy">¥31,200</div>
           <div class="sub">1室あたりの平均単価</div>
         </div>
-        <div class="kpi-card">
+        <div class="kpi-card" data-guide="【1室あたり売上】持っているお部屋すべて（空室も含む）を基準に、1室がどれだけ稼いだかを表します。稼働率と単価の両方を反映するため、その日の収益力を見るのに役立ちます。">
           <div class="label">1室あたり売上</div>
           <div class="value green">¥24,240</div>
           <div class="sub">稼働率反映後売上</div>
@@ -651,7 +651,7 @@
           <div class="value brand">1,240</div>
           <div class="sub">入湯税の母数</div>
         </div>
-        <div class="kpi-card" style="grid-column:1 / -1;">
+        <div class="kpi-card" style="grid-column:1 / -1;" data-guide="【手数料を引いたあとの実質単価】インターネットの予約サイト経由のご予約では、サイトに手数料を支払います。その手数料を差し引いた、実際に手元に残る1室あたりの金額です。表示の料金と手取りの差を朝礼ですぐ共有できます。">
           <div class="label">ネット予約サイト手数料控除後の実質単価</div>
           <div class="value navy">¥24,800</div>
           <div class="sub">手数料控除後の実効単価 / 朝礼で即共有</div>
@@ -666,7 +666,7 @@
           <div class="big">ワンタップ共有</div>
           <div class="sub">朝礼・シフト交代用のPDFをそのまま送信。IN/OUT人数・室数・稼働率を同一様式で固定。</div>
         </div>
-        <button class="btn btn-primary">共有</button>
+        <button class="btn btn-primary" data-guide="【共有】このボタンを押すと、その日のレポートが決まった様式のPDFになり、朝礼やシフト交代の相手にそのまま送れます。毎回同じ形でまとまるので、共有や引き継ぎが簡単になります。">共有</button>
       </div>
     </div>
 
@@ -698,5 +698,30 @@
     </a>
   </div>
 </div>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

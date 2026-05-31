@@ -346,17 +346,17 @@
     </div>
 
     <div class="glance-grid">
-      <div class="glance-card red">
+      <div class="glance-card red" data-guide="【本日夕食】今夜お食事を出すお客様の合計人数です。この人数分の料理を配ってお下げします。">
         <div class="label">本日夕食</div>
         <div class="value">96名</div>
         <div class="hint">配膳対象の総数</div>
       </div>
-      <div class="glance-card amber">
+      <div class="glance-card amber" data-guide="【布団未敷(ふとんみしき)】まだお布団を敷いていないお部屋の数です。お食事を下げ終えると、布団を敷く担当へ自動でお知らせが届きます。">
         <div class="label">布団未敷</div>
         <div class="value">7室</div>
         <div class="hint">下膳済から布団班へ自動通知</div>
       </div>
-      <div class="glance-card grid-wide">
+      <div class="glance-card grid-wide" data-guide="【時間枠別人数】何時にお食事を始めるお客様が何名いるかを時間ごとに示します。人数が多い時間帯は早めに準備すると混みにくくなります。">
         <div class="label">時間枠別人数</div>
         <div class="mini-bars">
           <span class="mini-pill blue">18:00 28名</span>
@@ -368,15 +368,15 @@
       </div>
     </div>
 
-    <div class="countdown">
+    <div class="countdown" data-guide="【コース進行カウントダウン】今出しているお料理の段階と、次のお料理を一斉に出すまでの残り時間の目安です。お客様の進み具合に合わせて状態を更新してください。">
       <div class="row">
         <div>
           <div class="label">コース進行カウントダウン</div>
-          <div class="course">会席 竹 / 先付・椀物 進行中</div>
+          <div class="course" data-guide="【会席(かいせき)コース】少しずつ順番にお出しする和食のコース料理です。竹はコースの種類(松竹梅のうちの一つ)を表します。先付・椀物はその中の品名です。">会席 竹 / 先付・椀物 進行中</div>
         </div>
         <div class="timer">12:40</div>
       </div>
-      <div class="note">次の一斉進行までの目安。配膳済に更新すると厨房とデシャップの段取りが進む。</div>
+      <div class="note" data-guide="【厨房との連携】お料理を出したら状態を更新すると、台所(厨房)と料理を仕分ける係に次の段取りが伝わります。">次の一斉進行までの目安。配膳済に更新すると厨房とデシャップの段取りが進む。</div>
     </div>
 
     <div class="section-title">
@@ -387,7 +387,7 @@
     <details class="meal-card" open>
       <summary>
         <div class="card-top">
-          <div class="alert-strip"><span class="tag">アレルギー</span> 甲殻類 / 卵 あり。赤帯を最上部固定。</div>
+          <div class="alert-strip" data-guide="【アレルギーの注意帯】このお部屋のお客様が食べられない食材です。間違えると体調に関わるため、必ず一番上に赤く目立つように表示されます。提供前に必ずご確認ください。"><span class="tag">アレルギー</span> 甲殻類 / 卵 あり。赤帯を最上部固定。</div>
           <div class="main-row">
             <div>
               <div class="room">302号室</div>
@@ -399,8 +399,8 @@
               <span class="chip state">未着席</span>
             </div>
           </div>
-          <div class="status-strip">
-            <span class="s active">未着席</span>
+          <div class="status-strip" data-guide="【進み具合の表示】お席の状態を4段階で表します。色が付いている所が今の状態です。未着席→配膳済(料理を出した)→食事中→下膳済(お下げ済み)の順に進みます。">
+            <span class="s active" data-guide="【未着席(みちゃくせき)】お客様がまだお食事処の席に着いていない状態です。お見えになったらお迎えします。">未着席</span>
             <span class="s muted">配膳済</span>
             <span class="s muted">食事中</span>
             <span class="s muted">下膳済</span>
@@ -418,11 +418,11 @@
             <div class="detail-line"><strong>備考:</strong> 夕食時はご飯少なめ、子どもは先に水菓子を希望。</div>
             <div class="status-buttons">
               <button class="status-btn warn">未着席<span class="small">着席確認前</span></button>
-              <button class="status-btn ready">配膳済<span class="small">料理を置いた</span></button>
+              <button class="status-btn ready" data-guide="【配膳済(はいぜんずみ)】お料理をテーブルにお出ししたら押します。配膳とは料理をお客様の前に並べることです。">配膳済<span class="small">料理を置いた</span></button>
               <button class="status-btn active">食事中<span class="small">召し上がり中</span></button>
-              <button class="status-btn done">下膳済<span class="small">布団班へ通知</span></button>
+              <button class="status-btn done" data-guide="【下膳済(げぜんずみ)】お食事が終わって食器をお下げしたら押します。これを押すと布団を敷く担当へ自動でお知らせが届きます。">下膳済<span class="small">布団班へ通知</span></button>
             </div>
-            <div class="note-box"><strong>注記:</strong> 下膳済をタップすると布団班へ自動通知。布団未敷室がこの一覧に残る場合は先に回収。</div>
+            <div class="note-box" data-guide="【自動でお知らせ】下膳済を押すと布団を敷く担当へ自動で連絡が行きます。お布団がまだのお部屋がこの一覧に残っているときは、先に食器を回収してください。"><strong>注記:</strong> 下膳済をタップすると布団班へ自動通知。布団未敷室がこの一覧に残る場合は先に回収。</div>
           </div>
         </div>
       </div>
@@ -554,15 +554,40 @@
       <div class="icon">&#128716;</div>
       <div class="label-text">客室</div>
     </a>
-    <a href="#" class="nav-tab active">
+    <a href="#" class="nav-tab active" data-guide="【食事(いま開いている画面)】お料理の配膳とお下げを管理する画面です。担当のお部屋ごとに今どの状態かを見て進められます。">
       <div class="icon">&#127834;</div>
       <div class="label-text">食事</div>
     </a>
-    <a href="#" class="nav-tab">
+    <a href="#" class="nav-tab" data-guide="【引継ぎ(ひきつぎ)】交代する次の担当者へ申し送りや注意点を伝えるための画面です。やり残しや特別な対応を共有します。">
       <div class="icon">&#128172;</div>
       <div class="label-text">引継ぎ</div>
     </a>
   </div>
 </div>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

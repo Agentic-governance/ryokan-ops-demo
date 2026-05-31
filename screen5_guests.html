@@ -164,10 +164,10 @@ table.tbl tr.sel td { background:var(--brand-soft); }
 
   <div class="kpi-strip">
     <div class="kpi-card"><div class="label">在館ゲスト / 本日更新</div><div class="value" style="color:var(--navy);">128<span style="font-size:13px;font-weight:400;">名</span></div><div class="sub">宿泊 84 / 日帰り 44</div></div>
-    <div class="kpi-card"><div class="label">名簿必須項目 完了率</div><div class="value" style="color:var(--green);">96.2<span style="font-size:13px;font-weight:400;">%</span></div><div class="sub">未完了 5件は旅券未済を含む</div></div>
-    <div class="kpi-card"><div class="label">外国人 旅券保存対象</div><div class="value" style="color:var(--amber);">31<span style="font-size:13px;font-weight:400;">件</span></div><div class="sub">国籍 / 旅券番号 / 写し保存3年</div></div>
-    <div class="kpi-card"><div class="label">重複統合 候補</div><div class="value" style="color:var(--brand);">7<span style="font-size:13px;font-weight:400;">組</span></div><div class="sub">電話・メール・旅券一致で抽出</div></div>
-    <div class="kpi-card"><div class="label">送信待ち 申し送り</div><div class="value" style="color:var(--purple);">14<span style="font-size:13px;font-weight:400;">件</span></div><div class="sub">フロント / 食事 / 仲居 / 会議室</div></div>
+    <div class="kpi-card" data-guide="【名簿の完了率】宿泊者名簿に必要な項目が、どれだけ埋まっているかの割合です。100パーセントに近いほど記入もれが少ない状態です。"><div class="label">名簿必須項目 完了率</div><div class="value" style="color:var(--green);">96.2<span style="font-size:13px;font-weight:400;">%</span></div><div class="sub">未完了 5件は旅券未済を含む</div></div>
+    <div class="kpi-card" data-guide="【旅券の保存対象】海外からのお客様で、旅券（パスポート）の写しを保管しておく必要がある件数です。法律により写しは3年間の保存が必要です。"><div class="label">外国人 旅券保存対象</div><div class="value" style="color:var(--amber);">31<span style="font-size:13px;font-weight:400;">件</span></div><div class="sub">国籍 / 旅券番号 / 写し保存3年</div></div>
+    <div class="kpi-card" data-guide="【統合の候補】同じお客様が二重に登録されている可能性がある組み合わせの数です。電話やメール、旅券番号の一致から自動で見つけ出します。"><div class="label">重複統合 候補</div><div class="value" style="color:var(--brand);">7<span style="font-size:13px;font-weight:400;">組</span></div><div class="sub">電話・メール・旅券一致で抽出</div></div>
+    <div class="kpi-card" data-guide="【申し送り】お客様の要望や注意事項を、各部署へ伝える連絡メモのことです。まだ送られていない件数を表します。"><div class="label">送信待ち 申し送り</div><div class="value" style="color:var(--purple);">14<span style="font-size:13px;font-weight:400;">件</span></div><div class="sub">フロント / 食事 / 仲居 / 会議室</div></div>
   </div>
 
   <div class="cols">
@@ -178,7 +178,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
           <div class="src">2025年改正対応 / 行を選ぶと右に詳細表示</div>
         </div>
         <div class="card-b nopad">
-          <div class="req-box">
+          <div class="req-box" data-guide="【宿泊者名簿の必須項目】法律で記録が義務づけられている項目の一覧です。氏名や住所、海外のお客様は国籍と旅券番号などが必要です。">
             <b>宿泊者名簿の必須項目</b> を全ゲストで明示。
             <div class="req-list">
               <div>氏名</div><div>住所</div>
@@ -187,15 +187,15 @@ table.tbl tr.sel td { background:var(--brand-soft); }
             </div>
           </div>
           <div class="alert-strip" style="padding:0 16px 12px;">
-            <div class="a red"><b>旅券未済</b>K.M 様 / W.J 様の一部到着資料未収</div>
+            <div class="a red" data-guide="【旅券未済】海外のお客様の旅券（パスポート）の写しが、まだ受け取れていない状態を示します。到着時に確認が必要です。"><b>旅券未済</b>K.M 様 / W.J 様の一部到着資料未収</div>
             <div class="a amber"><b>VIP / 記念日</b>512号室 J.W 様 と E.C 様 は要ケア</div>
-            <div class="a green"><b>アレルギー / ハラル</b>厨房・食事処へ自動連携済</div>
-            <div class="a navy"><b>与信NG</b>該当時は申し送りに表示しチェックインを抑止</div>
+            <div class="a green" data-guide="【アレルギー・ハラル】食べられない食材があるお客様の情報です。ハラルとは、宗教上の決まりに沿った食事のこと。厨房と食事処へ自動で伝わっています。"><b>アレルギー / ハラル</b>厨房・食事処へ自動連携済</div>
+            <div class="a navy" data-guide="【与信NG】お支払いに不安がある（過去の未払いなど）と判断されたお客様です。該当するとチェックインを一時的に止め、申し送りに表示します。"><b>与信NG</b>該当時は申し送りに表示しチェックインを抑止</div>
           </div>
           <table class="tbl">
             <thead>
               <tr>
-                <th>氏名 / 客室</th><th>言語</th><th>国籍 / 旅券</th><th>館内動線</th><th>申し送り</th><th>要注意</th><th>累計利用額</th><th>会員</th>
+                <th>氏名 / 客室</th><th>言語</th><th>国籍 / 旅券</th><th data-guide="【館内動線】お客様が館内をどう移動する予定かの順路です。たとえば温泉から食事処へ、といった流れを示し、ご案内や混雑の見込みに役立てます。">館内動線</th><th>申し送り</th><th>要注意</th><th>累計利用額</th><th>会員</th>
               </tr>
             </thead>
             <tbody>
@@ -345,7 +345,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
       </div>
 
       <div class="merge">
-        <div class="head">重複ゲスト統合パネル</div>
+        <div class="head" data-guide="【重複ゲストの統合】同じお客様が二重に登録されていそうな組を一覧にしたものです。同一人物だと確認できたら一つにまとめ、履歴や好みを正しく引き継げます。">重複ゲスト統合パネル</div>
         <table>
           <thead>
             <tr><th>ゲストA</th><th>ゲストB</th><th>一致度</th><th>理由</th><th>アクション</th></tr>
@@ -354,9 +354,9 @@ table.tbl tr.sel td { background:var(--brand-soft); }
             <tr>
               <td>J.W 様 <span class="muted">#512</span></td>
               <td>J.W 様 <span class="muted">#801</span></td>
-              <td><div class="match-bar-wrap"><div class="match-bar"><div class="match-bar-fill" style="width:96%;background:var(--green);"></div></div><span style="font-weight:600;color:var(--green);">96%</span></div></td>
+              <td><div class="match-bar-wrap" data-guide="【一致度】二つの登録が同じお客様である可能性をパーセントで示したものです。数字が高いほど同一人物の見込みが強く、まとめても安全と考えられます。"><div class="match-bar"><div class="match-bar-fill" style="width:96%;background:var(--green);"></div></div><span style="font-weight:600;color:var(--green);">96%</span></div></td>
               <td>メール / 電話 / 旅券一致</td>
-              <td><button class="btn-merge">統合</button></td>
+              <td><button class="btn-merge" data-guide="【統合】二つの登録を一つにまとめます。同じお客様だと確認できた場合に押してください。まとめると履歴や好みが一本化されます。">統合</button></td>
             </tr>
             <tr>
               <td>W.J 様 <span class="muted">#418</span></td>
@@ -413,7 +413,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
         </div>
         <div class="panel-section">
           <div class="section-title">多言語メッセージ送信</div>
-          <div class="note-box">定型文を <b>中 / 英 / 韓</b> で即送信。旅券未済、夕食席、会議室案内、アレルギー確認をワンボタン化。</div>
+          <div class="note-box" data-guide="【多言語メッセージ】あらかじめ用意した案内文を、中国語・英語・韓国語ですぐに送れます。旅券の確認や夕食席、アレルギーの確認などを一度の操作でお送りできます。">定型文を <b>中 / 英 / 韓</b> で即送信。旅券未済、夕食席、会議室案内、アレルギー確認をワンボタン化。</div>
           <div class="action-row">
             <button class="btn-sm btn-red">英語で送信</button>
             <button class="btn-sm btn-navy">中文で送信</button>
@@ -422,7 +422,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
         </div>
         <div class="panel-section">
           <div class="section-title">旅券カメラスキャン導線</div>
-          <div class="note-box">フロント端末のカメラを起動し、旅券番号・国籍・ローマ字氏名を名簿へ自動転記。未保存は 3 年保管キューへ送る。</div>
+          <div class="note-box" data-guide="【旅券カメラスキャン】フロントの機器のカメラで旅券（パスポート）を読み取り、番号や国籍、氏名を名簿へ自動で書き写す機能です。手入力の手間と書き間違いを減らせます。">フロント端末のカメラを起動し、旅券番号・国籍・ローマ字氏名を名簿へ自動転記。未保存は 3 年保管キューへ送る。</div>
           <div class="action-row">
             <button class="btn-sm btn-out">カメラ起動</button>
             <button class="btn-sm btn-out">名簿へ自動転記</button>
@@ -433,5 +433,30 @@ table.tbl tr.sel td { background:var(--brand-soft); }
     </div>
   </div>
 </div>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

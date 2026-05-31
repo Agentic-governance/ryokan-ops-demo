@@ -178,11 +178,11 @@ canvas{max-width:100%}
 
   <div class="kpi-strip">
     <div class="kpi-card"><div class="label">試算表<br>借方 / 貸方</div><div class="value" style="color:var(--green)">¥12.84<span class="unit">M</span></div><div class="sub delta-up">一致 +¥0 / 乖離なし</div></div>
-    <div class="kpi-card"><div class="label">入湯税 見込<br>(人泊×¥150)</div><div class="value">¥186<span class="unit">K</span></div><div class="sub">12歳未満除外 14件</div></div>
-    <div class="kpi-card"><div class="label">宿泊税 / 消費税<br>分離集計</div><div class="value">¥42.1<span class="unit">K</span></div><div class="sub">宿泊税 ¥13.4K / 消費税 ¥28.7K</div></div>
-    <div class="kpi-card"><div class="label">売掛金 回収率<br>自動消込提案</div><div class="value" style="color:var(--navy)">91.4<span class="unit">%</span></div><div class="sub delta-up">提案 8件 / 自動照合 5件</div></div>
-    <div class="kpi-card"><div class="label">食数実績<br>予約比 / 無断不泊</div><div class="value">238<span class="unit">食</span></div><div class="sub">予約比 96.8% / 無断不泊 7名</div></div>
-    <div class="kpi-card"><div class="label">経営の主要指標<br>正味の平均客室単価 / 1室あたり売上</div><div class="value">¥24,800</div><div class="sub">ネット予約サイト控除後の平均客室単価 / 1室あたり売上 ¥18,240</div></div>
+    <div class="kpi-card" data-guide="【入湯税の見込み】温泉に泊まったお客様お一人につき1泊あたり一定額(ここでは150円)を市町村に納める税の見込み額です。お子様(12歳未満)は対象外として自動で除いています。"><div class="label">入湯税 見込<br>(人泊×¥150)</div><div class="value">¥186<span class="unit">K</span></div><div class="sub">12歳未満除外 14件</div></div>
+    <div class="kpi-card" data-guide="【宿泊税と消費税のまとめ】お客様からお預かりして納める2種類の税を分けて集計しています。宿泊税は宿泊料金に応じてかかる税、消費税はお買い物などにかかる税です。それぞれの内訳が下に出ています。"><div class="label">宿泊税 / 消費税<br>分離集計</div><div class="value">¥42.1<span class="unit">K</span></div><div class="sub">宿泊税 ¥13.4K / 消費税 ¥28.7K</div></div>
+    <div class="kpi-card" data-guide="【売掛金の回収率】あとから受け取るお金(請求済みでまだ入金されていない分)のうち、すでに回収できた割合です。システムが入金記録と請求を照らし合わせて、消し込み(入金済みとして処理)の候補をご提案します。最終確認は担当者が行います。"><div class="label">売掛金 回収率<br>自動消込提案</div><div class="value" style="color:var(--navy)">91.4<span class="unit">%</span></div><div class="sub delta-up">提案 8件 / 自動照合 5件</div></div>
+    <div class="kpi-card" data-guide="【食数の実績】実際にお出しした食事の数です。予約に対してどれくらい出たか(予約比)と、ご予約があったのに連絡なくお泊まりにならなかった人数(無断不泊)を表します。仕込み量の調整に役立ちます。"><div class="label">食数実績<br>予約比 / 無断不泊</div><div class="value">238<span class="unit">食</span></div><div class="sub">予約比 96.8% / 無断不泊 7名</div></div>
+    <div class="kpi-card" data-guide="【経営の主な数字】お部屋1室あたりの売上の目安です。平均客室単価は売れたお部屋1室あたりの平均料金、1室あたり売上は空室も含めた全室で平均した売上で、稼働の良し悪しまで分かる数字です。"><div class="label">経営の主要指標<br>正味の平均客室単価 / 1室あたり売上</div><div class="value">¥24,800</div><div class="sub">ネット予約サイト控除後の平均客室単価 / 1室あたり売上 ¥18,240</div></div>
   </div>
 
   <div class="card">
@@ -194,11 +194,11 @@ canvas{max-width:100%}
       <div class="cols">
         <div class="col-l">
           <div class="two-col">
-            <div class="panel-soft">
+            <div class="panel-soft" data-guide="【帳簿のつり合い確認】1日の締め処理で、お金の出どころ(借方)と使いみち(貸方)の合計が一致しているかを確認します。「一致」なら計算がそろっており、ずれがある場合は赤色で警告します。">
               <div class="audit-score">
                 <div>
                   <h4>監査バランス</h4>
-                  <div class="v ok">一致</div>
+                  <div class="v ok" data-guide="【一致しています】帳簿の左右(借方と貸方)の金額がぴったりそろっている状態です。問題なく1日の締めができている合図です。ずれがあると赤色の表示に変わります。">一致</div>
                 </div>
                 <div class="m">借方 = 貸方<br>差異 ¥0</div>
               </div>
@@ -208,7 +208,7 @@ canvas{max-width:100%}
               </div>
               <div class="foot-note">最終締め・収益確認を想定した固定表示。差異が出た場合は赤判定に切替。</div>
             </div>
-            <div class="panel-soft">
+            <div class="panel-soft" data-guide="【お金の増減の流れ】前日の残高から始まり、売上で増え、入金で動き、最終的に当日の残高になるまでの流れを棒グラフで表します。どの段階でいくら増減したかを左から順に追えます。">
               <h4>ウォーターフォール</h4>
               <div class="waterfall">
                 <div class="wf-col"><div class="wf-bar" style="height:26px;background:var(--navy)">+4.8</div><div class="wf-label">前日残</div></div>
@@ -235,7 +235,7 @@ canvas{max-width:100%}
               <div class="big">日次レポート PDF</div>
               <div class="sub">直近2日のチェックイン / チェックアウト 人数・室数・稼働率をそのまま配布できる定型出力</div>
             </div>
-            <button class="btn-sm btn-red">PDF出力</button>
+            <button class="btn-sm btn-red" data-guide="【PDFで出力】この日次レポートを印刷や配布に使える書類(PDF)として書き出します。押すとそのまま会議資料などに使える形で保存できます。">PDF出力</button>
           </div>
           <div class="chart-wrap short" style="margin-top:10px"><canvas id="auditChart"></canvas></div>
         </div>
@@ -249,13 +249,13 @@ canvas{max-width:100%}
         <div class="card-h"><div class="t">💴 税ダッシュボード</div><span class="src">入湯税 / 宿泊税 / 消費税</span></div>
         <div class="card-b">
           <div class="tax-stack">
-            <div class="tax-tier tax-1">
-              <div class="th"><div class="ttl">入湯税</div><span class="badge badge-bad">人泊 × ¥150</span></div>
+            <div class="tax-tier tax-1" data-guide="【入湯税】温泉に入浴したお客様にかかる税で、市町村に納めます。お一人の1泊を1単位(人泊)として、1単位ごとに決まった額をかけて計算します。お子様など対象外の方は年齢から自動で除いています。">
+              <div class="th"><div class="ttl">入湯税</div><span class="badge badge-bad" data-guide="【人泊あたり150円】「人泊」とはお一人が1泊することを1と数える単位です。延べ宿泊人数に1泊150円をかけて入湯税を計算しています。">人泊 × ¥150</span></div>
               <div class="num">¥186,000</div>
               <div class="meta">対象人泊 1,240 / 12歳未満除外 14件 / 免税判定は年齢で自動切替</div>
             </div>
-            <div class="tax-tier tax-2">
-              <div class="th"><div class="ttl">宿泊税</div><span class="badge badge-warn">料金帯別</span></div>
+            <div class="tax-tier tax-2" data-guide="【宿泊税】宿泊料金に応じてかかる税です。料金の高さで税額の段階が分かれるため、料金帯ごとに件数と税額を分けて表示しています。">
+              <div class="th"><div class="ttl">宿泊税</div><span class="badge badge-warn" data-guide="【料金の段階別】宿泊料金の高さで税額が変わるため、料金の安い区分と高い区分に分けて集計しています。下の表で区分ごとの件数を確認できます。">料金帯別</span></div>
               <div class="num">¥13,400</div>
               <div class="meta">¥5,000-¥10,000: 26件 / ¥10,000超: 44件 / 段階別件数と税額を分離表示</div>
               <div class="tax-grid">
@@ -264,8 +264,8 @@ canvas{max-width:100%}
                 <div class="mini"><div class="k">税額合計</div><div class="v">¥13.4K</div></div>
               </div>
             </div>
-            <div class="tax-tier tax-3">
-              <div class="th"><div class="ttl">消費税</div><span class="badge badge-info">内税 / 外税</span></div>
+            <div class="tax-tier tax-3" data-guide="【消費税】お客様からお預かりして国に納める税です。料金に税込みで含めているもの(内税)と、料金とは別に上乗せするもの(外税)を分けて集計しています。">
+              <div class="th"><div class="ttl">消費税</div><span class="badge badge-info" data-guide="【税込みか別建てか】内税は表示価格にすでに税が含まれているもの、外税は価格とは別に税を加えるものです。どちらの対象がいくらあるかを下に表示しています。">内税 / 外税</span></div>
               <div class="num">¥28,700</div>
               <div class="meta">内税対象 ¥312,000 / 外税対象 ¥186,000 / 預り金と租税公課を分離</div>
             </div>
@@ -276,7 +276,7 @@ canvas{max-width:100%}
       <div class="card">
         <div class="card-h"><div class="t">📈 経営の主要指標</div><span class="src">平均客室単価 / 1室あたり売上 / 稼働率 / 人泊数 / 正味の平均客室単価 / キャンセル回収率</span></div>
         <div class="card-b">
-          <div class="chart-wrap"><canvas id="kpiChart"></canvas></div>
+          <div class="chart-wrap" data-guide="【経営指標の推移グラフ】直近3日間の動きを表します。折れ線はお部屋の平均料金と1室あたり売上、棒は満室に対してどれだけ埋まったか(稼働率)です。右側の目盛りが稼働率の割合です。"><canvas id="kpiChart"></canvas></div>
           <div class="kpi-mini">
             <div class="mk"><div class="mv">¥31,200</div><div class="ml">平均客室単価</div></div>
             <div class="mk"><div class="mv">¥24,240</div><div class="ml">1室あたり売上</div></div>
@@ -289,9 +289,9 @@ canvas{max-width:100%}
     </div>
     <div class="col-r">
       <div class="card">
-        <div class="card-h"><div class="t">🧮 売掛金の経過日数</div><span class="src">0-30 / 31-60 / 61-90 / 90+ 日 + ネット予約サイト入金消込</span></div>
+        <div class="card-h"><div class="t" data-guide="【売掛金の経過日数】まだ入金されていない請求を、請求してから何日たったかで色分けした表です。日数が長いほど回収が遅れている要注意の取引先で、色が濃くなります。">🧮 売掛金の経過日数</div><span class="src">0-30 / 31-60 / 61-90 / 90+ 日 + ネット予約サイト入金消込</span></div>
         <div class="card-b">
-          <table class="heatmap">
+          <table class="heatmap" data-guide="【未回収の一覧表】縦が取引先、横が請求からの経過日数(0〜30日など)です。マス目の色が濃く赤いほど回収が遅れている金額が大きい合図で、優先して連絡すべき相手が一目で分かります。">
             <thead>
               <tr><th>取引先</th><th>0-30</th><th>31-60</th><th>61-90</th><th>90+</th></tr>
             </thead>
@@ -303,7 +303,7 @@ canvas{max-width:100%}
             </tbody>
           </table>
           <div class="match-grid" style="margin-top:6px">
-            <div class="match-card"><div class="h">自動照合候補</div><div class="v">5件</div><div class="d">予約サイトの入金明細と会計明細(精算書)を一致候補化</div></div>
+            <div class="match-card" data-guide="【自動で見つけた一致候補】システムが予約サイトからの入金記録と、こちらの請求内容を照らし合わせて、同じ取引と思われる組み合わせを自動で見つけた件数です。確認のうえ消し込みに進めます。"><div class="h">自動照合候補</div><div class="v">5件</div><div class="d">予約サイトの入金明細と会計明細(精算書)を一致候補化</div></div>
             <div class="match-card"><div class="h">要確認差異</div><div class="v">2件</div><div class="d">金額差 / 日付差で保留</div></div>
             <div class="match-card"><div class="h">消込率</div><div class="v">91.4%</div><div class="d">当日分の自動消込済み</div></div>
             <div class="match-card"><div class="h">保留残</div><div class="v">¥0.8M</div><div class="d">担当者確認待ち</div></div>
@@ -319,7 +319,7 @@ canvas{max-width:100%}
               <div class="h">食数実績</div><div class="m">予約比 / 無断不泊</div><div class="v">238 食</div>
               <div class="hint">予約 246 食に対して 96.8%。無断不泊 7名で推移。</div>
             </div>
-            <div class="feed-card">
+            <div class="feed-card" data-guide="【食材のロス】仕入れた食材のうち、使われずに無駄になった割合です。前日と比べて増減が分かり、数値が低いほど仕込みの量が適切だったことを示します。仕入れ計画の見直しに使えます。">
               <div class="h">食材ロス</div><div class="m">前日比</div><div class="v">2.4%</div>
               <div class="hint">朝食ロス低下、夕食の過剰仕込みを抑制。</div>
             </div>
@@ -350,7 +350,7 @@ canvas{max-width:100%}
               <tr><td>2026/05/30</td><td>94</td><td>81</td><td>43</td><td>37</td><td>84.3%</td></tr>
             </tbody>
           </table>
-          <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="btn-sm btn-navy">PDF出力</button></div>
+          <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="btn-sm btn-navy" data-guide="【PDFで出力】直近2日のチェックインやチェックアウトの人数・室数・稼働率の表を、配布できる書類(PDF)として保存します。">PDF出力</button></div>
         </div>
       </div>
     </div>
@@ -415,5 +415,30 @@ new Chart(document.getElementById('dailyChart'), {
   }
 });
 </script>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

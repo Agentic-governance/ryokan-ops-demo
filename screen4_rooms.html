@@ -197,7 +197,7 @@ canvas { display:block; max-width:100%; }
 <nav class="sidebar">
   <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
   <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
-  <a class="sidebar-item active" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item active" href="screen4_rooms.html" data-guide="【客室管理】各お部屋の掃除や点検の進み具合、お客様の在室状況をひと目で見る画面です。掃除ボードや夜の準備、担当割りもここから確認します。">客室管理</a>
   <a class="sidebar-item" href="screen5_guests.html">ゲスト管理</a>
   <a class="sidebar-item" href="screen6_maintenance.html">保全管理</a>
   <a class="sidebar-item" href="screen7_marketing.html">マーケティング分析</a>
@@ -224,12 +224,12 @@ canvas { display:block; max-width:100%; }
   <div class="page-sub">客室状態(点検済/清掃済/再清掃前/使用後/一時停止/販売除外)を業界標準のデータ項目に準拠して色・記号・文字で表示。点検未了の部屋はチェックイン不可、状態更新はキー1つ、フロア一括操作は <b>全室で同じ画面・操作</b> で実施。</div>
 
   <div class="kpi-strip">
-    <div class="kpi-card"><div class="label">清掃済の空室 / すぐ販売可</div><div class="value" style="color:var(--green);">34<span class="unit">室</span></div><div class="sub">本館 22 / 別館 8 / 離れ 4</div></div>
+    <div class="kpi-card" data-guide="【清掃済の空室・すぐ販売可】掃除が終わってすぐにお客様をご案内できる空き部屋の数です。本館・別館・離れの内訳も下に出ます。今すぐ売れる部屋の在庫とお考えください。"><div class="label">清掃済の空室 / すぐ販売可</div><div class="value" style="color:var(--green);">34<span class="unit">室</span></div><div class="sub">本館 22 / 別館 8 / 離れ 4</div></div>
     <div class="kpi-card"><div class="label">在館中の客室</div><div class="value" style="color:var(--navy);">28<span class="unit">室</span></div><div class="sub">人数 61名 / 起こさないで 7室</div></div>
-    <div class="kpi-card"><div class="label">点検 未了</div><div class="value" style="color:var(--amber);">6<span class="unit">室</span></div><div class="sub">チェックイン不可の注記を適用</div></div>
-    <div class="kpi-card"><div class="label">状態の不一致 合計</div><div class="value" style="color:var(--brand);">9<span class="unit">件</span></div><div class="sub">空室のはずが在室 4 / 在室のはずが空室 3 / 人数違い 2</div></div>
-    <div class="kpi-card"><div class="label">夜の客室整え 必要</div><div class="value" style="color:var(--purple);">14<span class="unit">室</span></div><div class="sub">完了 19 / 不要 29</div></div>
-    <div class="kpi-card"><div class="label">キー1つで更新 / 一括操作</div><div class="value" style="color:var(--teal);">清 点 汚 再</div><div class="sub">フロア単位の一括更新と仲居呼出に対応</div></div>
+    <div class="kpi-card" data-guide="【点検 未了】掃除は済んだが、まだ係の最終チェックが終わっていない部屋の数です。この部屋にはお客様をご案内できないため、チェックインの候補から外れます。"><div class="label">点検 未了</div><div class="value" style="color:var(--amber);">6<span class="unit">室</span></div><div class="sub">チェックイン不可の注記を適用</div></div>
+    <div class="kpi-card" data-guide="【状態の不一致 合計】フロントの記録と清掃の記録が食い違っている部屋の件数です。空いているはずが人がいる、人数が違う、などのズレをまとめて示します。早めの確認が必要です。"><div class="label">状態の不一致 合計</div><div class="value" style="color:var(--brand);">9<span class="unit">件</span></div><div class="sub">空室のはずが在室 4 / 在室のはずが空室 3 / 人数違い 2</div></div>
+    <div class="kpi-card" data-guide="【夜の客室整え 必要】夕食後にお布団を敷くなど、夜の準備がこれから必要な部屋の数です。下に完了済みと、準備が要らない部屋の数も出ます。"><div class="label">夜の客室整え 必要</div><div class="value" style="color:var(--purple);">14<span class="unit">室</span></div><div class="sub">完了 19 / 不要 29</div></div>
+    <div class="kpi-card" data-guide="【キー1つで更新・一括操作】清＝清掃済、点＝点検済、汚＝使用後、再＝再清掃前を表す合図です。一回の操作で部屋の状態を切り替えられ、フロアごとにまとめて更新したり仲居を呼んだりもできます。"><div class="label">キー1つで更新 / 一括操作</div><div class="value" style="color:var(--teal);">清 点 汚 再</div><div class="sub">フロア単位の一括更新と仲居呼出に対応</div></div>
   </div>
 
   <div class="topline">
@@ -255,9 +255,9 @@ canvas { display:block; max-width:100%; }
         </div>
         <div class="card-b">
           <div class="strip">
-            <div class="status-chip ip"><div class="k">点検済</div><div class="v">18</div><div class="x">販売可・チェックイン可</div></div>
-            <div class="status-chip cl"><div class="k">清掃済</div><div class="v">34</div><div class="x">清掃完了・点検待ち</div></div>
-            <div class="status-chip pu"><div class="k">再清掃前</div><div class="v">6</div><div class="x">軽い手直しが必要</div></div>
+            <div class="status-chip ip" data-guide="【点検済】掃除と係の最終チェックの両方が終わり、すぐにお客様をご案内できる状態です。この状態の部屋だけがチェックインの候補になります。"><div class="k">点検済</div><div class="v">18</div><div class="x">販売可・チェックイン可</div></div>
+            <div class="status-chip cl" data-guide="【清掃済】掃除は済んでいるが、まだ最終チェックを受けていない状態です。点検済になるまではお客様をご案内できません。"><div class="k">清掃済</div><div class="v">34</div><div class="x">清掃完了・点検待ち</div></div>
+            <div class="status-chip pu" data-guide="【再清掃前】タオルの補充など軽い手直しがもう一度必要な状態です。直してから清掃済へ進めます。"><div class="k">再清掃前</div><div class="v">6</div><div class="x">軽い手直しが必要</div></div>
             <div class="status-chip di"><div class="k">使用後</div><div class="v">12</div><div class="x">退室後・未清掃</div></div>
             <div class="status-chip os"><div class="k">一時停止</div><div class="v">3</div><div class="x">一時的に使用停止</div></div>
             <div class="status-chip oo"><div class="k">販売除外</div><div class="v">2</div><div class="x">故障等で販売対象外</div></div>
@@ -287,7 +287,7 @@ canvas { display:block; max-width:100%; }
         <div class="card-b">
           <div class="grid-legend">
             <div class="g"><b>左下</b> = フロント / 清掃の人数</div>
-            <div class="g"><b>右上</b> = 起こさないで / 清掃希望 / リネン交換 / 客室整え / 点検済</div>
+            <div class="g" data-guide="【部屋の右上の記号】お客様の希望や対応の合図です。起こさないで（休んでいるので入室を控える）、清掃希望、リネン交換（シーツ・タオルの取り替え）、客室整え（夜のお布団敷きなど）、点検済を小さな記号で示します。"><b>右上</b> = 起こさないで / 清掃希望 / リネン交換 / 客室整え / 点検済</div>
             <div class="g"><b>太字</b> = 室番</div>
           </div>
 
@@ -406,10 +406,10 @@ canvas { display:block; max-width:100%; }
 
     <div class="col-right">
       <div class="card">
-        <div class="card-h"><div class="t">客室状態の不一致</div><div class="hint">空室のはずが在室 / 在室のはずが空室 / 人数違い を件数バッジで表示</div></div>
+        <div class="card-h"><div class="t" data-guide="【客室状態の不一致】フロントの記録と清掃の記録がズレている部屋を集めた一覧です。空いているはずが人がいる、人数が合わない、などを見つけて直すための画面です。">客室状態の不一致</div><div class="hint">空室のはずが在室 / 在室のはずが空室 / 人数違い を件数バッジで表示</div></div>
         <div class="card-b">
           <div class="discrepancy">
-            <div class="disc-card">
+            <div class="disc-card" data-guide="【空室のはずが在室】フロントは空き部屋と記録しているのに、清掃の現場ではお客様がいると報告している食い違いです。二重予約などを防ぐため早めの確認が要ります。">
               <div class="k">空室のはずが在室</div>
               <div class="v">4 <span class="badge b-red">フロント=在室 / 清掃=空室</span></div>
               <div class="s">フロントの在館記録と清掃側の空室記録が食い違うケース。</div>
@@ -433,7 +433,7 @@ canvas { display:block; max-width:100%; }
         <div class="card-h"><div class="t">夜の客室整え / 仲居の担当割り</div><div class="hint">布団敷きと客室の割り当てを別管理に分離</div></div>
         <div class="card-b">
           <div class="subgrid">
-            <div class="axis-box">
+            <div class="axis-box" data-guide="【夜の客室整えの状況】夜の準備の進み具合を棒の高さで表します。左から順に、終わった部屋・これから対応が要る部屋・準備が要らない部屋の数です。">
               <div class="t">夜の客室整えの状況</div>
               <div class="m">完了 / 要対応 / 不要</div>
               <div class="bars">
@@ -451,7 +451,7 @@ canvas { display:block; max-width:100%; }
               </div>
             </div>
           </div>
-          <div class="small-list" style="margin-top:10px;">
+          <div class="small-list" style="margin-top:10px;" data-guide="【仲居の担当一覧】お客様係である仲居ごとの受け持ち部屋数と、いま手が空いているかどうかを並べています。応援が必要な人を見つけるのに使います。">
             <div class="qrow"><div class="l">仲居 #12</div><div class="r">担当 8室 / 2組入浴中</div></div>
             <div class="qrow"><div class="l">仲居 #07</div><div class="r">布団敷き 要対応 5室</div></div>
             <div class="qrow"><div class="l">仲居 #04</div><div class="r">応援待機 / 現在地の送信 有効</div></div>
@@ -460,7 +460,7 @@ canvas { display:block; max-width:100%; }
       </div>
 
       <div class="card">
-        <div class="card-h"><div class="t">チェックイン制御</div><div class="hint">点検未了の部屋は候補外</div></div>
+        <div class="card-h"><div class="t" data-guide="【チェックイン制御】お客様をお部屋にご案内できるかどうかを自動で判定する仕組みです。最終チェックの済んだ部屋だけを案内先の候補として残します。">チェックイン制御</div><div class="hint">点検未了の部屋は候補外</div></div>
         <div class="card-b">
           <div class="board-note">チェックインの可否は <b>点検済</b> を前提に判定します。清掃済や再清掃前のままでは受け付けず、部屋の割り当て候補から自動で除外します。</div>
           <div class="small-list" style="margin-top:10px;">
@@ -474,7 +474,7 @@ canvas { display:block; max-width:100%; }
       <div class="card">
         <div class="card-h"><div class="t">キー1つで更新・フロア一括操作</div><div class="hint">操作方法の説明を明示</div></div>
         <div class="card-b">
-          <div class="chart-wrap"><canvas id="statusMix"></canvas></div>
+          <div class="chart-wrap" data-guide="【状態ごとの部屋数グラフ】6つの状態それぞれに今いくつの部屋があるかを棒の高さで表します。点検済が多いほどすぐにご案内できる部屋が多い、とお考えください。"><canvas id="statusMix"></canvas></div>
         </div>
       </div>
     </div>
@@ -510,5 +510,30 @@ new Chart(ctx, {
   }
 });
 </script>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

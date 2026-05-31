@@ -503,24 +503,24 @@
   <div class="content">
 
     <!-- Alert Banner -->
-    <a href="mobile_action.html" class="alert-banner">
+    <a href="mobile_action.html" class="alert-banner" data-guide="【重大案件のお知らせ】今すぐ確認が必要な案件をまとめて表示しています。ここを押すと案件の一覧へ移動します。">
       <span>&#128308; 重大案件 2件 &mdash; 512号室クレーム / 302号室空調故障</span>
       <span class="chevron">&#8250;</span>
     </a>
 
     <!-- Quick Stats -->
     <div class="quick-stats">
-      <div class="stat-card">
+      <div class="stat-card" data-guide="【稼働率】本日、客室がどれくらい埋まっているかの割合です。下の矢印と数字は前の日と比べた増減を表します。">
         <div class="value">82%</div>
         <div class="label">稼働率</div>
         <div class="delta">&#9650; +2%</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" data-guide="【未処理】まだ対応が終わっていない案件の件数です。数字を押すと一覧で確認できます。">
         <div class="value red">7</div>
         <div class="label">未処理</div>
         <div class="delta" style="color:var(--brand);">要対応</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" data-guide="【承認待ち】支配人などの確認・許可を待っている案件の件数です。確認すると先に進みます。">
         <div class="value">3</div>
         <div class="label">承認待ち</div>
         <div class="delta" style="color:var(--amber);">確認待</div>
@@ -529,7 +529,7 @@
 
     <!-- VIP到着 -->
     <div class="section">
-      <div class="section-title">&#11088; 本日VIP到着 <span class="count">3名</span></div>
+      <div class="section-title" data-guide="【本日のお得意様の到着】今日ご到着予定の大切なお客様の一覧です。お迎えの準備やご要望の確認にお使いください。">&#11088; 本日VIP到着 <span class="count">3名</span></div>
 
       <div class="vip-card">
         <div class="header-row">
@@ -537,7 +537,7 @@
             <div class="name">T.I 様</div>
             <div class="meta"><span class="star">&#9733;</span> リピーター5回 &nbsp;|&nbsp; スイートB &nbsp;|&nbsp; 18:00到着予定</div>
           </div>
-          <span class="badge badge-upsell">アップセル候補</span>
+          <span class="badge badge-upsell" data-guide="【上のお部屋やプランをおすすめできるお客様】ご予算に余裕がありそうなお客様で、より良いお部屋や食事プランをご案内すると喜ばれる可能性が高い、という目印です。">アップセル候補</span>
         </div>
         <div class="note">好み: 高層階・朝食付き</div>
       </div>
@@ -567,9 +567,9 @@
 
     <!-- 未対応アクション -->
     <div class="section">
-      <div class="section-title">&#128203; 未対応 <span class="count">7件</span></div>
+      <div class="section-title" data-guide="【まだ対応していない案件】お客様からのお問い合わせやお部屋の不具合など、これから手を打つ必要のある案件の一覧です。赤い印ほど急ぎです。">&#128203; 未対応 <span class="count">7件</span></div>
 
-      <a href="mobile_action.html" class="action-card">
+      <a href="mobile_action.html" class="action-card" data-guide="【対応が必要な案件】押すと詳しい内容や対応の画面に進めます。赤い縦帯は急ぎの案件であることを表します。">
         <div class="color-bar red"></div>
         <div class="body">
           <div class="title-row">
@@ -578,7 +578,7 @@
           </div>
           <div class="detail">"隣室騒音で眠れず" &mdash; Expedia経由</div>
           <div class="footer">
-            <span class="deadline">期限: 11:00</span>
+            <span class="deadline" data-guide="【対応の期限】この時刻までに対応したい目安です。赤い文字は時間が迫っていることを示します。">期限: 11:00</span>
             <span>|</span>
             <span>フロント主任</span>
           </div>
@@ -674,20 +674,20 @@
 
     <!-- AI確認・推奨 -->
     <div class="section" style="margin-bottom:24px;">
-      <div class="section-title">&#10024; 確認・推奨 <span class="count">3件</span></div>
+      <div class="section-title" data-guide="【コンピューターからのおすすめ】数字や予約状況をもとに、コンピューターが気づいた点や提案をまとめています。あくまで提案で、最終的な判断は人が行います。">&#10024; 確認・推奨 <span class="count">3件</span></div>
 
       <div class="nudge-card">
         <div class="nudge-bar red"></div>
         <div class="nudge-top">
-          <span class="ai-badge">AI確認</span>
-          <span class="prio urgent">至急</span>
+          <span class="ai-badge" data-guide="【コンピューターによる提案】この内容はコンピューターが自動で作った下書きや提案です。そのまま実行はされません。中身を見て人が決めてください。">AI確認</span>
+          <span class="prio urgent" data-guide="【至急】できるだけ早く確認・対応したい案件であることを示します。">至急</span>
         </div>
         <div class="nudge-status">T.I 様の予約変更に返信案を用意しました</div>
         <div class="nudge-why">本日18:00到着のリピーター様。返信が遅れると到着前の準備に間に合いません。</div>
         <div class="nudge-rec">内容をご確認のうえ、15:00までに送信されるとよさそうです。</div>
         <div class="nudge-basis">対象: 1件 / 到着まで約2時間</div>
         <div class="nudge-btns">
-          <button class="btn-main">返信案を確認</button>
+          <button class="btn-main" data-guide="【返信の下書きを見る】コンピューターが用意したお客様への返信の下書きを開きます。内容を確かめて、直してから送れます。">返信案を確認</button>
           <button class="btn-sub">後で</button>
         </div>
       </div>
@@ -698,7 +698,7 @@
           <span class="ai-badge">AI確認</span>
           <span class="prio suggest">確認推奨</span>
         </div>
-        <div class="nudge-status">12/24-26 の料金を+12%に上げる候補があります</div>
+        <div class="nudge-status" data-guide="【料金引き上げの提案】混み合いそうな日について、宿泊料金を少し上げてはどうか、という提案です。上げ幅の数字はあくまで候補で、決めるのは人です。">12/24-26 の料金を+12%に上げる候補があります</div>
         <div class="nudge-why">周辺の予約が混み合う3日間です。今の料金のままだと売上の機会を逃す可能性があります。</div>
         <div class="nudge-rec">候補を表示します。最終確認は支配人が行ってください。</div>
         <div class="nudge-basis">対象: 12/24-26 / 現在の予約 残室わずか</div>
@@ -749,5 +749,30 @@
 
 </div><!-- /phone-frame -->
 
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

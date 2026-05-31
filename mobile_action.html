@@ -457,13 +457,13 @@
   <div class="content">
 
     <!-- Priority Banner -->
-    <div class="priority-banner">
+    <div class="priority-banner" data-guide="【優先度の帯】この対応の急ぎ具合と締め切りを示します。赤色は最優先で、右側にあと何分で期限かを表示します。">
       <span>&#128308; 高優先度 &mdash; 期限 11:00</span>
       <span class="countdown">残り 1時間18分</span>
     </div>
 
     <!-- Guest Info Card -->
-    <div class="guest-card">
+    <div class="guest-card" data-guide="【お客様情報】このお客様の部屋番号・お名前・ご予約内容をまとめた欄です。どなたへの対応かをここで確認できます。">
       <div class="room-row">
         <span class="room">Room 512</span>
         <span class="floor">別館5F</span>
@@ -472,14 +472,14 @@
         J.W 様 <span class="flag">&#127482;&#127480;</span>
       </div>
       <div class="info-grid">
-        <span class="label">経路</span>
+        <span class="label" data-guide="【経路】どの予約サイトや方法でご予約いただいたかを示します。サイト経由の場合は口コミ評価への影響に注意します。">経路</span>
         <span class="value">Expedia</span>
         <span class="label">チェックイン</span>
         <span class="value">12/15 &rarr; 12/18 (3泊)</span>
         <span class="label">料金</span>
         <span class="value">&yen;144,000</span>
       </div>
-      <span class="badge-first">初回利用</span>
+      <span class="badge-first" data-guide="【初回利用】当館を初めてご利用のお客様という印です。第一印象が大切なので、特に丁寧な対応が望まれます。">初回利用</span>
     </div>
 
     <!-- Complaint Content -->
@@ -495,7 +495,7 @@ The noise from the adjacent room (Room 510) kept me awake until 2am last night. 
 I expected better from a resort of this caliber. Please address this immediately.
 
 J.W 様</div>
-        <div class="translation-badge">&#129302; AI翻訳</div>
+        <div class="translation-badge" data-guide="【AI翻訳】上の外国語のお申し出を、コンピューターが日本語に訳したものです。内容の確認にお使いください。">&#129302; AI翻訳</div>
         <div class="translation">隣室(510号室)からの騒音で昨夜2時まで眠れませんでした。また、今朝の朝食会場は大変混雑しており、20分以上の待ち時間がありました。このクラスのリゾートとしては期待以下です。至急対応をお願いします。</div>
       </div>
     </div>
@@ -503,8 +503,8 @@ J.W 様</div>
     <!-- AI Proposal (Nudge) -->
     <div class="ai-card">
       <div class="card-header">
-        <span class="ai-tag">&#129302; AI確認</span>
-        <span class="prio">&#128308; 至急</span>
+        <span class="ai-tag" data-guide="【AIの提案】これはコンピューターによる対応案です。あくまで参考で、最終的な判断と実行は人が行います。">&#129302; AI確認</span>
+        <span class="prio" data-guide="【至急】すぐの対応が必要なことを示します。後回しにせず、まずこの件から動くのが望ましい状態です。">&#128308; 至急</span>
       </div>
       <div class="card-body">
         <!-- 1行目: 状況 -->
@@ -512,13 +512,13 @@ J.W 様</div>
         <!-- 2行目: なぜ重要か -->
         <div class="nudge-impact">初回ご利用の海外のお客様で、すでに「至急対応を」とのお声です。今日中に動かないと、口コミ評価に響くおそれがあります。</div>
         <!-- 3行目: 推奨アクション -->
-        <div class="nudge-action">&#128205; 静かな角部屋 518号室(清掃済・空室)へ、本日14:00以降のお部屋替えをご案内するとよさそうです。あわせて支配人名義のお詫びと、次回10%のご優待もご用意できます。</div>
+        <div class="nudge-action" data-guide="【おすすめの対応】AIが考えた具体的な動き方の案です。この通りに進めるか、別の対応にするかはご自身でお決めください。">&#128205; 静かな角部屋 518号室(清掃済・空室)へ、本日14:00以降のお部屋替えをご案内するとよさそうです。あわせて支配人名義のお詫びと、次回10%のご優待もご用意できます。</div>
         <!-- 補足: 根拠数値 -->
-        <div class="nudge-basis">根拠: 隣室510号室は注意連絡済 / 朝食混雑は本日チェックアウト18件が集中（明日以降は通常見込み）</div>
+        <div class="nudge-basis" data-guide="【提案の根拠】なぜこの対応をすすめるのか、その理由となる事実や数字です。提案が妥当かを確かめる材料になります。">根拠: 隣室510号室は注意連絡済 / 朝食混雑は本日チェックアウト18件が集中（明日以降は通常見込み）</div>
 
         <!-- 返信案(補助・折りたたみ) -->
         <div class="reply-section">
-          <div class="reply-label">&#128221; お詫び返信の文面案（送信前に支配人がご確認ください）</div>
+          <div class="reply-label" data-guide="【返信の文面案】お客様へのお詫び文をAIが下書きしたものです。そのまま送らず、必ず内容を確認・修正してからお使いください。">&#128221; お詫び返信の文面案（送信前に支配人がご確認ください）</div>
           <div class="reply-body">Dear J.W 様,
 
 Thank you for bringing this to our attention. I sincerely apologize for the inconvenience.
@@ -538,7 +538,7 @@ Taro Yamada, General Manager</div>
 
     <!-- Related Info -->
     <div class="related-card">
-      <div class="card-header">
+      <div class="card-header" data-guide="【関連情報】この件に関係する周辺の状況をまとめた欄です。右の印を押すと開いたり閉じたりできます。">
         <span>&#128269; 関連情報</span>
         <span class="toggle">&#9660;</span>
       </div>
@@ -562,12 +562,37 @@ Taro Yamada, General Manager</div>
 
   <!-- Fixed Bottom Action Bar -->
   <div class="bottom-action-bar">
-    <button class="btn-complete">対応完了</button>
-    <button class="btn-hold">一時保留</button>
+    <button class="btn-complete" data-guide="【対応完了】この件への対応が終わったときに押します。押すと支配人の承認済みとして本部のシステムに記録されます。">対応完了</button>
+    <button class="btn-hold" data-guide="【一時保留】今すぐ完了にできないときに押します。対応中の状態として残しておき、あとで続きから進められます。">一時保留</button>
     <div class="bottom-note">対応完了で支配人承認済みとして基幹システムに記録されます</div>
   </div>
 
 </div><!-- /phone-frame -->
 
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

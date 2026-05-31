@@ -441,25 +441,25 @@
         <div class="label">営業日</div>
         <div class="value">2026/05/30</div>
       </div>
-      <div class="badge">Face ID確定 + 監査ログ記録</div>
+      <div class="badge" data-guide="【顔認証で確定＋記録】承認を確定するときは顔認証で本人確認を行い、誰がいつどの端末で操作したかを自動で記録します。後から確認できる安心の仕組みです。">Face ID確定 + 監査ログ記録</div>
     </div>
 
     <div class="kpi-grid">
-      <div class="kpi-card">
+      <div class="kpi-card" data-guide="【本日の承認件数】今日この画面で支配人が承認した件数です。その場で判断して通した申請の数を表します。">
         <div class="value">8</div>
         <div class="label">本日承認<br>支配人即決</div>
       </div>
-      <div class="kpi-card">
+      <div class="kpi-card" data-guide="【本日の却下件数】今日見送った申請の件数です。却下のときは理由を必ず入力する決まりになっています。">
         <div class="value red">2</div>
         <div class="label">本日却下<br>却下理由入力済</div>
       </div>
-      <div class="kpi-card">
+      <div class="kpi-card" data-guide="【期限を過ぎた申請】対応の期限が過ぎてしまった申請の件数です。金額が大きいなどスマホでは決められないものは、パソコンで中身を詳しく確認します。">
         <div class="value amber">1</div>
         <div class="label">対応期限超過<br>パソコンで詳細確認</div>
       </div>
     </div>
 
-    <div class="note-banner">
+    <div class="note-banner" data-guide="【操作の使い方メモ】カードを指で右にはらうと承認、左にはらうと却下です。決められた金額の範囲内ならスマホでその場で決められ、範囲を超える申請はパソコンでの確認が必要になります。">
       <strong>操作メモ</strong><br>
       右スワイプで承認、左スワイプで却下。上限内はモバイルで即決、上限超過は <strong>パソコンで詳細確認</strong> バッジを表示。Face IDで確定し、<strong>利用者 / 日時 / 端末</strong> を監査ログに記録。
     </div>
@@ -482,7 +482,7 @@
             <span class="pill navy">モバイル即決</span>
           </div>
         </div>
-        <div class="diff-box">
+        <div class="diff-box" data-guide="【変更前と変更後の比較】申請によって金額がどう変わるかを並べて表示します。左が今の値、右が変更後の値、右端が増減です。">
           <div class="label">変更前 → 変更後</div>
           <div class="row">
             <span class="before">客室単価 ¥42,000 → ¥36,000</span>
@@ -494,7 +494,7 @@
           <span class="gesture-chip">左スワイプ = 却下</span>
           <span class="gesture-chip">Face IDで確定</span>
         </div>
-        <div class="audit-box">
+        <div class="audit-box" data-guide="【操作の記録（監査ログ）】誰が、いつ、どの端末で承認・却下したかを自動で記録した控えです。後から見返して確認できるため、不正やミスの防止に役立ちます。">
           <div class="label">監査ログ</div>
           <div class="row"><strong>利用者:</strong> 支配人ID 0152 / <strong>日時:</strong> 2026/05/30 15:42 / <strong>端末:</strong> 10.18.4.21</div>
         </div>
@@ -523,7 +523,7 @@
           </div>
         </div>
         <div class="button-row">
-          <button class="btn primary">Face IDで承認</button>
+          <button class="btn primary" data-guide="【顔認証で承認します】押すと顔認証で本人確認をしてから承認が確定します。誰がいつ承認したかも記録されます。">Face IDで承認</button>
           <button class="btn secondary">却下理由</button>
         </div>
         <div class="audit-box">
@@ -543,8 +543,8 @@
             <div class="meta">対象: 予約 #HK-250530-027 / 会計10439<br>申請者: 客室主任 田中<br>理由: 和室からツインへ変更、眺望差額調整</div>
           </div>
           <div class="badge-row">
-            <span class="pill amber">上限超</span>
-            <span class="pill navy">パソコンで詳細確認</span>
+            <span class="pill amber" data-guide="【金額の範囲を超えています】支配人がその場で決めてよい金額を超えている申請です。慎重な確認が必要、という注意の印です。">上限超</span>
+            <span class="pill navy" data-guide="【パソコンで確認が必要】金額が大きいなどの理由で、スマホでは決めずパソコンの画面で中身を詳しく見て判断します。">パソコンで詳細確認</span>
           </div>
         </div>
         <div class="diff-box">
@@ -586,7 +586,7 @@
             <span class="delta">+¥21,600</span>
           </div>
         </div>
-        <div class="modal">
+        <div class="modal" data-guide="【却下するときの理由選び】左にはらって却下するときに、見送る理由を選ぶ画面です。理由は必ず選ぶ決まりで、選んだ内容は記録として残ります。">
           <div class="title">左スワイプ時の却下理由モーダル</div>
           <div class="body">証憑不足 / 金額根拠不足 / 締め後のため会計確認要 / 代替案提示済 を選択。却下時は理由を必須化し、監査ログへ残す。</div>
         </div>
@@ -607,7 +607,7 @@
             <span class="pill navy">モバイル即決</span>
           </div>
         </div>
-        <div class="example-box">
+        <div class="example-box" data-guide="【お客様の声と自動翻訳の案】外国語で寄せられたお客様の声と、それを日本語に自動で訳した返信案を並べて表示します。AIが作った下書きなので、最終的な確認と判断は人が行います。">
           <div class="small">原文 + AI訳</div>
           <div class="text"><span class="lang">英語:</span>"The room was too noisy at night."<br><span class="lang">AI訳:</span>「夜間の騒音によりご不便をおかけしました。」</div>
           <div class="text" style="margin-top:6px;"><span class="lang">中文:</span>"房间晚上太吵了。"<br><span class="lang">AI訳:</span>「客室の夜間騒音でご迷惑をおかけしました。」</div>
@@ -625,7 +625,7 @@
           <div class="left">
             <div class="type-row">
               <div class="icon">📈</div>
-              <div class="type">AI料金変更</div>
+              <div class="type" data-guide="【AIによる料金変更の提案】予約の入り具合などをAIが見て、料金の見直しを自動で提案したものです。提案であり、通すかどうかは人が判断します。">AI料金変更</div>
               <div class="amount">+¥4,200</div>
             </div>
             <div class="meta">対象: 予約 #HK-250530-045 / 会計10488<br>申請者: 料金管理担当<br>理由: 需要上振れに伴う自動提案</div>
@@ -659,7 +659,7 @@
       <span class="icon">&#128260;</span>
       <span class="label-text">アクション</span>
     </a>
-    <a class="nav-tab active" href="mobile_approvals.html">
+    <a class="nav-tab active" href="mobile_approvals.html" data-guide="【承認の画面】いま開いている画面です。値引きや返金などスタッフから上がってきた申請を、支配人がまとめて承認・却下できます。">
       <span class="icon">&#9989;</span>
       <span class="label-text">承認</span>
     </a>
@@ -674,5 +674,30 @@
   </div>
 </div><!-- /phone-frame -->
 
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

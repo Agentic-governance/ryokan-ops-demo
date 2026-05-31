@@ -508,7 +508,7 @@
       </div>
     </div>
 
-    <div class="sync-banner">
+    <div class="sync-banner" data-guide="【未送信のお知らせ】客室の階は電波が弱いことが多いため、記録した内容は一度端末にためておきます。電波が戻ると自動で送られ、右の数字が未送信の件数です。">
       <div class="left">
         <div class="title">オフライン時の未送信件数</div>
         <div class="desc">客室階の電波が弱い前提で、未送信の更新を端末内にためておき、電波が戻ったら自動送信します。</div>
@@ -519,10 +519,10 @@
     <div class="counters" aria-label="状態別の件数">
       <div class="counter ip"><div class="num">6</div><div class="label">清掃中</div></div>
       <div class="counter cl"><div class="num">14</div><div class="label">清掃済</div></div>
-      <div class="counter pu"><div class="num">5</div><div class="label">片付け待ち</div></div>
-      <div class="counter di"><div class="num">3</div><div class="label">不一致</div></div>
-      <div class="counter os"><div class="num">1</div><div class="label">販売停止</div></div>
-      <div class="counter oo"><div class="num">1</div><div class="label">故障停止</div></div>
+      <div class="counter pu" data-guide="【片付け待ち】お客様がお発ちになり、これから清掃に入る部屋の数です。早めに手をつけたい部屋です。"><div class="num">5</div><div class="label">片付け待ち</div></div>
+      <div class="counter di" data-guide="【不一致】実際の部屋の様子と、システム上の表示が食い違っている部屋の数です。例えば空室のはずなのにお客様がいる、など。確認が必要な部屋です。"><div class="num">3</div><div class="label">不一致</div></div>
+      <div class="counter os" data-guide="【販売停止】設備の手入れなどで、今は新しいお客様を受け入れない部屋の数です。予約の対象から外れています。"><div class="num">1</div><div class="label">販売停止</div></div>
+      <div class="counter oo" data-guide="【故障停止】設備の不具合で使えない部屋の数です。直るまで予約も清掃の割り当てもされません。"><div class="num">1</div><div class="label">故障停止</div></div>
     </div>
 
     <div class="section">
@@ -540,7 +540,7 @@
           <div class="chips">
             <span class="chip cl">清掃済</span>
             <span class="chip vacant">空室</span>
-            <span class="chip assigned">担当: 仲居A</span>
+            <span class="chip assigned" data-guide="【担当】この部屋の清掃を受け持つ仲居さんを表します。">担当: 仲居A</span>
           </div>
         </div>
         <div class="middle">
@@ -555,10 +555,10 @@
         <div class="micro-icons">
           <div class="micro-icon makeup on"><span class="ico">🧼</span>清掃</div>
           <div class="micro-icon linen on"><span class="ico">🛏️</span>リネン交換</div>
-          <div class="micro-icon turndown"><span class="ico">🌙</span>夜の客室整え</div>
+          <div class="micro-icon turndown" data-guide="【夜の客室整え】夕食後にお布団を敷くなど、夜の準備をする作業です。お客様がくつろげるよう室内を整えます。"><span class="ico">🌙</span>夜の客室整え</div>
         </div>
         <div class="gestures">
-          <div class="gesture"><strong>スワイプ</strong> <span class="inline">清掃開始</span> で清掃を始めます。右→左に払うと作業開始を即記録します。</div>
+          <div class="gesture" data-guide="【右から左になぞる操作】部屋の上で指を右から左へ払うと、清掃の開始がその場で記録されます。ボタンを探さずに始められます。"><strong>スワイプ</strong> <span class="inline">清掃開始</span> で清掃を始めます。右→左に払うと作業開始を即記録します。</div>
           <div class="gesture"><strong>1タップ</strong> 客室状態の不一致は <span class="inline">客在・清掃未済</span> / <span class="inline">空室・清掃済</span> をその場で登録。</div>
         </div>
       </div>
@@ -571,7 +571,7 @@
           </div>
           <div class="chips">
             <span class="chip pu">片付け待ち</span>
-            <span class="chip occupied">客在</span>
+            <span class="chip occupied" data-guide="【客在(きゃくざい)】お客様が今この部屋にお泊まりの状態です。出入りや休憩中の配慮が必要です。">客在</span>
             <span class="chip assigned">担当: 仲居C</span>
           </div>
         </div>
@@ -585,7 +585,7 @@
           </div>
         </div>
         <div class="micro-icons">
-          <div class="micro-icon note"><span class="ico">⚑</span> 起こさないで</div>
+          <div class="micro-icon note" data-guide="【起こさないで】お客様が休まれているので、声かけやノックを控えてほしいという目印です。清掃は後回しにします。"><span class="ico">⚑</span> 起こさないで</div>
           <div class="micro-icon makeup"><span class="ico">🧴</span>清掃</div>
           <div class="micro-icon turndown on"><span class="ico">🌙</span>夜の客室整え</div>
         </div>
@@ -650,7 +650,7 @@
         </div>
         <div class="micro-icons">
           <div class="micro-icon note"><span class="ico">⚠</span> 起こさないで</div>
-          <div class="micro-icon note"><span class="ico">🧾</span> 申し送り</div>
+          <div class="micro-icon note" data-guide="【申し送り(もうしおくり)】次の担当者に伝えておきたい引き継ぎ事項がある目印です。タップすると内容を確認できます。"><span class="ico">🧾</span> 申し送り</div>
           <div class="micro-icon turndown"><span class="ico">🌙</span>夜の客室整え</div>
         </div>
         <div class="gestures">
@@ -663,7 +663,7 @@
     </div>
   </div>
 
-  <a class="fab" href="#" aria-label="QRスキャン">⌁</a>
+  <a class="fab" href="#" aria-label="QRスキャン" data-guide="【読み取りボタン】部屋の扉などにある読み取り用の印を、端末のカメラでかざして読み取ります。番号を打たずに部屋を呼び出せます。">⌁</a>
 
   <div class="bottom-nav">
     <a class="nav-tab" href="#">
@@ -674,15 +674,40 @@
       <div class="icon">🏨</div>
       <div class="label-text">室の状態</div>
     </a>
-    <a class="nav-tab" href="#">
+    <a class="nav-tab" href="#" data-guide="【応援(おうえん)】手が足りないとき、他の係に手伝いを呼ぶ画面です。部屋番号は自動で添えられるので、すぐに来てもらえます。">
       <div class="icon">📣</div>
       <div class="label-text">応援</div>
     </a>
-    <a class="nav-tab" href="#">
+    <a class="nav-tab" href="#" data-guide="【引継ぎ(ひきつぎ)】次の時間帯の担当者へ伝える内容をまとめる画面です。途中の作業や注意点を漏れなく渡せます。">
       <div class="icon">↩</div>
       <div class="label-text">引継ぎ</div>
     </a>
   </div>
 </div>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

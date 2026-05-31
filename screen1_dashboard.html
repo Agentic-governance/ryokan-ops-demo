@@ -197,17 +197,17 @@ tr.data-row{cursor:pointer;}
 
   <!-- KPI Strip - 6 cards -->
   <div class="kpi-strip">
-    <div class="kpi-card">
+    <div class="kpi-card" data-guide="【稼働率（今夜）】今夜お泊まりになる予定の部屋が、全体の何割埋まっているかを示します。下の数字は目標と比べてどれだけ上回ったかです。">
       <div class="kpi-label">稼働率 (今夜)</div>
       <div class="kpi-value" style="color:var(--navy);">82<span class="unit">%</span></div>
       <div class="kpi-delta up">▲ +2% (目標比)</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" data-guide="【1室あたり売上】空いている部屋も含めて、部屋1つあたり平均いくら売り上げているかを示します。空室が多いと下がり、高い料金で多く埋まると上がります。">
       <div class="kpi-label">1室あたり売上</div>
       <div class="kpi-value" style="color:var(--green);">¥23,288</div>
       <div class="kpi-delta up">▲ +6.2% 前週比</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" data-guide="【平均客室単価】実際にお泊まりいただいた部屋1泊あたりの平均料金です。割引や高単価プランの影響で上下します。">
       <div class="kpi-label">平均客室単価</div>
       <div class="kpi-value" style="color:var(--navy);">¥28,400</div>
       <div class="kpi-delta up">▲ +¥1,200 前月比</div>
@@ -217,12 +217,12 @@ tr.data-row{cursor:pointer;}
       <div class="kpi-value" style="color:var(--navy);">23<span class="unit">件</span></div>
       <div class="kpi-delta up">▲ +3 前日比</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" data-guide="【予約サイト一元管理の同期率】各ネット予約サイトと当館の在庫・料金が、どれだけ正しく一致しているかを示します。高いほど二重予約や売り違いの心配が少ない状態です。">
       <div class="kpi-label">予約サイト一元管理 同期率</div>
       <div class="kpi-value" style="color:var(--green);">98.2<span class="unit">%</span></div>
       <div class="kpi-delta down-good">▲ +0.4% 前日比</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" data-guide="【未対応のAIからの提案】AIがお知らせした提案のうち、まだ確認・対応が済んでいない件数です。件数が多いときは右側の提案一覧から順に見ていくと安心です。">
       <div class="kpi-label">未対応AIアクション</div>
       <div class="kpi-value" style="color:var(--brand);">8<span class="unit">件</span></div>
       <div class="kpi-delta" style="color:var(--amber);">⚠ 要対応</div>
@@ -241,7 +241,7 @@ tr.data-row{cursor:pointer;}
             <span class="chart-tab">30日間</span>
           </div>
         </div>
-        <div class="card-body" style="padding:12px 16px;">
+        <div class="card-body" style="padding:12px 16px;" data-guide="【予約数推移のグラフ】日ごとの新規予約とキャンセルの動きを表します。赤い線が新しい予約、灰色の棒がキャンセル、紺色の線が差し引きの増減です。上の切り替えで7日間と30日間を選べます。">
           <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
         </div>
       </div>
@@ -251,22 +251,22 @@ tr.data-row{cursor:pointer;}
     <div class="col-35">
       <div class="card">
         <div class="card-head">
-          <h3>🤖 AI優先アクション</h3>
+          <h3 data-guide="【AIからの優先提案】AIが今いちばん気にかけてほしいことを、優先順位の高い順に並べてお知らせします。あくまで提案で、最終的な判断は支配人や現場の方が行います。">🤖 AI優先アクション</h3>
           <span class="badge" style="background:var(--brand-lite);color:var(--brand-dark);">8件</span>
         </div>
         <div class="card-body" style="padding:10px;">
           <div class="ai-actions">
 
             <!-- Nudge 1: 至急（当日対応・赤帯） -->
-            <div class="nudge urgent">
+            <div class="nudge urgent" data-guide="【至急の提案】今日のうちに手を打たないと、お客様の不満や売上の損失につながる可能性が高い項目です。下の根拠と提案を確認のうえ、対応するかどうかをご判断ください。">
               <div class="nudge-top">
-                <span class="nudge-aibadge">🤖 AI確認</span>
+                <span class="nudge-aibadge" data-guide="【AIが確認しました】この内容はAIが各種データから見つけて作成した提案です。実行する前に内容をご確認ください。">🤖 AI確認</span>
                 <span class="nudge-prio urgent">至急</span>
               </div>
               <div class="nudge-msg">別館302の空調を、今夜分の販売から外しましょう。</div>
               <div class="nudge-why">センサーが異音を検知しています。このままご案内すると、ご滞在中の不具合とクレームにつながります。</div>
               <div class="nudge-rec">12時までに販売を止め、保全担当へ点検を依頼すると安心です。今夜の該当予約2件は別室へのご移動を提案できます。</div>
-              <div class="nudge-basis">根拠: 同型機の故障パターン3件と一致 / 週末の見込み損失 約¥96,000</div>
+              <div class="nudge-basis" data-guide="【根拠】AIがこの提案をした理由と、放っておいた場合に見込まれる損失の目安です。判断材料としてご確認ください。">根拠: 同型機の故障パターン3件と一致 / 週末の見込み損失 約¥96,000</div>
               <div class="nudge-btns">
                 <a href="screen6_maintenance.html" class="nudge-btn primary">対象予約を見る</a>
                 <span class="nudge-btn secondary">後で</span>
@@ -290,7 +290,7 @@ tr.data-row{cursor:pointer;}
             </div>
 
             <!-- Nudge 3: 改善提案（青帯） -->
-            <div class="nudge suggest">
+            <div class="nudge suggest" data-guide="【確認をおすすめする提案】急ぎではありませんが、検討すると増収などのメリットが見込める項目です。たとえば料金の見直し候補などが含まれます。最終決定は支配人が行ってください。">
               <div class="nudge-top">
                 <span class="nudge-aibadge">🤖 AI確認</span>
                 <span class="nudge-prio suggest">確認推奨</span>
@@ -363,7 +363,7 @@ tr.data-row{cursor:pointer;}
       <div style="display:flex;gap:12px;height:100%;">
         <!-- Donut -->
         <div class="card" style="flex:1;">
-          <div class="card-head"><h3>予約ステータス</h3></div>
+          <div class="card-head"><h3 data-guide="【予約ステータスの内訳】今の予約が、料金まで確定したもの・仮に押さえているだけのもの・キャンセル待ちの3種類に、どんな割合で分かれているかを示す円グラフです。">予約ステータス</h3></div>
           <div class="card-body" style="padding:10px 14px;">
             <div style="display:flex;align-items:center;gap:12px;">
               <div class="chart-wrap donut"><canvas id="donutChart"></canvas></div>
@@ -377,7 +377,7 @@ tr.data-row{cursor:pointer;}
         </div>
         <!-- Channel -->
         <div class="card" style="flex:1;">
-          <div class="card-head"><h3>チャネル別</h3></div>
+          <div class="card-head"><h3 data-guide="【予約の入り口別の割合】予約がどこから入ったかを示します。自社ホームページ・各ネット予約サイトごとの比率がひと目で分かり、どの経路が多いか把握できます。">チャネル別</h3></div>
           <div class="card-body" style="padding:8px 14px;"><div class="chart-wrap channel"><canvas id="channelChart"></canvas></div></div>
         </div>
       </div>
@@ -387,14 +387,14 @@ tr.data-row{cursor:pointer;}
   <!-- OTA/PMS Health -->
   <div class="card" style="margin-bottom:20px;">
     <div class="card-head">
-      <h3>連携の状態 — 基幹システム ⇄ 予約サイト一元管理 ⇄ ネット予約サイト</h3>
+      <h3 data-guide="【連携の状態】当館の宿泊管理システムと、各ネット予約サイトの間で、空室や料金の情報がきちんとやり取りできているかを示します。緑は正常、黄色は反映待ちや差分あり、赤は要確認の状態です。">連携の状態 — 基幹システム ⇄ 予約サイト一元管理 ⇄ ネット予約サイト</h3>
       <span style="font-size:11px;color:var(--text-mute);">反映の間隔 30秒〜数分 / 順次反映 &nbsp;<a href="screen_connectivity.html" style="color:var(--brand);font-weight:600;">連携詳細→</a></span>
     </div>
     <!-- topology line: OTAは必ずサイトコントローラー経由(直結しない) -->
     <div style="display:flex;align-items:center;gap:8px;padding:10px 14px 2px;font-size:11px;flex-wrap:wrap;">
       <span style="font-weight:700;color:var(--navy);background:var(--navy-lite);padding:4px 10px;border-radius:5px;">基幹システム (宿泊管理)</span>
       <span style="color:var(--text-mute);">⇄ 双方向 ⇄</span>
-      <span style="font-weight:700;color:var(--brand);background:var(--brand-soft);padding:4px 10px;border-radius:5px;">予約サイト一元管理 (手間いらず)</span>
+      <span style="font-weight:700;color:var(--brand);background:var(--brand-soft);padding:4px 10px;border-radius:5px;" data-guide="【予約サイト一元管理】複数のネット予約サイトの空室・料金・予約を、ひとつの画面でまとめて管理する仕組みです。1か所直せば各サイトへ自動で反映されるため、手入力の手間と入力ミスを減らせます。">予約サイト一元管理 (手間いらず)</span>
       <span style="color:var(--text-mute);">— 空室・料金の反映 / 予約データ →</span>
       <span style="color:var(--text-sub);">Booking.com · 楽天トラベル · じゃらんnet · 一休.com · 公式直予約</span>
     </div>
@@ -412,7 +412,7 @@ tr.data-row{cursor:pointer;}
   <div class="card">
     <div class="action-header">
       <div class="action-title">
-        <strong>本日のアクション</strong> — 要対応 <span class="count">12 件</span> / 完了 7 件 (累計 19 件)
+        <strong data-guide="【本日のアクション一覧】今日対応すべき問い合わせ・変更・アラートなどを時刻順に並べた一覧です。要対応は未着手の件数、完了は処理済みの件数を表します。各行をクリックすると詳細を確認できます。">本日のアクション</strong> — 要対応 <span class="count">12 件</span> / 完了 7 件 (累計 19 件)
       </div>
       <div class="action-filters">
         <span class="filter-tab active">全て</span>
@@ -429,7 +429,7 @@ tr.data-row{cursor:pointer;}
           <th>詳細</th>
           <th style="width:45px;">言語</th>
           <th style="width:65px;">関連</th>
-          <th style="width:70px;">影響額</th>
+          <th style="width:70px;" data-guide="【影響額】その対応をした場合・しなかった場合に、売上にどのくらい影響しそうかの目安額です。プラスは増収の見込み、マイナスは損失の見込みを表します。">影響額</th>
           <th style="width:65px;">ステータス</th>
           <th style="width:45px;"></th>
         </tr>
@@ -442,7 +442,7 @@ tr.data-row{cursor:pointer;}
         <tr class="data-row"><td>10:12</td><td><span class="badge b-mail">🌐 中国語メール</span></td><td><strong>W.J 様</strong> — "接送服务咨询" 東京駅からの送迎+高齢者同伴</td><td>🌐 中国語</td><td>和室特別</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
         <tr class="data-row"><td>10:30</td><td><span class="badge b-mail">🌐 韓国語メール</span></td><td><strong>K.M 様</strong> — "온천 이용 문의" タトゥー温泉利用+家族風呂予約</td><td>🌐 韓国語</td><td>ツインB</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
         <tr class="data-row"><td>10:45</td><td><span class="badge" style="background:var(--purple-lite);color:var(--purple);">👥 団体調整</span></td><td><strong>青葉商事 研修旅行</strong> 38名/14室 — 未確定: 3名到着時間、飲み放題有無</td><td>🇯🇵 日本語</td><td>本館2F</td><td style="font-weight:600;color:var(--green);">+¥684,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen3_reservations.html">詳細→</a></td></tr>
-        <tr class="data-row"><td>10:55</td><td><span class="badge b-maint">🔧 保全アラート</span></td><td>別館302 エアコン異音 (センサー検知) — 同型機3件故障パターン一致</td><td>—</td><td>別館302</td><td style="font-weight:600;color:var(--brand);">-¥96,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen6_maintenance.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>10:55</td><td data-guide="【保全アラート（予兆保全）】設備が壊れる前に、センサーが捉えた異常の兆しからAIが故障の予兆を知らせる仕組みです。止まる前に点検でき、急な使用中止やお客様への迷惑を防げます。"><span class="badge b-maint">🔧 保全アラート</span></td><td>別館302 エアコン異音 (センサー検知) — 同型機3件故障パターン一致</td><td>—</td><td>別館302</td><td style="font-weight:600;color:var(--brand);">-¥96,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen6_maintenance.html">詳細→</a></td></tr>
         <tr class="data-row"><td>11:10</td><td><span class="badge b-ota">🟪 予約サイト自動</span></td><td>Booking.com 自動メッセージ — 到着時間確認リクエスト (3件未回答)</td><td>—</td><td>—</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen3_reservations.html">詳細→</a></td></tr>
         <tr class="data-row"><td>11:32</td><td><span class="badge b-ai">💰 AI価格提案</span></td><td>12/24-26 +12%値上げ提案 — 紅葉ライトアップ需要+32%上昇中</td><td>—</td><td>全棟</td><td style="font-weight:600;color:var(--green);">+¥420,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen7_marketing.html">詳細→</a></td></tr>
         <tr class="data-row"><td>11:45</td><td><span class="badge b-hold">⏰ 仮押さえ期限</span></td><td>T.K 様 — 18:00 までに本予約確定要</td><td>🇯🇵 日本語</td><td>スイートA</td><td style="font-weight:600;">¥56,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
@@ -484,5 +484,30 @@ new Chart(document.getElementById('channelChart').getContext('2d'), {
 });
 </script>
 
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

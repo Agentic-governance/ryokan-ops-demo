@@ -112,8 +112,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Go
 <div class="zone zone-client">
   <span class="ztag">① クライアント</span>
   <div class="row center" style="gap:18px;">
-    <div class="node" style="flex:0 0 320px;"><div class="nt">🖥️ パソコン画面</div><div class="nd">フロント/予約/会計/レポート/承認待ち一覧(支配人)</div></div>
-    <div class="node" style="flex:0 0 320px;"><div class="nt">📱 スマホ画面 (現場)</div><div class="nd">客室係/仲居/フロント/支配人 — 役割別ホーム・承認・QRコード</div></div>
+    <div class="node" style="flex:0 0 320px;" data-guide="【パソコン画面】フロントや事務所で使う画面です。予約や会計、レポートのほか、支配人が承認を待っている案件の一覧もここで確認できます。"><div class="nt">🖥️ パソコン画面</div><div class="nd">フロント/予約/会計/レポート/承認待ち一覧(支配人)</div></div>
+    <div class="node" style="flex:0 0 320px;" data-guide="【スマホ画面（現場）】客室係や仲居、フロントなどが手元のスマホで使う画面です。担当する役割ごとにホーム画面が変わり、その場で承認やQRコードの読み取りができます。"><div class="nt">📱 スマホ画面 (現場)</div><div class="nd">客室係/仲居/フロント/支配人 — 役割別ホーム・承認・QRコード</div></div>
   </div>
 </div>
 
@@ -122,7 +122,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Go
 <!-- ZONE 2: Control plane -->
 <div class="zone zone-control">
   <span class="ztag">② 自社の統制基盤</span>
-  <span class="region-flag">🇯🇵 日本拠点に固定 (承認/監査記録/業務データベース/名簿/機密情報の保管庫)</span>
+  <span class="region-flag" data-guide="【日本拠点に固定】お客様の名簿や承認の記録など大切なデータは、海外ではなく日本国内の場所に置いて保管していることを示します。個人情報を国内で守る方針です。">🇯🇵 日本拠点に固定 (承認/監査記録/業務データベース/名簿/機密情報の保管庫)</span>
 
   <div class="row" style="gap:14px;align-items:stretch;">
     <!-- main column -->
@@ -136,7 +136,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Go
       <div class="connect"><span class="a arrow-navy">↓</span></div>
 
       <!-- Agent -->
-      <div class="node node-agent">
+      <div class="node node-agent" data-guide="【AIが行う提案】AIは空室や予約などのデータを読み取って、おすすめの対応案を作ります。あくまで提案であり、データを書き換える力は持ちません。最終的な判断と実行は必ず人が行います。">
         <div class="nt">🤖 AI(自律的に動く) <span class="pill pill-host">Anthropic側で稼働</span></div>
         <div class="nd">空室/予約/在庫/申し送りを読み、変更点の説明・部門間調整・<b>提案</b>を生成。会話の記憶・要約を内蔵。<b>書き込みの機能は持たない</b> — 提案だけを行う。</div>
       </div>
@@ -145,7 +145,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Go
         <!-- read path -->
         <div style="flex:1;">
           <div class="connect"><span class="lbl read">読み取り機能 <span class="auto-chip">自律</span></span><span class="a arrow-green">↓↑</span></div>
-          <div class="node node-read"><div class="nt" style="font-size:12px;">📖 読み取り用の連携窓口 <span class="pill pill-self">自社の標準接続</span></div>
+          <div class="node node-read" data-guide="【読み取り用の窓口】AIが各システムのデータを見るための入り口です。空室や予約、料金などの情報をここを通して読み取ります。書き換えはできません。"><div class="nt" style="font-size:12px;">📖 読み取り用の連携窓口 <span class="pill pill-self">自社の標準接続</span></div>
             <div class="mcp-grid" style="margin-top:8px;grid-template-columns:repeat(2,1fr);">
               <div style="font-size:10px;background:var(--surface);border-radius:5px;padding:5px 7px;"><b>基幹システム読み取り</b><br>空室/予約/部屋割/会計</div>
               <div style="font-size:10px;background:var(--surface);border-radius:5px;padding:5px 7px;"><b>予約サイト一元管理 読み取り</b><br>ネット予約サイトの在庫/料金/売止/予約通知</div>
@@ -157,13 +157,13 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Go
         <!-- write/proposal path -->
         <div style="flex:1;">
           <div class="connect"><span class="lbl prop">提案機能 <span class="gate-chip">承認へ</span></span><span class="a" style="color:var(--purple);">↓</span></div>
-          <div class="node node-approval">
+          <div class="node node-approval" data-guide="【承認の仕組みと権限ルール】AIの提案を実行してよいか判定する関所です。誰が承認できるか、金額の上限を超えていないか、自分の提案を自分で承認していないかなどを自動で確認し、問題なければ担当者に承認をお願いします。">
             <div class="nt" style="font-size:12px;">🛡️ 承認の仕組み + 権限ルール判定</div>
             <div class="nd">提案+根拠+変更前後の差分+対象データ+二重実行を防ぐ識別子+ルールの版を保存。<b>権限/金額の上限/自己承認の禁止/二重承認/時間外</b>を判定。</div>
-            <div style="font-size:9.5px;color:var(--text-sub);margin-top:5px;">→ 🔔 通知 → 支配人/フロント責任者/経理 → 🧑‍💼 <b>承認者の画面</b>(承認/却下+理由)</div>
+            <div style="font-size:9.5px;color:var(--text-sub);margin-top:5px;" data-guide="【承認者の画面】支配人やフロント責任者、経理などに通知が届き、提案の内容を見て承認するか却下するかを理由を添えて選びます。ここで承認されて初めて実行に進みます。">→ 🔔 通知 → 支配人/フロント責任者/経理 → 🧑‍💼 <b>承認者の画面</b>(承認/却下+理由)</div>
           </div>
           <div class="connect"><span class="lbl write">承認時のみ / 署名付きの承認証 + 二重実行防止の識別子</span><span class="a arrow-red">↓</span></div>
-          <div class="node node-write"><div class="nt" style="font-size:12px;">⚙️ 書き込み実行 → 書き込み用の連携窓口 <span class="pill pill-self">自社の標準接続 · 相互認証</span></div>
+          <div class="node node-write" data-guide="【書き込みの実行】予約の更新や返金、料金や在庫の変更など、実際にデータを書き換える作業を行う部分です。人の承認がない提案は受け付けず、実行する直前にもう一度最新の内容を読み直して、食い違いがあれば取りやめます。"><div class="nt" style="font-size:12px;">⚙️ 書き込み実行 → 書き込み用の連携窓口 <span class="pill pill-self">自社の標準接続 · 相互認証</span></div>
             <div style="font-size:10px;color:var(--text-sub);margin-top:5px;line-height:1.5;"><b>基幹システム書き込み</b>(予約更新/返金/取り消し/顧客更新) ・ <b>予約サイト一元管理 書き込み</b>(料金/在庫/売止)。承認証が無ければ拒否(承認が必要)。実行直前に読み直し→内容が食い違えば無効化。</div>
           </div>
         </div>
@@ -172,10 +172,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Go
 
     <!-- side stores -->
     <div class="side-col">
-      <div class="node node-store"><div class="nt" style="font-size:12px;">🗄️ 業務データベース / 宿泊者名簿</div><div class="nd">個人情報の元データ(氏名/住所/国籍/旅券・保存3年)。日本拠点。</div></div>
-      <div class="pii-line">🔒 個人情報の境界 — AIには宿泊客の識別番号 / 予約番号 / 制約 のみ渡す。旅券画像・決済・住所は連携窓口・保管庫の中で処理し要約だけ返す。</div>
-      <div class="node node-store"><div class="nt" style="font-size:12px;">📜 監査記録の保管</div><div class="nd">会話ID/提案/承認/送受信内容の照合値/実行者/時刻/再送。書き換え不可・改ざん検知。</div></div>
-      <div class="node node-store"><div class="nt" style="font-size:12px;">🔑 機密情報の保管庫</div><div class="nd">基幹システムの接続鍵+認証 / 予約サイト一元管理の認証情報。連携窓口・書き込み実行のみ参照。</div></div>
+      <div class="node node-store" data-guide="【宿泊者名簿】お客様の氏名や住所、国籍、旅券番号などの個人情報を保管する元の台帳です。法令にもとづき3年間保存し、日本国内で管理します。"><div class="nt" style="font-size:12px;">🗄️ 業務データベース / 宿泊者名簿</div><div class="nd">個人情報の元データ(氏名/住所/国籍/旅券・保存3年)。日本拠点。</div></div>
+      <div class="pii-line" data-guide="【個人情報の境界】お客様の氏名や旅券画像、決済情報などはAIに直接渡さない仕組みです。AIには予約番号や条件だけを伝え、機微な情報は施設内で処理して要約だけを返します。情報漏れを防ぐ壁の役割です。">🔒 個人情報の境界 — AIには宿泊客の識別番号 / 予約番号 / 制約 のみ渡す。旅券画像・決済・住所は連携窓口・保管庫の中で処理し要約だけ返す。</div>
+      <div class="node node-store" data-guide="【監査記録の保管】いつ誰がどんな提案をして、誰が承認し実行したかをすべて記録しておく台帳です。後から書き換えられず、改ざんがあれば検知できるため、トラブル時の確認に役立ちます。"><div class="nt" style="font-size:12px;">📜 監査記録の保管</div><div class="nd">会話ID/提案/承認/送受信内容の照合値/実行者/時刻/再送。書き換え不可・改ざん検知。</div></div>
+      <div class="node node-store" data-guide="【機密情報の保管庫】各システムに接続するためのパスワードや鍵を厳重にしまっておく金庫のような場所です。決められた窓口だけが取り出せるようにして、外部に漏れないよう守ります。"><div class="nt" style="font-size:12px;">🔑 機密情報の保管庫</div><div class="nd">基幹システムの接続鍵+認証 / 予約サイト一元管理の認証情報。連携窓口・書き込み実行のみ参照。</div></div>
       <div class="node node-store"><div class="nt" style="font-size:12px;">🔁 データ受け渡しの仕組み</div><div class="nd">取り込みの正規化・重複排除・再送・処理失敗データの退避 → 業務閲覧用データへ反映。</div></div>
     </div>
   </div>
@@ -187,8 +187,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Go
 <div class="zone zone-ext">
   <span class="ztag">③ 外部システム</span>
   <div class="row" style="gap:14px;">
-    <div class="node" style="flex:1;border-top:3px solid var(--navy);"><div class="nt">🏨 Oracle OPERA 基幹システム <span class="pill pill-ext">元データ</span></div><div class="nd">公式の連携(都度・順次・業務イベントの配信)。予約・会計・顧客・部屋の元データ。</div></div>
-    <div class="node" style="flex:1;border-top:3px solid var(--brand);"><div class="nt">🔀 予約サイト一元管理 <span class="pill pill-ext">配信</span></div><div class="nd">手間いらず / TLリンカーン。空室・料金・在庫を各ネット予約サイトへ配信・予約データ取り込み。一方向/双方向。</div></div>
+    <div class="node" style="flex:1;border-top:3px solid var(--navy);" data-guide="【基幹システム（元データ）】予約・会計・お客様・部屋割りなど旅館運営の中心となるデータを管理する仕組みです。ここにある情報が正としての元データになり、ほかの仕組みはこれを参照します。"><div class="nt">🏨 Oracle OPERA 基幹システム <span class="pill pill-ext">元データ</span></div><div class="nd">公式の連携(都度・順次・業務イベントの配信)。予約・会計・顧客・部屋の元データ。</div></div>
+    <div class="node" style="flex:1;border-top:3px solid var(--brand);" data-guide="【予約サイト一元管理】楽天トラベルやじゃらんなど複数のネット予約サイトの空室や料金、在庫をまとめて一括で更新できる仕組みです。各サイトを個別に手入力する手間を省き、予約の取り込みも自動化します。"><div class="nt">🔀 予約サイト一元管理 <span class="pill pill-ext">配信</span></div><div class="nd">手間いらず / TLリンカーン。空室・料金・在庫を各ネット予約サイトへ配信・予約データ取り込み。一方向/双方向。</div></div>
     <div class="node" style="flex:1;border-top:3px solid var(--amber);"><div class="nt">🌐 ネット予約サイト / 公式直予約</div><div class="nd">楽天トラベル / じゃらん / 一休 / Booking.com / Expedia / Agoda / 予約エンジン。</div></div>
     <div class="node" style="flex:1;border-top:3px solid var(--teal);"><div class="nt">📚 観光データベース</div><div class="nd">充実版データ 約1,946万件(専用サーバー上の外部データ連携)。需要先読み・市場の動向を知識ベースへ供給。</div></div>
   </div>
@@ -196,5 +196,30 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Go
 
 <div class="foot">勝ち筋: AIは速く読めるが、料金・返金・在庫・顧客データの変更は人間と権限ルールが握る。「基幹システムを置き換える」のではなく「基幹システムの連携価値・データ価値・継続価値を高める拡張」。 ／ 地雷: AIに基幹システムへの書き込みを直接開放・個人情報を会話にそのまま投入・"全件取り消し"。</div>
 
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

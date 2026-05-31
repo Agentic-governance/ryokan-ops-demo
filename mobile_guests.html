@@ -495,7 +495,7 @@
           <div class="headline">常連・要注意・多言語対応をこの1画面で追う</div>
           <div class="subline">旅券未済、アレルギー、記念日、VIP、館内動線（現在地）を即時把握。予約・客室・配膳の判断材料を圧縮表示。</div>
         </div>
-        <div class="locator-badge">
+        <div class="locator-badge" data-guide="【現在地】館内のどの場所にお客様がいらっしゃるかの目安です。大浴場やラウンジなど、対応に向かう前の確認に使います。">
           <span class="small">現在地</span>
           <span class="place">ロビー</span>
         </div>
@@ -504,7 +504,7 @@
 
     <div class="search-card">
       <div class="search-row">
-        <input class="search-input" type="text" value="" placeholder="氏名 / 室番 / 予約番号" aria-label="高速検索">
+        <input class="search-input" type="text" value="" placeholder="氏名 / 室番 / 予約番号" aria-label="高速検索" data-guide="【すばやく探す】お客様の氏名、お部屋の番号、予約の番号のどれを入れても、その方の情報をすぐに呼び出せます。">
         <button class="search-btn">検索</button>
       </div>
       <div class="search-hints">
@@ -515,12 +515,12 @@
     </div>
 
     <div class="action-row">
-      <button class="action-btn primary">
+      <button class="action-btn primary" data-guide="【旅券スキャンで名簿に自動記入】端末のカメラでパスポートを写すと、お名前や国籍などが宿泊者名簿へ自動で書き写されます。手入力の手間を省き、控えが未済の方もすぐに見分けられます。">
         <div class="top"><span>旅券スキャン</span><span>カメラ</span></div>
         <div class="title">名簿へ自動転記</div>
         <div class="meta">氏名・国籍・旅券番号を転記して、未済を即抽出</div>
       </button>
-      <button class="action-btn">
+      <button class="action-btn" data-guide="【多言語のあいさつ文を送る】到着のご案内や朝食・送迎・記念日のご案内など、あらかじめ用意した文章を中国語・英語・韓国語で送れます。毎回文章を考えずに済みます。">
         <div class="top"><span>定型送信</span><span>中 / 英 / 韓</span></div>
         <div class="title">多言語メッセージ</div>
         <div class="meta">到着案内、朝食、送迎、記念日案内をテンプレ化</div>
@@ -537,9 +537,9 @@
             <div class="room">512号室 / 予約 #HK-250530-018 / 英語</div>
           </div>
           <div class="flags">
-            <span class="flag en">EN</span>
-            <span class="flag member">R5</span>
-            <span class="flag vip">VIP</span>
+            <span class="flag en" data-guide="【対応言語の目印】このお客様は英語での対応がよいことを表します。中は中国語、韓は韓国語の方です。">EN</span>
+            <span class="flag member" data-guide="【再訪の回数】Rのあとの数字は当館へのご来訪回数です。R5なら5回目のお客様で、常連の方ほど手厚い対応の目安になります。">R5</span>
+            <span class="flag vip" data-guide="【特別なお客様】とくに丁寧な対応が望ましい大切なお客様です。挨拶やお部屋の準備で配慮します。">VIP</span>
           </div>
         </div>
         <div class="meta-grid">
@@ -548,9 +548,9 @@
           <span class="meta-pill"><strong>到着:</strong> 16:10</span>
         </div>
         <div class="alerts">
-          <span class="alert red">アレルギー: えび</span>
-          <span class="alert amber">記念日</span>
-          <span class="alert green">旅券済</span>
+          <span class="alert red" data-guide="【食物アレルギー】このお客様が食べられない食材です。お料理の手配時に必ず厨房と共有し、献立から外します。">アレルギー: えび</span>
+          <span class="alert amber" data-guide="【記念日】ご滞在中に記念日のあるお客様です。お祝いの一言やちょっとしたおもてなしを検討する目印です。">記念日</span>
+          <span class="alert green" data-guide="【旅券の控え済み】海外のお客様のパスポートの控えが取れている状態です。緑は確認が完了していることを示します。">旅券済</span>
         </div>
         <div class="guest-actions">
           <button class="mini chat">英語定型</button>
@@ -663,9 +663,9 @@
           <span class="meta-pill"><strong>到着:</strong> 15:00</span>
         </div>
         <div class="alerts">
-          <span class="alert red">旅券未済</span>
+          <span class="alert red" data-guide="【旅券の控えが未済】海外のお客様のパスポートの控えがまだ取れていない状態です。赤はお早めの確認が必要なことを示します。">旅券未済</span>
           <span class="alert amber">記念日</span>
-          <span class="alert purple">本人確認要</span>
+          <span class="alert purple" data-guide="【本人確認が必要】ご予約の方ご本人であることの確認がまだ済んでいません。チェックイン時に身分証などでの確認をお願いします。">本人確認要</span>
         </div>
         <div class="guest-actions">
           <button class="mini chat">確認送信</button>
@@ -677,7 +677,7 @@
 
     <div class="language-panel">
       <div class="title-line">
-        <div class="label">定型メッセージ</div>
+        <div class="label" data-guide="【用意済みのご案内文】よく使うご案内をあらかじめ文章にしたものです。中国語・英語・韓国語をワンタップで送れ、その場で文章を作らずに済みます。">定型メッセージ</div>
         <div class="note">中 / 英 / 韓 をワンタップ送信</div>
       </div>
       <div class="message-grid">
@@ -723,7 +723,7 @@
       <span class="icon">&#127969;</span>
       <span class="label-text">客室</span>
     </a>
-    <a href="#" class="nav-tab active">
+    <a href="#" class="nav-tab active" data-guide="【ゲスト画面】今ご滞在中・ご来館予定のお客様を一覧で確認できる画面です。常連や要対応の方、言語やアレルギーをまとめて把握できます。">
       <span class="icon">&#128101;</span>
       <span class="label-text">ゲスト</span>
     </a>
@@ -734,5 +734,30 @@
   </div>
 </div>
 
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

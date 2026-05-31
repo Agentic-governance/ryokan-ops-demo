@@ -331,7 +331,7 @@
     </div>
 
     <div class="search-wrap">
-      <div class="search-box">
+      <div class="search-box" data-guide="【お客様の検索】ここに文字を入れて、本日到着のお客様をすぐ呼び出せます。お名前・お部屋番号・予約番号・ネット予約サイトの番号のどれでも探せます。">
         <span class="icon">&#128269;</span>
         <input type="text" placeholder="氏名 / 室番 / 予約番号 / ネット予約サイト番号で検索">
       </div>
@@ -339,10 +339,10 @@
     <div class="helper">高速検索は 1 ボックスのみ。候補は氏名・室番・予約番号・ネット予約サイト番号に限定しています。</div>
 
     <div class="summary-row">
-      <div class="mini-card"><div class="num">14</div><div class="lbl">当日 到着予定</div></div>
-      <div class="mini-card"><div class="num">6</div><div class="lbl">チェックイン済</div></div>
-      <div class="mini-card"><div class="num">3</div><div class="lbl">VIP</div></div>
-      <div class="mini-card"><div class="num">1</div><div class="lbl">団体</div></div>
+      <div class="mini-card" data-guide="【当日 到着予定】今日これからお越しになる予定のお客様の組数です。受付の残り件数の目安になります。"><div class="num">14</div><div class="lbl">当日 到着予定</div></div>
+      <div class="mini-card" data-guide="【チェックイン済】すでに受付が済んだお客様の組数です。到着予定との差が、まだお越しでない組数になります。"><div class="num">6</div><div class="lbl">チェックイン済</div></div>
+      <div class="mini-card" data-guide="【VIP】特に丁寧な対応が必要なお客様の組数です。お出迎えや館内ご案内に余裕を持って備えてください。"><div class="num">3</div><div class="lbl">VIP</div></div>
+      <div class="mini-card" data-guide="【団体】まとまった人数で一度にお越しになるお客様（旅行会社や会社のご一行など）の組数です。"><div class="num">1</div><div class="lbl">団体</div></div>
     </div>
 
     <div class="section">
@@ -358,22 +358,22 @@
               <div class="slot-name">J.W 様 <span style="font-size:12px;color:var(--navy);font-weight:700;">🇬🇧</span></div>
               <div class="slot-sub">512号室 / ツインA / 2泊</div>
             </div>
-            <span class="badge badge-duein">到着予定</span>
+            <span class="badge badge-duein" data-guide="【到着予定】まだお越しになっていないお客様です。これから受付の準備をします。">到着予定</span>
           </div>
           <div class="badges">
             <span class="badge badge-vip">VIP</span>
-            <span class="badge badge-lang">英語</span>
-            <span class="badge badge-late">遅着</span>
+            <span class="badge badge-lang" data-guide="【英語】英語でのご案内が必要なお客様です。英語対応できるスタッフや案内表示の用意に役立ちます。">英語</span>
+            <span class="badge badge-late" data-guide="【遅着】到着が予定より遅くなるお客様です。お食事の時間調整やお部屋の準備の参考にします。">遅着</span>
           </div>
         </summary>
         <div class="slot-body">
-          <div class="row"><div class="key">人泊</div><div class="val">大2 子1 <span class="muted">/ 添い寝1</span></div></div>
-          <div class="row"><div class="key">食事</div><div class="val">1泊2食 <span class="pill">夕食 18:00</span> <span class="pill">アレルギー: 甲殻類</span></div></div>
+          <div class="row" data-guide="【人泊（にんぱく）】何名様が何泊するかを表します。大は大人、子はお子様、添い寝はお布団を使わず一緒にお休みになるお子様の人数です。"><div class="key">人泊</div><div class="val">大2 子1 <span class="muted">/ 添い寝1</span></div></div>
+          <div class="row" data-guide="【食事】お食事の付き方です。1泊2食は夕食と朝食の両方付き。右側に夕食の開始時間や、配慮が必要な食材（アレルギー）を表示します。"><div class="key">食事</div><div class="val">1泊2食 <span class="pill">夕食 18:00</span> <span class="pill">アレルギー: 甲殻類</span></div></div>
           <div class="row"><div class="key">支払</div><div class="val">前受あり / カード保証</div></div>
           <div class="row"><div class="key">状態</div><div class="val">到着予定 / チェックイン前 / 送迎待ち</div></div>
           <div class="actions">
-            <button class="btn btn-primary">車寄せで受付</button>
-            <button class="btn btn-secondary">順番待ち登録</button>
+            <button class="btn btn-primary" data-guide="【車寄せで受付】玄関先でこのお客様の受付を始めます。押すとお名前やお部屋の確認に進みます。">車寄せで受付</button>
+            <button class="btn btn-secondary" data-guide="【順番待ち登録】受付が混み合っているとき、このお客様を順番待ちに登録します。お待たせする際の整理に使います。">順番待ち登録</button>
           </div>
         </div>
       </details>
@@ -468,8 +468,8 @@
 
     <div class="section" style="margin-bottom:18px;">
       <div class="section-title">&#9888; 運用メモ</div>
-      <div class="desktop-note">料金変更・売止の一括変更は、誤操作防止のためパソコン画面へ誘導します。スマートフォンでは到着処理と順番待ち登録に集中してください。</div>
-      <div class="note-box">常連メモ: 512号室 J.W 様 / E.C 様、W.J 様、団体 青葉商事 38名を優先表示しています。</div>
+      <div class="desktop-note" data-guide="【運用メモ】料金の変更やお部屋の販売停止など、間違えると影響が大きい操作はパソコン画面で行うご案内です。スマートフォンでは到着の受付と順番待ちに専念できます。">料金変更・売止の一括変更は、誤操作防止のためパソコン画面へ誘導します。スマートフォンでは到着処理と順番待ち登録に集中してください。</div>
+      <div class="note-box" data-guide="【優先表示のお知らせ】特に気を配りたいお客様（よくお越しになる常連の方や団体など）を上に並べて見やすくしています。">常連メモ: 512号室 J.W 様 / E.C 様、W.J 様、団体 青葉商事 38名を優先表示しています。</div>
     </div>
   </div>
 
@@ -497,5 +497,30 @@
   </div>
 </div>
 
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

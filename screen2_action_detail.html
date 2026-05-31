@@ -739,12 +739,12 @@ a { text-decoration: none; color: inherit; }
 
   <!-- Action Header -->
   <div class="action-header">
-    <span class="badge badge-mail">メール変更</span>
+    <span class="badge badge-mail" data-guide="【依頼の種類】お客様からのメールが「予約の変更」依頼であることを示しています。一目で用件が分かります。">メール変更</span>
     <span class="ah-subject">予約変更のお願い</span>
     <span class="ah-time">09:23 (3 分前)</span>
-    <span class="ah-guest">T.I 様 <span class="star">★</span>リピーター 3 回目</span>
-    <span class="badge badge-urgency">通常</span>
-    <span class="ah-reservation">#R-2026-1289 / スイートB / 12/20-22 / ¥48,000</span>
+    <span class="ah-guest" data-guide="【お客様情報】このお客様は3回目のご宿泊(リピーター)です。星印は常連のお客様であることを表し、丁寧な対応が望ましい目印になります。">T.I 様 <span class="star">★</span>リピーター 3 回目</span>
+    <span class="badge badge-urgency" data-guide="【急ぎ度合い】対応の優先度です。「通常」は急ぎではない一般的な依頼という意味です。急ぎの場合は色付きで強く表示されます。">通常</span>
+    <span class="ah-reservation" data-guide="【予約の概要】対象となる予約の番号・お部屋・宿泊日・料金をまとめて表示しています。どの予約の話かをすぐ確認できます。">#R-2026-1289 / スイートB / 12/20-22 / ¥48,000</span>
   </div>
 
   <!-- 3 Column Layout -->
@@ -774,7 +774,7 @@ a { text-decoration: none; color: inherit; }
 ご返信お待ちしております。<br><br>
 T.I
           </div>
-          <div class="email-hint">💡 過去メール 12 通から「ですます調・簡潔」のスタイルを学習済み</div>
+          <div class="email-hint" data-guide="【文面づくりの参考】このお客様と過去にやり取りした12通のメールから、ふだんの言葉づかい(丁寧で簡潔な調子)を読み取り、返信案の文面づくりに役立てています。">💡 過去メール 12 通から「ですます調・簡潔」のスタイルを学習済み</div>
           <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--rule-lite);">
             <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px;">📋 対応履歴</div>
             <div style="font-size:11px;color:var(--text-sub);line-height:1.6;border-left:2px solid var(--rule-soft);padding-left:10px;">
@@ -783,7 +783,7 @@ T.I
               <div style="margin-bottom:6px;"><span style="color:var(--brand);">12/16 09:23</span> — <strong>変更依頼受信 ← 現在</strong></div>
             </div>
           </div>
-          <div style="margin-top:10px;padding:8px 10px;background:var(--amber-lite);border-radius:4px;font-size:11px;color:var(--text-sub);line-height:1.5;">
+          <div style="margin-top:10px;padding:8px 10px;background:var(--amber-lite);border-radius:4px;font-size:11px;color:var(--text-sub);line-height:1.5;" data-guide="【お客様のご希望・注意点】過去の宿泊で分かっているお客様の好みや配慮事項です。お部屋の手配やご案内のときに気をつける点として表示しています。">
             <strong>⚠️ ゲスト注意事項:</strong> 高層階希望 / 禁煙 / 遅めチェックイン (18時以降)
           </div>
         </div>
@@ -799,18 +799,18 @@ T.I
         <div class="card-body">
 
           <!-- AI Nudge: this record -->
-          <div class="nudge">
+          <div class="nudge" data-guide="【AIからの提案】AIが状況を整理して「こうするとよさそう」とおすすめする欄です。あくまで提案で、送るかどうかの最終判断は担当の方が行います。">
             <div class="nudge-top">
               <span class="nudge-badge">✓ AI確認</span>
-              <span class="nudge-prio today">今日中</span>
+              <span class="nudge-prio today" data-guide="【対応の目安期限】このお客様への返信は今日中に行うのがおすすめ、という目印です。早めに返すほど他のお部屋を検討される前に決まりやすくなります。">今日中</span>
             </div>
             <div class="nudge-line1">T.I 様の宿泊日変更 (12/20-22 → 12/21-23) に返信できます</div>
             <div class="nudge-line2">リピーター3回目のお客様です。本日中にお返事すると、別タイプへの切替えを検討される前に同じスイートBで確定でき、満足度につながります。</div>
             <div class="nudge-line3">12/21-23 のスイートBは空室です。<strong>下の返信案を確認のうえ送信する</strong>とよさそうです (料金・人数は変更なし)。</div>
             <span class="nudge-fact">空室 12/21-23 スイートB / 変更 2件 + 在庫同期1件 連動</span>
             <div class="nudge-buttons">
-              <button class="btn btn-primary" onclick="console.log('adopt')">この返信案を確認して送信</button>
-              <button class="btn btn-outline" onclick="console.log('edit')">別案を見る</button>
+              <button class="btn btn-primary" onclick="console.log('adopt')" data-guide="【返信案を送る】下に表示された返信文の内容で問題なければ、この操作でお客様へ送信する手続きに進みます。送る前に内容を確認できます。">この返信案を確認して送信</button>
+              <button class="btn btn-outline" onclick="console.log('edit')" data-guide="【別の文案を見る】今の返信案がしっくりこないときに、言い回しの違う別の案を表示します。気に入った方を選べます。">別案を見る</button>
             </div>
           </div>
 
@@ -839,7 +839,7 @@ T.I
             <button class="btn btn-outline" onclick="console.log('edit')">✏️ 本文を編集</button>
             <button class="btn btn-outline" onclick="console.log('regenerate')">🔄 別案を表示</button>
           </div>
-          <div class="ai-note">空室 (12/21-23 スイートB) と過去メール12通の文面を参照した返信案の候補を表示しています。送信前の確認・修正は支配人が行います。</div>
+          <div class="ai-note" data-guide="【この返信案について】空室状況とお客様との過去のやり取りをもとに作った下書きです。実際に送る前の確認や修正は、必ず担当の方が行います。">空室 (12/21-23 スイートB) と過去メール12通の文面を参照した返信案の候補を表示しています。送信前の確認・修正は支配人が行います。</div>
         </div>
       </div>
     </div>
@@ -847,7 +847,7 @@ T.I
     <!-- Right: PMS Updates -->
     <div class="col-right">
       <div class="card">
-        <div class="card-header">📋 基幹システム データ更新案 (3 件連動)</div>
+        <div class="card-header" data-guide="【基幹システムへの更新案】基幹システムとは、予約や客室の在庫を管理する旅館の中心となるシステムのことです。今回の返信に合わせて自動で必要になる3つの更新案をまとめています。">📋 基幹システム データ更新案 (3 件連動)</div>
         <div class="card-body">
 
           <!-- Change 1 -->
@@ -892,7 +892,7 @@ T.I
           </div>
 
           <!-- Change 2 -->
-          <div class="pms-change">
+          <div class="pms-change" data-guide="【在庫(空き部屋)の調整】宿泊日が変わるのに合わせて、各日の空き部屋の状態を自動で入れ替えます。元の日付は空室に戻し、新しい日付を予約済みにします。">
             <div class="pms-change-title">変更 2: 在庫調整</div>
             <div style="font-size: 12px; color: var(--text-mute); margin-bottom: 8px;">スイートB:</div>
             <table class="inv-table">
@@ -923,9 +923,9 @@ T.I
           </div>
 
           <!-- Change 3 -->
-          <div class="pms-change">
+          <div class="pms-change" data-guide="【ネット予約サイトへの反映】今回の変更を、楽天トラベルやじゃらんなど各ネット予約サイトの空室・料金にも反映します。各サイトを個別に直すのではなく、まとめ役の管理画面を通して一括で行います。">
             <div class="pms-change-title">変更 3: 在庫・料金の同期 — 予約サイト一元管理経由</div>
-            <div style="font-size: 11px; color: var(--text-mute); margin-bottom: 8px; line-height:1.5;">
+            <div style="font-size: 11px; color: var(--text-mute); margin-bottom: 8px; line-height:1.5;" data-guide="【予約サイト一元管理とは】複数のネット予約サイトの空室や料金を一か所でまとめて操作できる仕組みです。基幹システムからこの管理画面を経由して各サイトへ反映するため、サイトごとの手作業が不要になります。">
               基幹システム → <strong style="color:var(--navy);">予約サイト一元管理 (手間いらず)</strong> → 各ネット予約サイトへ 在庫・料金 を一括反映。<strong>ネット予約サイトへは直結しない。</strong>
             </div>
             <table class="inv-table">
@@ -938,7 +938,7 @@ T.I
                 <td class="change-col">解除 → 売止</td>
               </tr>
             </table>
-            <div style="background:var(--surface);border-radius:5px;padding:8px 10px;margin:8px 0;font-size:10.5px;">
+            <div style="background:var(--surface);border-radius:5px;padding:8px 10px;margin:8px 0;font-size:10.5px;" data-guide="【各サイトへの反映状況】楽天トラベルなど各ネット予約サイトに変更が届いたかどうかを表示します。緑は反映済み、黄色はまだ送信中(取り込み待ち)という意味です。">
               <div style="font-weight:700;margin-bottom:5px;color:var(--text-sub);">在庫・料金 反映状況 (予約確定時に在庫を引落／順次反映)</div>
               <div style="display:flex;justify-content:space-between;padding:2px 0;"><span>🟢 Booking.com</span><span style="color:var(--text-mute);">反映済 0.4s前</span></div>
               <div style="display:flex;justify-content:space-between;padding:2px 0;"><span>🟢 楽天トラベル</span><span style="color:var(--text-mute);">反映済 0.9s前</span></div>
@@ -978,7 +978,7 @@ T.I
   </div>
 
   <!-- Approval Flow -->
-  <div class="approval-section">
+  <div class="approval-section" data-guide="【承認の流れ】この変更が実際に反映されるまでの順番を示しています。左から右へ、AIの提案・担当者の確認・支配人の承認・システムへの反映、と進みます。今どの段階かが色で分かります。">
     <div class="approval-title">承認フロー — この変更には承認が必要です</div>
     <div class="approval-row">
       <div class="approval-flow">
@@ -1026,10 +1026,35 @@ T.I
   <div class="action-bar-spacer"></div>
   <button class="btn-save">一時保存</button>
   <div class="btn-cta-wrap">
-    <button class="btn-cta" onclick="console.log('submit')">☑️ 確認して承認申請</button>
+    <button class="btn-cta" onclick="console.log('submit')" data-guide="【承認をお願いする】返信内容と更新内容を確認したうえで、この操作を押すと支配人へ承認のお願いが送られます。承認されると実際の反映が始まります。">☑️ 確認して承認申請</button>
     <div class="btn-cta-note">申請後、支配人 (鈴木様) にメール通知が送信されます (推定到達 1 分以内)</div>
   </div>
 </div>
 
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>

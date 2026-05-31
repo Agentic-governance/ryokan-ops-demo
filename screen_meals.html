@@ -265,8 +265,8 @@ a { text-decoration: none; color: inherit; }
   <div class="page-sub">営業日 2026/05/30。食事の提供能力が客室販売数を決める前提で、会場席数・時間枠・厨房ピークを客室在庫へ戻して販売を止める。未確認アレルギーと定員超過は予約チップと仕込み表に即時反映。</div>
 
   <div class="kpi-strip">
-    <div class="kpi-card"><div class="label">本日夕食</div><div class="value" style="color:var(--brand);">96<span class="unit">名</span></div><div class="sub delta-up">朝食見込み 88名</div></div>
-    <div class="kpi-card"><div class="label">時間枠別</div>
+    <div class="kpi-card" data-guide="【本日夕食】今夜お食事を召し上がるお客様の合計人数です。下の数字は翌朝の朝食の見込み人数です。"><div class="label">本日夕食</div><div class="value" style="color:var(--brand);">96<span class="unit">名</span></div><div class="sub delta-up">朝食見込み 88名</div></div>
+    <div class="kpi-card" data-guide="【時間枠別】夕食を始める時間ごとの人数です。棒が高いほどその時間に集中しています。混みすぎる時間は別の時間へご案内する目安になります。"><div class="label">時間枠別</div>
       <div class="bar-mini">
         <div class="b warm" style="height:28px;"><span>18:00</span><i></i></div>
         <div class="b" style="height:42px;"><span>18:30</span><i></i></div>
@@ -275,13 +275,13 @@ a { text-decoration: none; color: inherit; }
       <div class="sub">18:00=24 / 18:30=48 / 19:00=24</div>
     </div>
     <div class="kpi-card"><div class="label">会場稼働</div><div class="value" style="color:var(--navy);">82<span class="unit">%</span></div><div class="sub">食事処 82% / 個室 満</div></div>
-    <div class="kpi-card"><div class="label">アレルギー未確認</div><div class="value" style="color:var(--brand);">3<span class="unit">件</span></div><div class="sub">到着前確認推奨</div></div>
-    <div class="kpi-card"><div class="label">子供食</div><div class="value" style="color:var(--purple);">12<span class="unit">名</span></div><div class="sub">A5 / B4 / C3</div></div>
-    <div class="kpi-card"><div class="label">食事提供能力</div><div class="value" style="color:var(--green);">120<span class="unit">名</span></div><div class="sub">残24名 = 客室販売数を決める</div></div>
+    <div class="kpi-card" data-guide="【アレルギー未確認】食べられない食材の確認がまだ取れていないお客様の件数です。誤って提供すると体調に関わるため、到着前に確認しておくと安心です。"><div class="label">アレルギー未確認</div><div class="value" style="color:var(--brand);">3<span class="unit">件</span></div><div class="sub">到着前確認推奨</div></div>
+    <div class="kpi-card" data-guide="【子供食】お子様向けのお食事を用意する人数です。年齢や量に応じて区分が分かれており、内訳は下の記号で示しています。"><div class="label">子供食</div><div class="value" style="color:var(--purple);">12<span class="unit">名</span></div><div class="sub">A5 / B4 / C3</div></div>
+    <div class="kpi-card" data-guide="【食事提供能力】今夜お食事をご用意できる人数の上限です。会場の席数と厨房の手が回る範囲で決まります。残りの人数を超えてお部屋を売ると、当日に食事が出しきれなくなります。"><div class="label">食事提供能力</div><div class="value" style="color:var(--green);">120<span class="unit">名</span></div><div class="sub">残24名 = 客室販売数を決める</div></div>
   </div>
 
   <div class="meal-hero">
-    <div class="hero-left">
+    <div class="hero-left" data-guide="【夕食の上限と販売の調整】今夜あと何名分のお食事を出せるかを示します。残りが少なくなると、お部屋の予約をこれ以上受けないよう知らせる目安になります。">
       <div class="hero-k">夕食上限 / 販売制御</div>
       <div class="hero-v">残24 <small>名分</small></div>
       <div class="hero-list">
@@ -313,7 +313,7 @@ a { text-decoration: none; color: inherit; }
   <div class="layout">
     <div class="left">
       <div class="card">
-        <div class="card-h">
+        <div class="card-h" data-guide="【時間と会場の一覧表】縦が食事会場、横が開始時間です。色の付いた帯が席の埋まり具合を表し、赤くなると満席に近い状態です。各お客様のお部屋番号やお食事内容も確認できます。">
           <div class="t">時間枠 × 会場 グリッド</div>
           <span class="src">縦=食事処/個室/大広間/部屋食/レストラン · 横=18:00/18:30/19:00/19:30</span>
         </div>
@@ -327,7 +327,7 @@ a { text-decoration: none; color: inherit; }
               <div class="cell">
                 <div class="seatbar"><div class="cap">24</div><div class="track"><span style="width:75%;"></span></div><div class="val">24/32</div></div>
                 <div class="chip-row">
-                  <span class="chip chip-room">302 S.M 様 3名</span><span class="chip chip-course">梅</span><span class="chip chip-alert">卵</span>
+                  <span class="chip chip-room">302 S.M 様 3名</span><span class="chip chip-course">梅</span><span class="chip chip-alert" data-guide="【アレルギー表示】このお客様が食べられない食材です。厨房に必ず伝え、別の料理に差し替える目印になります。">卵</span>
                   <span class="chip chip-anniv">記念日</span><span class="chip chip-flag">日本</span>
                 </div>
                 <div class="chip-row">
@@ -338,7 +338,7 @@ a { text-decoration: none; color: inherit; }
                 <div class="seatbar"><div class="cap">48</div><div class="track"><span style="width:100%;"></span></div><div class="val">32/32</div></div>
                 <div class="chip-row">
                   <span class="chip chip-room">201 T.I 様 4名</span><span class="chip chip-course">松</span><span class="chip chip-alert">えび</span>
-                  <span class="chip chip-flag bad">超過 +8</span>
+                  <span class="chip chip-flag bad" data-guide="【定員超過】この時間枠が席数を超えている状態です。数字は何名分はみ出しているかを表します。別の時間へのご案内を検討する合図です。">超過 +8</span>
                 </div>
                 <div class="chip-row">
                   <span class="chip chip-room">409 G. 様 2名</span><span class="chip chip-course">梅</span><span class="chip chip-flag">🇪🇸</span>
@@ -454,7 +454,7 @@ a { text-decoration: none; color: inherit; }
       <div class="board">
         <div class="board-head">
           <div>
-            <div class="ttl">デシャップ / 卓リスト</div>
+            <div class="ttl" data-guide="【デシャップ・卓リスト】厨房と客席の間で料理の出し具合を整える進行表です。同じ時間に始めたお客様にそろって料理を出し、今どの料理まで進んだかを管理します。卓とはお客様のテーブルのことです。">デシャップ / 卓リスト</div>
             <div class="sub">時間枠ごとの一斉スタートとコース進行カウントダウン</div>
           </div>
           <div class="flow"><span>先付</span><span>椀物</span><span>向付</span><span>焼物</span><span>炊合せ</span><span>揚物</span><span>止肴</span><span>食事</span><span>水菓子</span></div>
@@ -496,7 +496,7 @@ a { text-decoration: none; color: inherit; }
       <div class="board">
         <div class="board-head">
           <div>
-            <div class="ttl">配膳 / 仲居担当卓</div>
+            <div class="ttl" data-guide="【配膳・仲居担当卓】仲居さんが担当するお客様ごとに、料理を運ぶ状況をまとめた表です。お食事が終わって食器を下げたお客様は、自動でお布団を敷く担当へ知らせが届きます。">配膳 / 仲居担当卓</div>
             <div class="sub">ステータス更新で下膳済卓を布団班に自動通知</div>
           </div>
         </div>
@@ -528,7 +528,7 @@ a { text-decoration: none; color: inherit; }
         </div>
         <div class="card-b nopad">
           <div class="prep-box">
-            <div class="prep-head">
+            <div class="prep-head" data-guide="【仕込み表】今夜作る料理の品目と数量を厨房へ渡すための一覧です。送る前にここで内容を確かめられます。アレルギーのあるお客様は別の行で分けて表示します。">
               <div class="tag">厨房送信前プレビュー</div>
               <div class="ti">本日夕食 仕込み表</div>
               <div class="de">品目順: 先付→椀物→向付→焼物→炊合せ→揚物→止肴→食事→水菓子。アレルギーは個別行で展開し、未確認3件を先に潰す。</div>
@@ -548,7 +548,7 @@ a { text-decoration: none; color: inherit; }
               </div>
               <div class="foot-note">アレルギー個別行は、特定原材料8品目を必ずチェックしてから厨房送信。7日前ルールを満たさない申告は赤旗。</div>
               <div style="display:flex;gap:8px;margin-top:10px;">
-                <button class="btn-sm btn-navy">厨房へ送信</button>
+                <button class="btn-sm btn-navy" data-guide="【厨房へ送信】この仕込み表の内容を厨房へ正式に伝えます。押す前に、アレルギーの確認が済んでいるかをご確認ください。">厨房へ送信</button>
                 <button class="btn-sm btn-out">印刷</button>
               </div>
             </div>
@@ -592,7 +592,7 @@ a { text-decoration: none; color: inherit; }
 
       <div class="card right-card">
         <div class="card-h">
-          <div class="t">今の確認事項</div>
+          <div class="t" data-guide="【今の確認事項】AIが見つけた、今みておくとよい点をまとめたものです。AIの提案であり、最終的な判断は支配人が行います。">今の確認事項</div>
           <span class="src">重要な3件 · 最終確認は支配人</span>
         </div>
         <div class="card-b">
@@ -639,5 +639,30 @@ Chart.defaults.font.family = "'Inter','Hiragino Sans','Yu Gothic UI',sans-serif"
 Chart.defaults.font.size = 10;
 Chart.defaults.color = '#8C8C8C';
 </script>
+<!-- GUIDE_MODULE_START : 説明モード(インストラクション)。カーソルを合わせると説明を表示 -->
+<style id="guide-css">
+.guide-toggle{position:fixed;right:16px;bottom:16px;z-index:9999;background:#14283D;color:#fff;border:none;border-radius:20px;padding:9px 16px;font:600 12px/1 'Hiragino Sans','Yu Gothic UI',sans-serif;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.guide-toggle.on{background:#C8102E}
+.guide-tip{position:fixed;z-index:10000;max-width:300px;background:#14283D;color:#fff;font:400 12px/1.65 'Hiragino Sans','Yu Gothic UI',sans-serif;padding:10px 13px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none;opacity:0;transition:opacity .12s;border-left:3px solid #C8102E}
+.guide-tip .gt-h{display:block;font-weight:700;margin-bottom:3px;color:#fff}
+.guide-tip.show{opacity:1}
+body.guide-on [data-guide]{outline:1.5px dashed rgba(200,16,46,.55);outline-offset:2px;cursor:help;border-radius:3px}
+body.guide-on [data-guide]:hover{outline-color:#C8102E;background:rgba(200,16,46,.06)}
+.guide-hint{position:fixed;right:16px;bottom:58px;z-index:9999;background:#fff;color:#14283D;border:1px solid #DCE2E9;border-radius:8px;padding:8px 12px;font:600 11.5px/1.55 'Hiragino Sans','Yu Gothic UI',sans-serif;max-width:248px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none}
+body.guide-on .guide-hint{display:block}
+</style>
+<div class="guide-hint">説明モード：点線の項目にカーソルを合わせると、用語や次の操作の説明が表示されます。</div>
+<button class="guide-toggle" type="button" onclick="var b=document.body.classList.toggle('guide-on');this.classList.toggle('on',b);this.textContent=b?'✓ 説明モード ON':'？ 説明モード';">？ 説明モード</button>
+<script id="guide-js">
+(function(){
+  var tip=document.createElement('div');tip.className='guide-tip';document.body.appendChild(tip);
+  function show(e){var t=e.currentTarget.getAttribute('data-guide');if(!t)return;tip.innerHTML=t;tip.classList.add('show');move(e);}
+  function move(e){var r=14,x=e.clientX+r,y=e.clientY+r,w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-r;if(y+h>window.innerHeight-8)y=e.clientY-h-r;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px';}
+  function hide(){tip.classList.remove('show');}
+  function bind(){document.querySelectorAll('[data-guide]').forEach(function(el){if(el._gb)return;el._gb=1;el.addEventListener('mouseenter',show);el.addEventListener('mousemove',move);el.addEventListener('mouseleave',hide);});}
+  bind();window.addEventListener('load',bind);setTimeout(bind,1500);
+})();
+</script>
+<!-- GUIDE_MODULE_END -->
 </body>
 </html>
