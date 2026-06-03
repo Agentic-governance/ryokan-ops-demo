@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>市場調査レポート｜ホテル・旅館の基幹システム連携AI市場</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--navy:#14283D;--navy2:#22425F;--red:#C8102E;--grey:#6B7886;--lgrey:#9DAAB7;--rule:#DCE2E9;--panel:#F4F7FA;--panel2:#ECF2F8;--ink:#1A2330;--green:#1E7A46;--teal:#0E7490;--amber:#C77A0A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;color:var(--ink);background:#fff;line-height:1.7;-webkit-font-smoothing:antialiased;font-size:14px}
+.nav{position:fixed;top:0;left:0;width:220px;height:100vh;background:var(--navy);color:#fff;overflow-y:auto;padding:20px 0;z-index:100}
+.nav .brand{padding:0 18px 14px;border-bottom:1px solid #2c4a68;margin-bottom:8px}
+.nav .brand b{display:block;font-size:13px;letter-spacing:1px;color:#FF7A89}
+.nav .brand span{font-size:11px;color:#AFC0D2}
+.nav a{display:block;color:#C7D3DE;text-decoration:none;font-size:12px;padding:7px 18px;border-left:3px solid transparent}
+.nav a:hover{background:#1c354e;color:#fff;border-left-color:var(--red)}
+.main{margin-left:220px;max-width:1080px;padding:0 40px}
+section{padding:46px 0 10px;border-bottom:1px solid var(--rule)}
+.kick{color:var(--red);font-weight:700;letter-spacing:2px;font-size:11px}
+h1{font-size:30px;color:var(--navy);font-weight:800;margin:4px 0}
+h2{font-size:22px;color:var(--navy);font-weight:800;margin:2px 0 4px}
+.sub{color:var(--grey);font-size:13px;margin-bottom:18px}
+h3{font-size:14px;color:var(--navy);font-weight:700;margin:18px 0 8px;padding-left:10px;border-left:4px solid var(--red)}
+.hero{margin-left:220px;background:var(--navy);color:#fff;padding:70px 50px 56px;border-left:8px solid var(--red)}
+.hero .k{color:#FF7A89;font-weight:700;letter-spacing:3px;font-size:13px}
+.hero h1{color:#fff;font-size:36px;margin:10px 0 6px;line-height:1.25}
+.hero .lead{color:#C7D3DE;font-size:15px;margin-bottom:18px}
+.hero .meta{color:#8DA0B5;font-size:12px;border-top:1px solid #2c4a68;padding-top:14px;margin-top:20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+.card{border:1px solid var(--rule);border-radius:8px;padding:14px 16px;background:var(--panel)}
+.card.bl{border-left:4px solid var(--red)}
+.card .lab{color:var(--red);font-weight:700;font-size:11px}
+.card .big{font-size:20px;font-weight:800;color:var(--navy);margin:2px 0}
+.card .dsc{font-size:11.5px;color:var(--grey)}
+.concl{background:var(--navy);color:#fff;border-radius:8px;padding:18px 22px;margin-top:18px;font-size:14px;font-weight:600}
+.concl b{color:#FF7A89}
+.chartbox{position:relative;width:100%;height:280px;border:1px solid var(--rule);border-radius:8px;padding:12px 14px 8px;background:#fff}
+.chartbox.sm{height:230px}
+.chartbox .ct{font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.chartbox .cw{position:relative;height:calc(100% - 24px)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--navy);color:#fff;font-weight:700;text-align:left;padding:7px 9px;font-size:11.5px}
+td{padding:6px 9px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:nth-child(even) td{background:#F7F9FB}
+.tag{display:inline-block;border-radius:3px;padding:1px 7px;font-size:10.5px;font-weight:700;color:#fff}
+.t-red{background:var(--red)}.t-navy{background:var(--navy2)}.t-grey{background:var(--lgrey)}.t-green{background:var(--green)}.t-teal{background:var(--teal)}
+.note{font-size:11px;color:var(--lgrey);margin-top:10px}
+.seg{display:flex;align-items:center;gap:14px;border:1px solid var(--rule);border-radius:8px;margin-bottom:8px;overflow:hidden}
+.seg .L{width:64px;flex:none;align-self:stretch;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:800}
+.seg .body{padding:10px 0}
+.seg .body b{font-size:13.5px;color:var(--navy)}
+.seg .body span{font-size:11px;color:var(--grey);display:block}
+.seg .rel{margin-left:auto;margin-right:14px;flex:none}
+.vc{border:1px solid var(--rule);border-left:5px solid var(--navy);border-radius:6px;padding:9px 14px;margin-bottom:6px}
+.vc b{font-size:13px;color:var(--navy)}.vc span{font-size:11.5px;color:var(--ink)}.vc i{font-size:10.5px;color:var(--grey);font-style:normal}
+.arrow{text-align:center;color:var(--lgrey);font-size:12px;margin:1px 0}
+.drv{border:1px solid var(--rule);border-left:5px solid var(--green);border-radius:6px;padding:11px 14px;background:var(--panel)}
+.drv.thr{border-left-color:var(--red)}.drv.res{border-left-color:var(--grey)}.drv.opp{border-left-color:var(--green)}
+.drv b{font-size:13px;color:var(--navy)}.drv p{font-size:11.5px;color:var(--ink);margin:3px 0}.drv .src{font-size:10px;color:var(--lgrey)}
+.pos{position:relative;border:1px solid var(--rule);background:var(--panel);border-radius:8px;height:300px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.pos .q{padding:12px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.pos .q h4{font-size:11px;color:var(--navy2);font-weight:700;margin-bottom:4px}
+.pos .q p{font-size:11px;color:var(--ink);line-height:1.5}
+.pos .star{color:var(--red);font-weight:800;font-size:15px}
+.axis{font-size:10px;color:var(--grey);font-weight:700}
+.mtx td,.mtx th{text-align:center;padding:5px 4px;font-size:11px}
+.mtx td.nm{text-align:left;font-weight:600;color:var(--navy)}
+.mtx tr.us td{background:#FBE9EC !important;font-weight:800}
+.mtx .o{color:var(--red);font-weight:800}.mtx .d{color:var(--grey)}.mtx .x{color:var(--lgrey)}
+.tl{display:flex;gap:0;margin-bottom:8px;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.tl .yr{background:var(--navy);color:#fff;font-weight:700;padding:10px 14px;width:120px;flex:none;display:flex;align-items:center;font-size:12px}
+.tl .ct{padding:8px 14px}.tl .ct b{font-size:12.5px;color:var(--navy)}.tl .ct span{font-size:11px;color:var(--grey)}
+.ws{border:1px solid var(--rule);border-left:5px solid var(--red);border-radius:6px;padding:12px 16px;margin-bottom:8px;background:var(--panel)}
+.ws .h{font-size:13px;font-weight:800;color:var(--navy)}.ws .h .b{background:var(--red);color:#fff;border-radius:3px;padding:1px 8px;font-size:11px;margin-right:8px}
+.ws p{font-size:11.5px;color:var(--ink);margin-top:3px}
+.srcs{column-count:2;column-gap:24px;font-size:11px;color:var(--grey)}
+.srcs a{color:var(--teal);word-break:break-all}
+.foot{margin-left:220px;background:var(--navy);color:#8DA0B5;font-size:11px;padding:18px 40px}
+@media print{.nav{display:none}.main,.hero,.foot{margin-left:0}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="brand"><b>MARKET RESEARCH</b><span>ホテル・旅館の基幹システム連携AI市場</span></div>
+  <a href="#sum">1. 要約</a>
+  <a href="#seg">2. 市場の定義・区分</a>
+  <a href="#vc">3. バリューチェーン</a>
+  <a href="#world">4. 世界市場規模</a>
+  <a href="#japan">5. 日本市場規模</a>
+  <a href="#tssom">6. TAM/SAM/SOM</a>
+  <a href="#drv">7. 成長ドライバー</a>
+  <a href="#rot">8. 抑制・機会・脅威</a>
+  <a href="#comp">9. 競争環境・資本</a>
+  <a href="#players">10. プレイヤー徹底分析</a>
+  <a href="#bench">11. 機能ベンチマーク</a>
+  <a href="#outlook">12. 将来展望</a>
+  <a href="#imp">13. 示唆・優位性</a>
+  <a href="#method">14. 方法論・出典</a>
+</nav>
+
+<div class="hero">
+  <div class="k">MARKET RESEARCH REPORT</div>
+  <h1>ホテル・旅館の基幹システム連携AI市場</h1>
+  <div class="lead">PMS連携AIフロントサービス及び関連ツールの市場調査 — 世界・日本の市場規模と予測／成長ドライバー／主要プレイヤー徹底分析／競争環境と示唆</div>
+  <div class="meta">作成 2026年6月 ｜ 対象期間 2023–2030 ｜ 調査会社・官公庁の一次ソース 計165出典で検証（GPT-5.5＋codex 5体による調査・Claudeが統合）</div>
+</div>
+
+<div class="main">
+
+<!-- 1. SUMMARY -->
+<section id="sum">
+  <div class="kick">EXECUTIVE SUMMARY</div><h1>要約</h1>
+  <div class="sub">拡大する未成熟市場に、「旅館オペ統制の専業AI」という明確な空白がある。</div>
+  <div class="grid4">
+    <div class="card bl"><div class="lab">世界 市場規模</div><div class="big">約 $1.8B</div><div class="dsc">狭義(ソフト積み上げ)/2025。ARPUベース対象TAM約$8.8B、広義AI天井$20–34B</div></div>
+    <div class="card bl"><div class="lab">日本 市場規模</div><div class="big">429 億円</div><div class="dsc">宿泊DXソフト/2025年度。2022年202億→年率35%、2030年試算 約830億円</div></div>
+    <div class="card bl"><div class="lab">最大の追い風</div><div class="big">人手不足 59.0%</div><div class="dsc">旅館・ホテル(ワースト級)。訪日4,268万人・消費9.46兆円(2025・過去最高)</div></div>
+    <div class="card bl"><div class="lab">競争の空白</div><div class="big">専業AI 不在</div><div class="dsc">旅館オペ統制の外販製品は世界・日本とも不在。資本はL1大手OSとL3接点に集中</div></div>
+  </div>
+  <div class="concl"><b>結論　</b>市場は世界・日本とも拡大局面。だが各社は「大手OSによる置換」か「単機能ツール」に偏在し、基幹システムを正本として残したまま <b>承認統制 × 因果需要先読み × 旅館の食事提供能力</b> を束ねる製品は皆無。人手不足とインバウンドという構造的追い風の中、この空白が新規参入の勝ち筋になる。</div>
+</section>
+
+<!-- 2. SEGMENTATION -->
+<section id="seg">
+  <div class="kick">SCOPE</div><h2>市場の定義とセグメンテーション</h2>
+  <div class="sub">基幹システム(PMS)を正本として、その上・周辺で動くソフトを対象市場と定義する。</div>
+  <div class="seg"><div class="L" style="background:var(--grey)">L1</div><div class="body"><b>基幹システム / Hotel OS（PMS・中央予約・予約エンジン・会計）</b><span>代表例: Oracle OPERA・Mews・Cloudbeds・陣屋コネクト</span></div><span class="rel tag t-grey">隣接（母体）</span></div>
+  <div class="seg"><div class="L" style="background:var(--red)">L2</div><div class="body"><b>料金最適化・流通（RMS・サイトコントローラー）</b><span>代表例: IDeaS・Duetto・Lighthouse・SiteMinder・メトロエンジン</span></div><span class="rel tag t-red">対象</span></div>
+  <div class="seg"><div class="L" style="background:var(--red)">L3</div><div class="body"><b>ゲスト接点AI（チャット・音声・コンシェルジュ）</b><span>代表例: Canary・Duve・PolyAI・tripla・talkappi</span></div><span class="rel tag t-red">対象</span></div>
+  <div class="seg"><div class="L" style="background:var(--red)">L4</div><div class="body"><b>上位AI・連携統制（agentic・MCP・ガバナンス）</b><span>代表例: Agentic Hospitality・inHotel.io</span></div><span class="rel tag t-red">対象（最白地）</span></div>
+  <div class="seg"><div class="L" style="background:var(--red)">L5</div><div class="body"><b>運用AI・エージェント（業務自動化・実行）</b><span>代表例: Operto・星野FleBOL・Karakami</span></div><span class="rel tag t-red">対象（白地）</span></div>
+  <div class="note">対象市場 = L2〜L5のうち「宿泊事業者が購入するソフト」。基幹システム本体(L1ライセンス)と純粋なネット予約サイト配信は隣接(境界)として除外。</div>
+</section>
+
+<!-- 3. VALUE CHAIN -->
+<section id="vc">
+  <div class="kick">ECOSYSTEM</div><h2>バリューチェーン</h2>
+  <div class="sub">データは上流から流れ、利益は「正本（PMS）＋上位AI」に集まる。中間層はコモディティ化しやすい。</div>
+  <div class="vc" style="border-left-color:var(--navy2)"><b>① 需要・シグナル層</b> &nbsp;<span>ネット予約サイト / メタサーチ / 自社Web / SNS / 気象・イベント・為替・マクロ統計</span><br><i>流入と意図データ</i></div>
+  <div class="arrow">▼</div>
+  <div class="vc" style="border-left-color:var(--navy)"><b>② 正本（System of Record）</b> &nbsp;<span>基幹システム(PMS) / 中央予約 / 予約エンジン / 会計 / 決済</span><br><i>在庫・料金・予約・顧客・会計明細を保持＝データを握る</i></div>
+  <div class="arrow">▼</div>
+  <div class="vc" style="border-left-color:var(--teal)"><b>③ 連携・中間層</b> &nbsp;<span>サイトコントローラー / アプリ連携 / API・MCP接続</span><br><i>正規化・振り分け・ポリシー（コモディティ化しやすい）</i></div>
+  <div class="arrow">▼</div>
+  <div class="vc" style="border-left-color:var(--red)"><b>④ AI判断層（対象市場の主戦場）</b> &nbsp;<span>料金最適化 / ゲスト接点AI / 自律オペAI / 承認ガバナンス</span><br><i>価格・アップセル・人員・応答・例外処理で価値を出す</i></div>
+  <div class="arrow">▼</div>
+  <div class="vc" style="border-left-color:var(--grey)"><b>⑤ 現場の役割</b> &nbsp;<span>収益管理 / フロント / 予約 / マーケ / 支配人 / 本部</span><br><i>意思決定と実行</i></div>
+  <div class="concl" style="background:var(--panel2);color:var(--ink)"><b style="color:var(--red)">我々の位置　</b>②（正本）を置換せず、④の承認統制と⑤の現場実行を押さえる。データを握る②と意思決定の④の“あいだ”に、安全な実行レイヤーとして入る。</div>
+</section>
+
+<!-- 4. WORLD MARKET SIZE -->
+<section id="world">
+  <div class="kick">MARKET SIZE — GLOBAL</div><h2>世界市場規模</h2>
+  <div class="sub">ソフト各セグメントは着実に拡大、広義AIは年40%超で別次元の成長。重複控除後の狭義TAMは約$1.8B。</div>
+  <div class="grid2">
+    <div class="chartbox"><div class="ct">対象セグメントの規模推移（ソフト・10億USD）</div><div class="cw"><canvas id="c_wseg"></canvas></div></div>
+    <div class="chartbox"><div class="ct">広義AI×ホスピタリティ（天井・10億USD・年+41.7%）</div><div class="cw"><canvas id="c_wai"></canvas></div></div>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="chartbox sm"><div class="ct">地域別シェア（ホテル管理ソフト・2024）</div><div class="cw"><canvas id="c_region"></canvas></div></div>
+    <div class="chartbox sm"><div class="ct">対象市場(狭義)の積み上げ（2025・百万USD）</div><div class="cw"><canvas id="c_build"></canvas></div></div>
+  </div>
+  <div class="concl" style="background:var(--panel2);color:var(--ink)"><b style="color:var(--red)">読み方　</b>市場規模は「定義」で大きく変わる。ソフト純額の狭義TAM ≈ <b style="color:var(--red)">$1.8B</b>、宿泊事業者のAIフロント支出余地(ARPU法) ≈ <b style="color:var(--red)">$8.8B</b>、ホスピタリティ生成AI全体(天井) ≈ <b style="color:var(--red)">$20–34B</b>。本レポートは狭義TAM＋ARPU法を基準、広義は上限参照とする。重複前提＝サイトコントローラーの35%・料金最適化の30%・接点AIの25%を基幹/料金最適化と重複として控除。</div>
+  <div class="note">出典: Grand View Research（PMS/SC/RMSセグメント, 2024-25）／ The Business Research Company（AI in hospitality・generative AI in hospitality, 2025-26）。中間年はCAGRからの算出。VMR等の広義値は上限参照（外れ値）として除外。</div>
+</section>
+
+<!-- 5. JAPAN MARKET SIZE -->
+<section id="japan">
+  <div class="kick">MARKET SIZE — JAPAN</div><h2>日本市場規模</h2>
+  <div class="sub">宿泊DXソフト市場は2022年202億→2025年429億（年率35%）、2030年は試算で約830億円。母体6.5兆円に対しソフト投資は0.66%＝伸びしろ。</div>
+  <div class="grid2">
+    <div class="chartbox"><div class="ct">日本 宿泊DXソフト市場の推移（億円）</div><div class="cw"><canvas id="c_jp"></canvas></div></div>
+    <div class="chartbox"><div class="ct">母体：旅館・ホテル市場売上（兆円）</div><div class="cw"><canvas id="c_jpbase"></canvas></div></div>
+  </div>
+  <div class="grid4" style="margin-top:14px">
+    <div class="card bl"><div class="lab">2022→2025 実績</div><div class="big">CAGR +28%</div><div class="dsc">202→429億円（公開値・ミック）</div></div>
+    <div class="card bl"><div class="lab">2030年度 試算</div><div class="big">約 830億円</div><div class="dsc">+14.1%で機械延長</div></div>
+    <div class="card bl"><div class="lab">ソフト投資比率</div><div class="big">0.66 %</div><div class="dsc">429億 ÷ 母体6.5兆。低く伸びしろ大</div></div>
+    <div class="card bl"><div class="lab">ボトムアップTAM</div><div class="big">356–1,248億</div><div class="dsc">客室178万室×2–7万円/室年。中央713億</div></div>
+  </div>
+  <div class="note">■実績/見込（公開・ミック経済研究所）／■試算（前年比+14.1%で機械延長）。出典: ミック経済研究所「ホテル・宿泊DXソリューション市場」2023・2025年版（PMS/RMS/サイトコントローラー/スマートチェックインを含む）／ 帝国データバンク「旅館・ホテル市場動向調査」2026/3（母体: 2023 4.9兆→2024見込6.06兆→2025見込6.5兆）／ 観光庁 宿泊旅行統計2024（施設数72,384）。</div>
+</section>
+
+<!-- 6. TAM/SAM/SOM -->
+<section id="tssom">
+  <div class="kick">MARKET SIZE</div><h2>TAM / SAM / SOM 推計</h2>
+  <div class="sub">定義ごとにレンジで提示。世界SAM中央$5.0B、日本コアSAM中央290億円。SOMは「獲得客室数×ARR/室年」で算出。</div>
+  <div class="grid2">
+    <div>
+      <h3>世界（USD）</h3>
+      <table><tr><th>区分</th><th>中央（レンジ）</th><th>算定</th></tr>
+      <tr><td><b>TAM</b><br>対象・ARPU法</td><td class="o" style="color:var(--red);font-weight:800">$8.8B<br>($4.0–16.0B)</td><td>1,750万室 × ソフト約$500/室年。広義AI天井は$20–34B</td></tr>
+      <tr><td><b>SAM</b><br>連携で販売可能</td><td class="o" style="color:var(--red);font-weight:800">$5.0B<br>($3.0–8.0B)</td><td>到達65% × $450/室年。狭義ソフト積み上げ$1.8Bと整合域</td></tr>
+      <tr><td><b>SOM</b><br>3–5年ARR</td><td class="o" style="color:var(--red);font-weight:800">$30M<br>($4–180M)</td><td>獲得客室数 × ARR/室年。SAM中央の約0.6%</td></tr></table>
+    </div>
+    <div>
+      <h3>日本（円）</h3>
+      <table><tr><th>区分</th><th>中央（レンジ）</th><th>算定</th></tr>
+      <tr><td><b>TAM</b><br>対象・ボトムアップ</td><td style="color:var(--red);font-weight:800">713億円<br>(356–1,248億)</td><td>客室178万室 × 2–7万円/室年。母体6.5兆×0.6–1.9%で検算</td></tr>
+      <tr><td><b>コアSAM</b><br>対象範囲</td><td style="color:var(--red);font-weight:800">290億円<br>(170–380億)</td><td>隣接DX市場429億円(2025年度)の内側。対象範囲×連携可能分</td></tr>
+      <tr><td><b>SOM</b><br>3–5年ARR</td><td style="color:var(--red);font-weight:800">8億円<br>(1–40億)</td><td>獲得施設 × ARR。SAM中央の約2.4%</td></tr></table>
+    </div>
+  </div>
+  <div class="note">出典: GVR/TBRC/Market Intelo（世界, 2025-26）＋ボトムアップ ／ ミック経済研究所・帝国データバンク・観光庁（日本, 2025-26）。広義AIは天井参照、429億円は隣接DX上限の参照。</div>
+</section>
+
+<!-- 7. DRIVERS -->
+<section id="drv">
+  <div class="kick">DYNAMICS</div><h2>成長ドライバー</h2>
+  <div class="sub">人手不足とインバウンドが構造的な需要を生み、システム未統合が伸びしろを残す（DROC枠組みの Drivers）。</div>
+  <div class="grid2">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="drv"><b>▲ 人手不足（日本）</b><p>旅館・ホテルの非正社員不足 <b>59.0%</b>（2025/10・全業種ワースト級）。省人化・自動化の現場需要が直結。</p><div class="src">帝国データバンク 2025/10</div></div>
+      <div class="drv"><b>▲ 人材ギャップ（世界）</b><p>2035年に旅行・観光で4,300万人不足、うちホスピタリティ <b>860万人（必要人員比 −18%）</b>。</p><div class="src">WTTC 2025</div></div>
+      <div class="drv"><b>▲ 直販シフト</b><p>ネット予約サイト手数料 <b>15–30%</b>。直販は利益寄与が約9–10%高く、自社チャネル投資の合理性が高い。</p><div class="src">学術/業界 2025</div></div>
+      <div class="drv"><b>▲ システム未統合</b><p>基幹システムをフル統合できている宿は <b>24%のみ</b>（76%が未統合）。連携・上位AIの需要が大きい。</p><div class="src">Starfleet Research 2025</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="chartbox sm"><div class="ct">訪日外客数の回復（万人）</div><div class="cw"><canvas id="c_inv"></canvas></div></div>
+      <div class="chartbox sm"><div class="ct">訪日旅行消費額の推移（兆円）</div><div class="cw"><canvas id="c_inspend"></canvas></div></div>
+    </div>
+  </div>
+  <div class="note">その他のドライバー: AIの実行化（旅行業リーダーの約89%が何らかのAIを利用、McKinsey 2025）— 「検索→提案」から「予約変更・アップセル実行」へ価値が移動。</div>
+</section>
+
+<!-- 8. R/O/T -->
+<section id="rot">
+  <div class="kick">DYNAMICS</div><h2>抑制・機会・脅威</h2>
+  <div class="sub">切替コストと規制が抑制要因、白地ドメインと実行AIが機会。規制は「正本性を守る承認設計」で逆に強みになり得る。</div>
+  <div class="grid3">
+    <div>
+      <h3 style="border-color:var(--grey)">抑制（Restraints）</h3>
+      <div class="drv res" style="margin-bottom:8px"><b>既存運用の固定化</b><p>ホテルTech予算の<b>63%</b>がレガシー維持（Skift 2025）。新規AI導入の速度を鈍化。</p></div>
+      <div class="drv res" style="margin-bottom:8px"><b>IT人材・運用リソース不足</b><p>導入後の設定・改善・検証まで現場で回らないリスク。</p></div>
+      <div class="drv res"><b>投資余力の二極化</b><p>2025年 宿泊業の退出267件。地方中小は継続課金の耐性が弱い。</p></div>
+    </div>
+    <div>
+      <h3 style="border-color:var(--green)">機会（Opportunities）</h3>
+      <div class="drv opp" style="margin-bottom:8px"><b>旅館固有オペの自動化</b><p>清掃連携・食事時間枠・送迎調整など少人数運営に特化した白地。</p></div>
+      <div class="drv opp" style="margin-bottom:8px"><b>実行型AI（agentic）</b><p>承認付きで予約変更・アップセルを実行する価値へ移行。</p></div>
+      <div class="drv opp"><b>多言語インバウンド対応</b><p>2025年は20市場で過去最高。FAQ/チャット/決済説明の標準化需要。</p></div>
+    </div>
+    <div>
+      <h3 style="border-color:var(--red)">脅威（Threats）</h3>
+      <div class="drv thr" style="margin-bottom:8px"><b>規制（EU AI Act）</b><p>適用開始 <b>2026-08-02</b>、高リスク <b>2027-08-02</b>。違反は最大 <b>€35M / 売上7%</b>。</p></div>
+      <div class="drv thr" style="margin-bottom:8px"><b>大手の垂直統合</b><p>Mewsは買収継続（〜9社）。独立系ツールのコモディティ化圧力。</p></div>
+      <div class="drv thr"><b>地方旅館の退出</b><p>退出267件/年・地方比率<b>75.3%</b>。導入先の母数が純減。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. COMPETITION + CAPITAL -->
+<section id="comp">
+  <div class="kick">COMPETITION</div><h2>競争環境と資本動向</h2>
+  <div class="sub">資本は「置換型の大手OS」と「ゲスト接点AI」に集中。基幹を正本に残して全役割を統制する象限はほぼ無人。</div>
+  <div class="grid2">
+    <div>
+      <div class="axis" style="text-align:center">全役割 運用統制 ↑</div>
+      <div class="pos">
+        <div class="q"><h4>置換 × 全役割</h4><p>Mews / Oracle OPERA<br>Cloudbeds / Shiji<br>陣屋コネクト・星野FleBOL</p></div>
+        <div class="q" style="border-right:none"><h4>共存 × 全役割</h4><p class="star">★ 我々</p><p style="color:var(--red);font-weight:700">5本柱を束ねる無人地帯</p></div>
+        <div class="q" style="border-bottom:none"><h4>置換 × 単機能</h4><p>RoomRaccoon / Little Hotelier<br>Otonomus（AIホテル）</p></div>
+        <div class="q" style="border-right:none;border-bottom:none"><h4>共存 × 単機能</h4><p>価格: IDeaS / Lighthouse / メトロ<br>接点: tripla / talkappi / Canary<br>流通: SiteMinder / 手間いらず</p></div>
+      </div>
+      <div style="display:flex;justify-content:space-between"><span class="axis">← 基幹システム置換</span><span class="axis">共存（上に載せる）→</span></div>
+    </div>
+    <div>
+      <div class="chartbox"><div class="ct">主要な資金調達（2024–26・百万USD）</div><div class="cw"><canvas id="c_fund"></canvas></div></div>
+      <div class="concl" style="background:var(--panel2);color:var(--ink);margin-top:12px"><b style="color:var(--red)">資本の偏り　</b>L1の置換型OS（Mews 評価額$2.5B）とL3ゲスト接点（Canary/PolyAI/Duve）に集中。L4ガバナンス・L5旅館運用AIへの大型資本は確認されず＝参入余地。</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. PLAYERS -->
+<section id="players">
+  <div class="kick">COMPETITION</div><h2>主要プレイヤー徹底分析</h2>
+  <div class="sub">国内外20社。資本は大手OSと接点AIに集中、旅館オペ統制(L5)を外販する専業は不在。</div>
+  <table>
+    <tr><th>社名</th><th>層</th><th>基幹関係</th><th>規模</th><th>直近の資金・動向（2024–26）</th><th>対 我々の差</th></tr>
+    <tr><td><b>Mews</b></td><td>L1 OS</td><td>置換</td><td>15,000顧客/85か国</td><td>Series D $300M・評価$2.5B(26/1)。買収で自律運営OS化</td><td>置換型・食事律速/承認統制なし</td></tr>
+    <tr><td><b>Cloudbeds</b></td><td>L1 OS</td><td>置換</td><td>150か国</td><td>基盤AI『Signals』。25末黒字化見込</td><td>市場内データの相関。外部×因果でない</td></tr>
+    <tr><td><b>Oracle OPERA</b></td><td>L1 PMS</td><td>置換</td><td>世界数千導入</td><td>エンタープライズ標準にAI内蔵</td><td>重厚・中小/旅館に過剰</td></tr>
+    <tr><td><b>Shiji</b></td><td>L1群</td><td>置換</td><td>90,000+ホテル</td><td>アジア最大級。日本(小樽)実績</td><td>置換型・食事律速未対応</td></tr>
+    <tr><td><b>SiteMinder</b></td><td>L2 流通</td><td>連携</td><td>50,100施設(FY25)</td><td>上場・FY25黒字化(+12.6%)</td><td>流通特化・運用AI射程外</td></tr>
+    <tr><td><b>Apaleo</b></td><td>L1</td><td>置換/連携</td><td>1,700+施設</td><td>2024 €20M。API/MCP先行(業界初PMS MCP)</td><td>基盤志向・旅館オペ非対応</td></tr>
+    <tr><td><b>Lighthouse</b></td><td>L2 価格</td><td>連携</td><td>7万件級</td><td>Series C $370M・評価$1B(KKR,24/11)</td><td>価格・分析特化</td></tr>
+    <tr><td><b>IDeaS</b></td><td>L2 価格</td><td>連携</td><td>31,000+施設</td><td>SAS傘下の老舗RMS。Accor全社</td><td>客室軸・旅館/中小に過剰</td></tr>
+    <tr><td><b>Duetto</b></td><td>L2 価格</td><td>連携</td><td>6,000+施設</td><td>Open Pricing。2024買収</td><td>客室レベニュー中核</td></tr>
+    <tr><td><b>RateGain</b></td><td>L2/4</td><td>連携</td><td>3,224顧客(FY25)</td><td>Sojern買収$250M(25/11)</td><td>データ供給特化</td></tr>
+    <tr><td><b>Canary</b></td><td>L3 接点</td><td>連携</td><td>20,000+施設/80か国</td><td>Series D $80M・評価$600M(25/6)</td><td>接点特化・承認統制なし</td></tr>
+    <tr><td><b>Duve</b></td><td>L3 接点</td><td>連携</td><td>thousands</td><td>Series B $60M(25/12)</td><td>接点・需要予測/統制なし</td></tr>
+    <tr><td><b>PolyAI</b></td><td>L4/3 音声</td><td>連携</td><td>主要ホテル採用</td><td>Series D $86M・評価$750M(25/12)</td><td>音声単一・運用統制射程外</td></tr>
+    <tr><td><b>Agentic Hospitality</b></td><td>L4 MCP</td><td>共存</td><td>新興</td><td>MCPで基幹に接続・上位ガバナンス標榜</td><td>思想は近いが因果需要/食事律速は未踏</td></tr>
+    <tr><td><b>inHotel.io</b></td><td>L4/5</td><td>連携</td><td>新興</td><td>職種別AI＋デュアル認可・不変ログ</td><td>軸はアクセス統制・旅館/需要予測外</td></tr>
+    <tr><td><b>tripla</b>（日）</td><td>L2/3/4</td><td>連携</td><td>10,084施設</td><td>東証上場・FY25営収25.7億・黒字</td><td>集客/予約主。承認統制/食事律速なし</td></tr>
+    <tr><td><b>talkappi</b>（日）</td><td>L3 接点</td><td>連携</td><td>600〜1,500施設</td><td>多言語接点・旅館観光特化</td><td>接点単機能</td></tr>
+    <tr><td><b>陣屋コネクト</b>（日）</td><td>L1 PMS</td><td>置換</td><td>600施設超</td><td>旅館発PMS・厨房/配膳に強い</td><td>置換型・因果/監査は弱い</td></tr>
+    <tr><td><b>メトロエンジン</b>（日）</td><td>L2 価格</td><td>連携</td><td>多数</td><td>機械学習＋生成AIで価格・経営提案</td><td>価格起点・承認統制/食事律速外</td></tr>
+    <tr><td><b>星野FleBOL/Karakami</b>（日）</td><td>L5 運用</td><td>内製</td><td>自社運営</td><td>次世代agentic(食事・体験込み予約/AIロールアップ)</td><td>内製・外販の旅館運用AIは空白</td></tr>
+  </table>
+  <div class="note">出典: 各社プレス/IR・調査会社（2024-26、計66出典）。詳細プロファイルは reports/market_research/40_players.md（353行）。</div>
+</section>
+
+<!-- 11. BENCHMARK -->
+<section id="bench">
+  <div class="kick">COMPETITION</div><h2>機能ベンチマーク</h2>
+  <div class="sub">5本柱を縦に貫くのは自社のみ — 主要14社 × 8機能。空白＝我々の独占域。</div>
+  <table class="mtx">
+    <tr><th class="nm" style="text-align:left">社名</th><th>①正本性</th><th>②承認・記録</th><th>③因果需要</th><th>④食事律速</th><th>⑤全役割</th><th>非置換</th><th>AI連携</th><th>日本旅館</th></tr>
+    <tbody id="mtxbody"></tbody>
+  </table>
+  <div class="grid3" style="margin-top:14px">
+    <div class="ws"><div class="h"><span class="b">①②</span>承認統制＋不変記録</div><p>業界は自動反映へ。下書き→検証→人間承認→反映を製品化した旅館特化は皆無。</p></div>
+    <div class="ws"><div class="h"><span class="b">③</span>観光×経済の“因果”先読み</div><p>全社が相関・統計予測どまり。外部データの因果で3–6ヶ月先を読む製品はゼロ。</p></div>
+    <div class="ws"><div class="h"><span class="b">④</span>旅館の食事が販売室数を決める</div><p>世界中が客室在庫前提。会席提供能力・人泊2食・配膳をモデル化した製品は不在。</p></div>
+  </div>
+  <div class="note">凡例: ✓対応 / △部分・片鱗 / ✗非対応。①正本性(置換せず承認後だけ書込) ②承認・記録 ③因果需要先読み ④旅館の食事が販売室数を決める ⑤全役割モバイル。評価は公開情報ベースの相対比較。</div>
+</section>
+
+<!-- 12. OUTLOOK -->
+<section id="outlook">
+  <div class="kick">OUTLOOK</div><h2>トレンドと将来展望（2025–2030）</h2>
+  <div class="sub">agentic化・MCP標準化・寡占が進み、現場実行と統制に価値が移る。</div>
+  <div class="tl"><div class="yr">2025–26</div><div class="ct"><b>応答AI → 実行AI（agentic）</b><span>予約変更・価格適用・アップセルまで実行。承認統制の重要性が増す。</span></div></div>
+  <div class="tl"><div class="yr">2025–27</div><div class="ct"><b>MCP/連携の標準化</b><span>基幹システムを正本にAIから読み書き。連携の摩擦が下がり上位AIが伸長。</span></div></div>
+  <div class="tl"><div class="yr">2025–28</div><div class="ct"><b>寡占・垂直統合</b><span>大手OS(Mews等)が買収を継続。独立ツールはコモディティ化、差別化が必須。</span></div></div>
+  <div class="tl"><div class="yr">2026–27</div><div class="ct"><b>規制の本格化</b><span>EU AI Actの高リスク義務(2027/8)。監査可能性・説明責任が調達要件に。</span></div></div>
+  <div class="tl"><div class="yr">2025–30</div><div class="ct"><b>直販・多言語の定着</b><span>手数料回避と訪日対応で、直販×多言語×CRMの一体運用が標準に。</span></div></div>
+  <div class="concl"><b>含意　</b>価値は「正本の保持＋承認付き実行＋因果の先読み」に移る。我々の設計はこの方向と一致する。</div>
+</section>
+
+<!-- 13. IMPLICATION -->
+<section id="imp">
+  <div class="kick">IMPLICATION</div><h2>示唆：我々の優位性</h2>
+  <div class="sub">構造的追い風 × 競争の空白 × 差別化5本柱の重なりが勝ち筋。</div>
+  <div class="ws"><div class="h"><span class="b">W1（最重要）</span>旅館オペ統制の専業AIが不在</div><p>食事提供能力・配膳・献立・売掛承認を扱う外販製品は世界・日本とも不在（陣屋/星野は内製のみ）。差別化①④を直撃 × 追い風（人手不足・インバウンド）。</p></div>
+  <div class="ws"><div class="h"><span class="b">W2</span>上位AI/MCPガバナンスが空白</div><p>世界で新興1社・日本は専業不在。基幹を正本に承認統制を載せる差別化①②が刺さる。大手の囲い込み(脅威)を正面回避。</p></div>
+  <div class="ws"><div class="h"><span class="b">W3</span>中小・地方の一体型が手薄</div><p>大手はエンタープライズ偏重。agentic運用×多言語接点の軽量一体型＝差別化③⑤ × 人手不足(地方ほど深刻)・未統合76%。</p></div>
+  <div class="concl"><b>▸ </b>市場は拡大、競争は空白、追い風は構造的。基幹システムを置換せず「<b>承認統制 × 因果需要 × 旅館の食事律速</b>」を束ねることが、模倣困難な参入戦略になる。</div>
+</section>
+
+<!-- 14. METHOD -->
+<section id="method">
+  <div class="kick">APPENDIX</div><h2>方法論・出典</h2>
+  <div class="sub">推計はトップダウン（調査会社のセグメント市場）とボトムアップ（客室数×ARPU、宿泊売上×ソフト投資比率）の三角測量。狭義/広義のスコープを分け、外れ値は上限参照に格下げ。全数値に一次ソースを付与（計165出典）。</div>
+  <h3>主要出典</h3>
+  <div class="srcs">
+    Grand View Research（ホテル管理ソフト/PMS/SC/RMS）— grandviewresearch.com<br>
+    The Business Research Company（AI in hospitality & tourism）— thebusinessresearchcompany.com<br>
+    Market Intelo / Dataintelo（RMS）<br>
+    デロイト トーマツ ミック経済研究所（ホテル・宿泊DXソリューション市場 2023/2025）— mic-r.co.jp<br>
+    帝国データバンク（旅館・ホテル市場動向 2026/3／人手不足調査 2025/10）— tdb.co.jp<br>
+    観光庁（宿泊旅行統計／旅行・観光消費動向 2025速報）— mlit.go.jp/kankocho<br>
+    JNTO（訪日外客数 2025）— jnto.go.jp<br>
+    WTTC（旅行観光人材ギャップ 2035）— wttc.org<br>
+    Starfleet Research / Hospitality Net（システム統合率）— hospitalitynet.org<br>
+    EU AI Act（Regulation 2024/1689）— eur-lex.europa.eu<br>
+    各社プレス/IR（Mews・Lighthouse・Canary・PolyAI・Duve・SiteMinder・tripla 等）
+  </div>
+  <div class="note" style="margin-top:14px">本レポートは GPT-5.5（推計ロジック設計）＋ codex 5体（一次ソース検証・並列調査）＋ Claude（統合・作成）による。詳細な検証ログは reports/market_research/（00_blueprint〜50_ecosystem）および reports/market_landscape_v4.md を参照。as-of 2026-06-01。</div>
+</section>
+
+</div>
+<div class="foot">市場調査レポート ｜ ホテル・旅館の基幹システム連携AI及び関連ツール — 2026年6月 ｜ 公開情報・推計を含む（推計はレンジで明示）。本ページは検索エンジンに登録されません。</div>
+
+<script>
+Chart.defaults.font.family="'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif";
+Chart.defaults.font.size=11; Chart.defaults.color="#1A2330";
+const NV="#14283D",NV2="#22425F",RD="#C8102E",GY="#9DAAB7",TL="#0E7490",GR="#1E7A46";
+const noLeg={legend:{display:false}}, dlOff={};
+function mk(id,cfg){const el=document.getElementById(id);if(el)new Chart(el,cfg);}
+// 4. world segments stacked
+mk("c_wseg",{type:"bar",data:{labels:["2023","2025","2028","2030"],datasets:[
+ {label:"基幹システム(PMS)",data:[0.71,0.83,1.06,1.25],backgroundColor:NV},
+ {label:"サイトコントローラー",data:[0.31,0.35,0.42,0.45],backgroundColor:TL},
+ {label:"料金最適化(RMS)",data:[0.33,0.39,0.50,0.55],backgroundColor:NV2},
+ {label:"ゲスト接点AI",data:[0.10,0.24,0.94,2.30],backgroundColor:RD}]},
+ options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{color:"#EEF2F6"}}},plugins:{legend:{position:"bottom",labels:{boxWidth:10,font:{size:10}}}}}});
+// 4. broad AI
+mk("c_wai",{type:"bar",data:{labels:["2023","2025","2028","2030"],datasets:[{data:[17.1,34.2,97.3,196.1],backgroundColor:[GY,NV2,NV,RD]}]},
+ options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{grid:{color:"#EEF2F6"}}},plugins:{legend:{display:false}}}});
+// 4. region
+mk("c_region",{type:"bar",data:{labels:["北米","欧州","APAC","うち日本"],datasets:[{data:[35.5,26.2,23.0,3.7],backgroundColor:[NV,NV2,TL,RD]}]},
+ options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,scales:{x:{grid:{color:"#EEF2F6"},ticks:{callback:v=>v+"%"}},y:{grid:{display:false}}},plugins:{legend:{display:false}}}});
+// 4. buildup
+mk("c_build",{type:"bar",data:{labels:["①基幹","②SC","③料金","④接点AI","重複控除","=狭義TAM"],datasets:[{data:[830,350,390,240,-300,1510],backgroundColor:[NV,TL,NV2,RD,GY,RD]}]},
+ options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,scales:{x:{grid:{color:"#EEF2F6"}},y:{grid:{display:false}}},plugins:{legend:{display:false}}}});
+// 5. japan time series
+mk("c_jp",{type:"bar",data:{labels:["2022","2023","2024","2025","2026","2027","2028","2029","2030"],datasets:[{data:[202,235,376,429,489.5,558.5,637.2,727.1,829.6],backgroundColor:["#14283D","#14283D","#14283D",RD,GY,GY,GY,GY,GY]}]},
+ options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{grid:{color:"#EEF2F6"}}},plugins:{legend:{display:false}}}});
+// 5. japan base
+mk("c_jpbase",{type:"bar",data:{labels:["2023","2024見込","2025見込"],datasets:[{data:[4.9,6.06,6.5],backgroundColor:[NV2,NV,RD]}]},
+ options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{grid:{color:"#EEF2F6"}}},plugins:{legend:{display:false}}}});
+// 7. inbound visitors
+mk("c_inv",{type:"bar",data:{labels:["2019","2023","2024","2025"],datasets:[{data:[3188,2507,3687,4268],backgroundColor:[NV,GY,NV,RD]}]},
+ options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{grid:{color:"#EEF2F6"}}},plugins:{legend:{display:false}}}});
+// 7. inbound spend
+mk("c_inspend",{type:"bar",data:{labels:["2019","2023","2024","2025"],datasets:[{data:[4.81,5.31,8.13,9.46],backgroundColor:[NV,GY,NV,RD]}]},
+ options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{grid:{color:"#EEF2F6"}}},plugins:{legend:{display:false}}}});
+// 9. funding
+mk("c_fund",{type:"bar",data:{labels:["Mews '26","Lighthouse '24","PolyAI '25","Canary '25","Duve '25","Apaleo '24"],datasets:[{data:[300,370,86,80,60,22],backgroundColor:[RD,NV,NV2,NV2,TL,GY]}]},
+ options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,scales:{x:{grid:{color:"#EEF2F6"}},y:{grid:{display:false}}},plugins:{legend:{display:false}}}});
+// 11. matrix
+const M=[["陣屋コネクト",["x","x","x","d","d","x","x","o"]],["aipass",["x","x","x","d","d","x","d","d"]],["星野 FleBOL(内製)",["x","x","x","d","d","x","d","o"]],["メトロエンジン",["x","x","d","x","x","o","d","o"]],["tripla",["x","x","x","x","d","o","d","o"]],["talkappi",["x","x","x","x","x","o","d","o"]],["Mews",["x","d","x","x","d","x","o","d"]],["Cloudbeds",["x","x","d","x","x","x","o","x"]],["Oracle OPERA",["x","d","x","x","d","x","d","d"]],["Shiji",["x","d","x","x","x","x","d","d"]],["SiteMinder",["x","x","x","x","x","o","d","d"]],["Lighthouse",["x","d","x","x","x","x","o","d"]],["Canary",["x","x","x","x","d","o","o","d"]],["Agentic Hospitality",["d","d","x","x","x","o","o","x"]],["★ 自社",["o","o","o","o","o","o","o","o"]]];
+const sym={o:'<span class="o">✓</span>',d:'<span class="d">△</span>',x:'<span class="x">✗</span>'};
+document.getElementById("mtxbody").innerHTML=M.map((r,i)=>{const us=i===M.length-1;return '<tr'+(us?' class="us"':'')+'><td class="nm">'+r[0]+'</td>'+r[1].map(c=>'<td>'+sym[c]+'</td>').join('')+'</tr>';}).join('');
+</script>
+</body>
+</html>
