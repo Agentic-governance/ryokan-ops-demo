@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>提案デッキ｜旅館運営AIシステム</title>
+<style>
+:root{--navy:#14283D;--red:#C8102E;--grey:#6B7886;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;background:#0d1722;color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{display:flex;align-items:center;gap:14px;padding:9px 16px;background:var(--navy);border-bottom:2px solid var(--red);flex:0 0 auto}
+header .ttl{font-size:13.5px;font-weight:700;letter-spacing:.3px}
+header .sub{font-size:11px;color:#AFC0D2;margin-top:1px}
+header .right{margin-left:auto;display:flex;align-items:center;gap:9px}
+header a{text-decoration:none;font-size:12px;border-radius:6px;padding:6px 12px}
+header a.dl{color:#fff;background:var(--red);font-weight:700}
+header a.dl:hover{background:#a50d26}
+header a.home{color:#C7D3DE;border:1px solid #3A5072}
+header a.home:hover{background:#1c354e;color:#fff}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;gap:12px;min-height:0}
+.nav{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#fff;width:44px;height:44px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer;flex:0 0 auto}
+.nav:hover{background:var(--red);border-color:var(--red)}
+.nav:disabled{opacity:.22;cursor:default}
+.slidewrap{position:relative;height:100%;max-width:calc(100% - 120px);aspect-ratio:16/9;background:#fff;box-shadow:0 8px 40px rgba(0,0,0,.55);border-radius:4px;overflow:hidden}
+.slidewrap img{width:100%;height:100%;display:block;object-fit:contain}
+footer{flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:16px;padding:9px;background:var(--navy)}
+.counter{font-size:13px;color:#C7D3DE;min-width:58px;text-align:center;font-variant-numeric:tabular-nums}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:56vw}
+.dot{width:9px;height:9px;border-radius:50%;background:#3A5072;cursor:pointer;border:none;padding:0}
+.dot.on{background:var(--red)}
+.hint{flex:0 0 auto;font-size:10.5px;color:#5d6b7a;text-align:center;padding:0 0 7px;background:#0d1722}
+@media(max-width:640px){.nav{width:36px;height:36px;font-size:18px}header .sub{display:none}.slidewrap{max-width:calc(100% - 88px)}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="ttl">提案デッキ — 旅館運営AIシステム</div><div class="sub">基幹システムを置換せず、現場判断・AI・承認を束ねる運用レイヤー（全10枚）</div></div>
+  <div class="right">
+    <a class="dl" href="HMS_pitch.pptx" download>PPTをダウンロード</a>
+    <a class="home" href="index.html">← 一覧へ</a>
+  </div>
+</header>
+<div class="stage">
+  <button class="nav" id="prev" aria-label="前のスライド">‹</button>
+  <div class="slidewrap"><img id="slide" src="pitch_slides/slide-01.png" alt="スライド 1"></div>
+  <button class="nav" id="next" aria-label="次のスライド">›</button>
+</div>
+<footer>
+  <div class="counter"><span id="cur">1</span> / <span id="total">10</span></div>
+  <div class="dots" id="dots"></div>
+</footer>
+<div class="hint">← → キー（またはスペース）でも移動できます</div>
+<script>
+const N=10, pad=n=>String(n).padStart(2,'0');
+let i=1;
+const img=document.getElementById('slide'),cur=document.getElementById('cur'),
+      prev=document.getElementById('prev'),next=document.getElementById('next'),dots=document.getElementById('dots');
+document.getElementById('total').textContent=N;
+for(let k=1;k<=N;k++){const b=document.createElement('button');b.className='dot';b.setAttribute('aria-label','スライド'+k);b.onclick=()=>go(k);dots.appendChild(b);}
+for(let k=1;k<=N;k++){const im=new Image();im.src='pitch_slides/slide-'+pad(k)+'.png';}
+function go(n){i=Math.max(1,Math.min(N,n));img.src='pitch_slides/slide-'+pad(i)+'.png';img.alt='スライド '+i;cur.textContent=i;
+  prev.disabled=(i===1);next.disabled=(i===N);
+  [...dots.children].forEach((d,idx)=>d.classList.toggle('on',idx===i-1));}
+prev.onclick=()=>go(i-1);next.onclick=()=>go(i+1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(i+1);}if(e.key==='ArrowLeft'){e.preventDefault();go(i-1);}});
+go(1);
+</script>
+</body>
+</html>
