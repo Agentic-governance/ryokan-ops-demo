@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>もっと</title>
+<style>
+:root{
+  --bg:#FFFFFF;--text:#1A1A1A;--text-sub:#4A4A4A;--text-mute:#8C8C8C;
+  --rule:#D0D0D0;--rule-soft:#E5E5E5;--rule-lite:#F0F0F0;--surface:#F7F7F7;
+  --brand:#C8102E;--brand-lite:#FCE5E8;--brand-soft:#FFF0F2;--brand-dark:#8B0F1F;
+  --navy:#1E3A5F;--navy-lite:#DCE5F0;--green:#15803D;--green-lite:#DCFCE7;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;background:#F0F0F0;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px 0;-webkit-font-smoothing:antialiased;}
+.phone-frame{width:375px;min-height:812px;background:var(--bg);border-radius:40px;box-shadow:0 20px 60px rgba(0,0,0,0.15),0 0 0 1px rgba(0,0,0,0.05);position:relative;overflow:hidden;display:flex;flex-direction:column;}
+.notch{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:12px;font-weight:600;color:var(--text);}
+.appbar{background:var(--navy);color:#fff;padding:14px 18px 16px;}
+.appbar .role{font-size:11px;color:#B9C7D8;}
+.appbar .ttl{font-size:18px;font-weight:800;margin-top:2px;}
+.content{flex:1;overflow-y:auto;padding:14px 14px 86px;}
+.grp{font-size:11px;font-weight:700;color:var(--text-mute);letter-spacing:.04em;margin:14px 4px 7px;text-transform:uppercase;}
+.menu{background:var(--bg);border:1px solid var(--rule-soft);border-radius:12px;overflow:hidden;}
+a.item{display:flex;align-items:center;gap:12px;padding:13px 15px;border-bottom:1px solid var(--rule-lite);text-decoration:none;color:var(--text);}
+a.item:last-child{border-bottom:none;}
+a.item:active{background:var(--surface);}
+a.item .ic{width:30px;height:30px;border-radius:8px;background:var(--brand-soft);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+a.item .tx{flex:1;}
+a.item .tx .t{font-size:14px;font-weight:600;}
+a.item .tx .d{font-size:11px;color:var(--text-mute);margin-top:1px;}
+a.item .arw{color:var(--text-mute);font-size:16px;}
+a.pc{display:block;margin-top:16px;text-align:center;background:var(--navy);color:#fff;border-radius:12px;padding:13px;font-size:13px;font-weight:700;text-decoration:none;}
+.note{font-size:10.5px;color:var(--text-mute);text-align:center;margin-top:12px;line-height:1.6;}
+.bottom-nav{position:absolute;bottom:0;left:0;right:0;height:64px;background:var(--bg);border-top:1px solid var(--rule-soft);display:flex;align-items:center;justify-content:space-around;border-radius:0 0 40px 40px;}
+.nav-tab{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--text-mute);font-size:10px;}
+.nav-tab.active{color:var(--brand);}
+.nav-tab .icon{font-size:19px;}
+</style>
+</head>
+<body>
+<div class="phone-frame">
+  <div class="notch"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="appbar">
+    <div class="role">支配人A ・ ○○リゾート箱根</div>
+    <div class="ttl">もっと</div>
+  </div>
+  <div class="content">
+
+    <div class="grp">現場オペレーション</div>
+    <div class="menu">
+      <a class="item" href="mobile_today.html"><span class="ic">🏯</span><span class="tx"><div class="t">今日（ホーム）</div><div class="d">当日のやること・確認事項</div></span><span class="arw">›</span></a>
+      <a class="item" href="mobile_action.html"><span class="ic">📝</span><span class="tx"><div class="t">アクション詳細</div><div class="d">お客様対応の現場ビュー</div></span><span class="arw">›</span></a>
+      <a class="item" href="mobile_reservations.html"><span class="ic">📅</span><span class="tx"><div class="t">予約</div><div class="d">予約・到着の確認</div></span><span class="arw">›</span></a>
+      <a class="item" href="mobile_rooms.html"><span class="ic">🛏️</span><span class="tx"><div class="t">客室</div><div class="d">清掃・客室状況</div></span><span class="arw">›</span></a>
+      <a class="item" href="mobile_guests.html"><span class="ic">🧑‍🤝‍🧑</span><span class="tx"><div class="t">ゲスト</div><div class="d">担当ゲストの情報（ID表示）</div></span><span class="arw">›</span></a>
+    </div>
+
+    <div class="grp">食事・保全・販売</div>
+    <div class="menu">
+      <a class="item" href="mobile_meals.html"><span class="ic">🍽️</span><span class="tx"><div class="t">食事</div><div class="d">配膳・アレルギー対応</div></span><span class="arw">›</span></a>
+      <a class="item" href="mobile_maintenance.html"><span class="ic">🔧</span><span class="tx"><div class="t">設備保全</div><div class="d">不具合の確認・点検登録</div></span><span class="arw">›</span></a>
+      <a class="item" href="mobile_marketing.html"><span class="ic">📈</span><span class="tx"><div class="t">マーケティング</div><div class="d">予約の動きと販売候補</div></span><span class="arw">›</span></a>
+    </div>
+
+    <div class="grp">承認・記録・連携</div>
+    <div class="menu">
+      <a class="item" href="mobile_approvals.html"><span class="ic">✓</span><span class="tx"><div class="t">承認</div><div class="d">外出先でも承認・記録（監査ログ）</div></span><span class="arw">›</span></a>
+      <a class="item" href="mobile_reports.html"><span class="ic">📊</span><span class="tx"><div class="t">レポート</div><div class="d">売上・会計の確認</div></span><span class="arw">›</span></a>
+      <a class="item" href="mobile_connectivity.html"><span class="ic">🔌</span><span class="tx"><div class="t">連携</div><div class="d">予約データの取り込み状況</div></span><span class="arw">›</span></a>
+    </div>
+
+    <a class="pc" href="index.html">🖥️ PC版・デモ一覧へ</a>
+    <div class="note">サンプルデータ・個人名は非表示（役割ラベル／IDで表示）。<br>AIは検知・提案まで。重要な実行は人の承認後・監査ログに記録。</div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-tab" href="mobile_today.html"><div class="icon">&#8962;</div><div>今日</div></a>
+    <a class="nav-tab" href="mobile_reports.html"><div class="icon">&#128202;</div><div>レポート</div></a>
+    <a class="nav-tab" href="mobile_approvals.html"><div class="icon">&#128221;</div><div>承認</div></a>
+    <a class="nav-tab" href="mobile_rooms.html"><div class="icon">&#127968;</div><div>客室</div></a>
+    <a class="nav-tab active" href="mobile_more.html"><div class="icon">&#8942;</div><div>もっと</div></a>
+  </div>
+</div>
+</body>
+</html>

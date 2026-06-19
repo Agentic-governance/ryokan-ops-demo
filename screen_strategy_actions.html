@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>AI戦略アクション — 施設運営AI OS</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+/* 画面固有: 制約チェックの○×行 */
+.constraint{font-size:11px;color:var(--text-sub);line-height:1.5;margin-bottom:3px;}
+.constraint .ok{color:var(--green);font-weight:700;}
+.constraint .ng{color:var(--brand);font-weight:700;}
+.constraint .warn{color:var(--amber);font-weight:700;}
+.flow-strip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--bg);border:1px solid var(--rule-soft);border-radius:6px;padding:12px 16px;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.flow-step{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text-sub);}
+.flow-step .num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--navy);color:#fff;font-size:10px;font-weight:700;}
+.flow-step.hl .num{background:var(--brand);}
+.flow-step.hl{color:var(--brand);font-weight:700;}
+.flow-arrow{color:var(--text-mute);font-size:13px;}
+.grp-meta{font-size:10.5px;color:var(--text-mute);font-weight:600;margin-left:8px;}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-logo"><span class="dot"></span><span>施設運営AI OS</span><span class="os">FACILITY OS</span></div>
+  <div class="header-facility"><span>○○リゾート箱根 — 全施設横断ビュー</span><span style="font-size:11px;color:var(--text-mute);">▾</span></div>
+  <div class="header-search"><input type="text" placeholder="予約ID・部屋番号・提案IDを検索"></div>
+  <div class="header-right">
+    <a class="header-link" href="index.html">← デモ一覧</a>
+    <div class="header-notif">🔔<span class="notif-badge">8</span></div>
+    <div class="header-user"><div><div class="header-user-name">支配人A</div><div class="header-user-role">支配人</div></div><span style="font-size:11px;color:var(--text-mute);">▾</span></div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <div class="sidebar-group">運営</div>
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen_meals.html">食事管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">設備保全</a>
+  <div class="sidebar-group">AI・戦略・外部</div>
+  <a class="sidebar-item" href="screen_external_signals.html">外部シグナル監視</a>
+  <a class="sidebar-item" href="screen_risk_forecast.html">リスク予測</a>
+  <a class="sidebar-item active" href="screen_strategy_actions.html">AI戦略アクション</a>
+  <div class="sidebar-group">承認・監査</div>
+  <a class="sidebar-item" href="screen_approvals.html">承認待ち</a>
+  <a class="sidebar-item" href="screen_audit_reports.html">監査レポート</a>
+  <div class="sidebar-group">展開</div>
+  <a class="sidebar-item" href="screen_public_facility.html">公共施設OS</a>
+</nav>
+
+<main class="main">
+<div class="page-head">
+  <div class="crumb"><a href="index.html">デモ一覧</a> ／ AI戦略アクション</div>
+  <div class="page-kicker">STRATEGY ACTIONS</div>
+  <h1 class="page-title">AI戦略アクション — 提案を承認で動かす</h1>
+  <p class="page-sub">AIが外部シグナルと内部制約を突き合わせて作った提案を、承認ワークフローで実行する。重要な書き込みは必ず承認後・監査ログに記録。</p>
+</div>
+
+<div class="note-strip">
+  <span class="ico">🤖</span>
+  <span>AIは<b>外部シグナル（需要・天気・競合・SNS・OTA）</b>と<b>内部制約（実効販売可能数・食事提供能力・清掃能力・人員）</b>を突き合わせて提案します。AIが行うのは検知・要約・提案まで。<b>実行は人間の承認後</b>に行われ、すべて監査ログに記録されます。</span>
+</div>
+
+<div class="kpi-strip">
+  <div class="kpi-card">
+    <div class="kpi-label">未承認の提案</div>
+    <div class="kpi-value">8<span class="unit">件</span></div>
+    <div class="kpi-delta warn">うち 至急 2 ／ 本日中 3</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">期待増収（全提案合計）</div>
+    <div class="kpi-value">¥1.86<span class="unit">M</span></div>
+    <div class="kpi-delta up">▲ 承認すれば今月見込みに加算</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">制約クリア率</div>
+    <div class="kpi-value">75<span class="unit">%</span></div>
+    <div class="kpi-delta warn">2件は人員制約で条件付き</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">要上位承認</div>
+    <div class="kpi-value">2<span class="unit">件</span></div>
+    <div class="kpi-delta down">価格変更・販売停止は要決裁</div>
+  </div>
+</div>
+
+<div class="flow-strip">
+  <div class="flow-step"><span class="num">1</span>外部シグナル検知</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step"><span class="num">2</span>内部制約と突合</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step hl"><span class="num">3</span>AIが提案を生成</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step hl"><span class="num">4</span>人間が承認／却下</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step"><span class="num">5</span>実行＋監査ログ記録</div>
+</div>
+
+<!-- ============ 1. 増収 / 価格 ============ -->
+<div class="section-title">増収 / 価格<span class="grp-meta">需要シグナル × 実効販売可能数</span></div>
+<div class="grid-2">
+
+  <div class="proposal urgent">
+    <div class="proposal-top">
+      <span class="prio urgent">至急</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-red">要上位承認</span>
+      <span class="badge b-navy">価格</span>
+    </div>
+    <div class="proposal-msg">12/24-26 の本館スタンダード和洋室を +12% に値上げ</div>
+    <div class="proposal-line">期待効果：<b>期待増収 約 +¥420,000</b>（3泊・残14室を満室想定）</div>
+    <div class="proposal-basis">根拠: 紅葉ライトアップ＋クリスマス連休で当該日程の検索需要 +32% ／ 競合5施設中4施設が満室 ／ 同条件OTA最安が当館より +¥4,800</div>
+    <div class="constraint">制約: 実効販売可能数 残14室 <span class="ok">OK</span> ／ 食事提供能力 <span class="ok">OK</span> ／ 清掃能力 <span class="ok">OK</span> ／ 人員 <span class="ok">OK</span></div>
+    <div class="proposal-meta"><span>承認者: <b>支配人A ＋ 会計担当C</b></span><span>提案ID <b>AI-2026-0418</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+  <div class="proposal today">
+    <div class="proposal-top">
+      <span class="prio today">本日中</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-navy">価格</span>
+    </div>
+    <div class="proposal-msg">平日（火・水）の別館ツインを -8% に調整し稼働を底上げ</div>
+    <div class="proposal-line">期待効果：<b>期待増収 約 +¥185,000</b>（空室14室の歩留まり改善）</div>
+    <div class="proposal-basis">根拠: 来週平日の予約ペースが前年同週比 -19% ／ 近隣で大型イベントなし ／ 価格弾力性モデルで -8% 時に充足率 +21pt 見込み</div>
+    <div class="constraint">制約: 実効販売可能数 <span class="ok">OK</span> ／ 食事提供能力 <span class="ok">OK</span> ／ 清掃能力 <span class="ok">OK</span> ／ 人員 <span class="ok">OK</span></div>
+    <div class="proposal-meta"><span>承認者: <b>会計担当C</b></span><span>提案ID <b>AI-2026-0419</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ 2. Web / SNS / OTA コピー ============ -->
+<div class="section-title">Web / SNS / OTA コピー<span class="grp-meta">話題シグナル × 訴求最適化</span></div>
+<div class="grid-2">
+
+  <div class="proposal">
+    <div class="proposal-top">
+      <span class="prio suggest">提案</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-purple">Web</span>
+    </div>
+    <div class="proposal-msg">公式サイトのトップ訴求を「雪見温泉」訴求に更新</div>
+    <div class="proposal-line">期待効果：<b>CVR +0.4pt 見込み / 期待増収 約 +¥130,000</b></div>
+    <div class="proposal-basis">根拠: 週間予報で来週末に初積雪見込み ／ 「箱根 雪見風呂」検索が直近7日で +58% ／ 昨季同訴求時の流入CVRが通常比 1.3倍</div>
+    <div class="constraint">制約: 実効販売可能数 <span class="ok">OK（露天付き客室 残6室）</span> ／ 清掃能力 <span class="ok">OK</span></div>
+    <div class="proposal-meta"><span>承認者: <b>支配人A</b></span><span>提案ID <b>AI-2026-0420</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal-top">
+      <span class="prio suggest">提案</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-purple">OTA</span>
+      <span class="badge b-navy">SNS</span>
+    </div>
+    <div class="proposal-msg">OTA説明文に「貸切家族風呂」を追記し、台湾向け繁体字ページを更新</div>
+    <div class="proposal-line">期待効果：<b>台湾セグメントの予約 +6〜9% 見込み</b></div>
+    <div class="proposal-basis">根拠: 繁体字SNSで当館の「家族風呂」言及が直近2週で +44% ／ 主要OTA説明文に家族風呂の記載なし ／ 台湾発の問い合わせが前月比 +27%</div>
+    <div class="constraint">制約: 貸切風呂 予約枠 <span class="warn">一部逼迫</span> → ピーク時間帯の枠数を制限して掲載</div>
+    <div class="proposal-meta"><span>承認者: <b>フロント担当B</b></span><span>提案ID <b>AI-2026-0421</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ 3. 運用 / 人員 ============ -->
+<div class="section-title">運用 / 人員<span class="grp-meta">稼働予測 × 人員制約</span></div>
+<div class="grid-2">
+
+  <div class="proposal today">
+    <div class="proposal-top">
+      <span class="prio today">本日中</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-amber">人員</span>
+    </div>
+    <div class="proposal-msg">今週末（金・土）の夜勤フロントを 1名増員</div>
+    <div class="proposal-line">期待効果：<b>クレーム回避 / 深夜チェックイン対応の遅延ゼロ化</b></div>
+    <div class="proposal-basis">根拠: 週末の到着予定が前週比 +38組（うち22時以降到着 14組） ／ 過去の同水準日でフロント待ち時間が15分超 ／ 海外団体1件の深夜着あり</div>
+    <div class="constraint">制約: 食事提供能力 <span class="ok">OK</span> ／ 清掃能力 <span class="ok">OK</span> ／ 人員 <span class="ng">一部不足</span> → 夜勤シフトに1名増員前提（候補2名に空き確認済み）</div>
+    <div class="proposal-meta"><span>承認者: <b>支配人A ＋ 夜勤担当D</b></span><span>提案ID <b>AI-2026-0422</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal-top">
+      <span class="prio suggest">提案</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-amber">運用</span>
+    </div>
+    <div class="proposal-msg">日曜の清掃シフトを午前へ2名前倒しし、アーリーチェックインを解放</div>
+    <div class="proposal-line">期待効果：<b>アーリーIN販売 +8件 / 期待増収 約 +¥56,000</b></div>
+    <div class="proposal-basis">根拠: 日曜は連泊客の入替が午前に集中 ／ 11時時点の清掃完了率が直近4週で平均62% ／ アーリーIN要望が前月比 +12件</div>
+    <div class="constraint">制約: 清掃能力 <span class="warn">条件付き</span> → 午前2名前倒しで対応可 ／ 人員 <span class="ok">OK（早番に空き）</span></div>
+    <div class="proposal-meta"><span>承認者: <b>支配人A</b></span><span>提案ID <b>AI-2026-0423</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ 4. 保全 / 客室販売停止 ============ -->
+<div class="section-title">保全 / 客室販売停止<span class="grp-meta">設備シグナル × 実効販売可能数</span></div>
+<div class="grid-2">
+
+  <div class="proposal urgent">
+    <div class="proposal-top">
+      <span class="prio urgent">至急</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-red">要上位承認</span>
+      <span class="badge b-amber">保全</span>
+    </div>
+    <div class="proposal-msg">別館302を48時間 販売停止し、予約客へ同等以上の代替室を提案</div>
+    <div class="proposal-line">期待効果：<b>クレーム・返金リスク回避 / 直前キャンセル防止</b></div>
+    <div class="proposal-basis">根拠: 302の給湯温度センサーが基準下限を継続検知 ／ 保全担当が要点検と判断 ／ 当該室に2泊予約1件（明後日着）あり</div>
+    <div class="constraint">制約: 実効販売可能数 <span class="ok">OK</span> → 同タイプ上位室 304 が空室・無償アップグレードで充当可 ／ 清掃能力 <span class="ok">OK</span></div>
+    <div class="proposal-meta"><span>承認者: <b>支配人A ＋ フロント担当B</b></span><span>提案ID <b>AI-2026-0424</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+  <div class="proposal good">
+    <div class="proposal-top">
+      <span class="prio good">余裕あり</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-green">保全</span>
+    </div>
+    <div class="proposal-msg">大浴場ろ過装置の定期点検を、稼働の谷である来週火曜午前に予約</div>
+    <div class="proposal-line">期待効果：<b>営業影響ゼロで予防保全 / 突発停止リスク低減</b></div>
+    <div class="proposal-basis">根拠: 前回点検から稼働時間が推奨インターバルの92%に到達 ／ 来週火曜午前は入浴利用が最少（過去4週平均） ／ 業者の同日空きあり</div>
+    <div class="constraint">制約: 実効販売可能数 <span class="ok">影響なし（夜間は通常営業）</span> ／ 人員 <span class="ok">OK</span></div>
+    <div class="proposal-meta"><span>承認者: <b>支配人A</b></span><span>提案ID <b>AI-2026-0425</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ 5. 発注 / 食材在庫 ============ -->
+<div class="section-title">発注 / 食材在庫<span class="grp-meta">予約・アレルギー情報 × 食事提供能力</span></div>
+<div class="grid-2">
+
+  <div class="proposal today">
+    <div class="proposal-top">
+      <span class="prio today">本日中</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-amber">発注</span>
+    </div>
+    <div class="proposal-msg">甲殻類アレルギー対応の代替食材（白身魚・地鶏）を3名分 追加発注</div>
+    <div class="proposal-line">期待効果：<b>アレルギー事故回避 / 当日対応の欠品防止</b></div>
+    <div class="proposal-basis">根拠: 明日着の予約3件に甲殻類アレルギー申告 ／ 現在庫の代替食材が2名分のみ ／ 仕入れ先の本日発注締切 15:00</div>
+    <div class="constraint">制約: 食事提供能力 <span class="warn">条件付き</span> → 代替食材の発注で充足 ／ 厨房人員 <span class="ok">OK</span></div>
+    <div class="proposal-meta"><span>承認者: <b>会計担当C</b></span><span>提案ID <b>AI-2026-0426</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal-top">
+      <span class="prio suggest">提案</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-amber">発注</span>
+    </div>
+    <div class="proposal-msg">週末の夕食提供数に合わせ、地物鮮魚の発注量を +20% に増量</div>
+    <div class="proposal-line">期待効果：<b>機会損失の回避 / 食材廃棄率は据え置き見込み</b></div>
+    <div class="proposal-basis">根拠: 週末の夕食付き予約が確定ベースで前週比 +31食 ／ 直近の鮮魚消費が発注量の98%（欠品ギリギリ） ／ 連休前の市場相場は安定</div>
+    <div class="constraint">制約: 食事提供能力 <span class="ok">OK（最大席数内）</span> ／ 冷蔵保管 <span class="ok">OK</span></div>
+    <div class="proposal-meta"><span>承認者: <b>会計担当C</b></span><span>提案ID <b>AI-2026-0427</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ 6. 顧客コミュニケーション ============ -->
+<div class="section-title">顧客コミュニケーション<span class="grp-meta">予約状況シグナル × フロント運用</span></div>
+<div class="grid-2">
+
+  <div class="proposal urgent">
+    <div class="proposal-top">
+      <span class="prio urgent">至急</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-red">顧客対応</span>
+    </div>
+    <div class="proposal-msg">到着未確認の4組へ、定型メッセージで到着予定時刻の確認連絡を送信</div>
+    <div class="proposal-line">期待効果：<b>ノーショー削減 / 夜間オペレーションの平準化</b></div>
+    <div class="proposal-basis">根拠: 本日18時時点で到着予定の4組が未チェックイン ／ うち2組は過去にノーショー履歴 ／ 連絡可能な電話/メールを保有</div>
+    <div class="constraint">制約: 送信は人間の承認後 ／ 個人情報は画面上で非表示（送信時のみ参照） ／ フロント人員 <span class="ok">OK</span></div>
+    <div class="proposal-meta"><span>承認者: <b>フロント担当B</b></span><span>提案ID <b>AI-2026-0428</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+  <div class="proposal good">
+    <div class="proposal-top">
+      <span class="prio good">余裕あり</span>
+      <span class="ai-badge">🤖 AI提案</span>
+      <span class="badge b-green">顧客対応</span>
+    </div>
+    <div class="proposal-msg">連泊・記念日予約の3組へ、館内アクティビティの事前案内を送付</div>
+    <div class="proposal-line">期待効果：<b>付帯売上 約 +¥38,000 / 満足度・再訪率の向上</b></div>
+    <div class="proposal-basis">根拠: 予約備考に「記念日」「アニバーサリー」の記載3件 ／ 連泊客は館内体験の利用率が1.6倍 ／ 該当日のアクティビティ枠に空きあり</div>
+    <div class="constraint">制約: 送信は人間の承認後 ／ アクティビティ提供能力 <span class="ok">OK</span> ／ 人員 <span class="ok">OK</span></div>
+    <div class="proposal-meta"><span>承認者: <b>フロント担当B</b></span><span>提案ID <b>AI-2026-0429</b></span></div>
+    <div class="btns">
+      <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+      <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+      <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+      <button class="btn ghost" onclick="actOn(this,'根拠パネルを表示','#7C3AED')">根拠を見る</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="note-strip privacy-strip">
+  <span class="ico">🔒</span>
+  <span>個人名・連絡先は画面上では非表示です。AIは検知・要約・提案までを担当し、<b>送信・価格変更・販売停止など外部に影響する実行は、必ず担当者の承認後</b>に行われ、承認者・日時・根拠とともに監査レポートへ記録されます。</span>
+</div>
+
+<div class="foot">サンプルデータ・個人名は非表示。AIは検知・要約・提案まで／重要な実行は人の承認後・監査ログに記録。</div>
+</main>
+
+<script>
+function actOn(btn,label,color){var c=btn.closest('.proposal')||btn.closest('.card');if(!c)return;var b=c.querySelector('.btns');var t=c.querySelector('.act-result');if(!t){t=document.createElement('span');t.className='act-result';t.style.cssText='display:inline-block;margin-left:8px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;';b.appendChild(t);}t.textContent=label;t.style.background=color+'22';t.style.color=color;}
+</script>
+</body>
+</html>

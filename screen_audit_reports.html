@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>監査レポート — 施設運営AI OS</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .filter-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between;}
+    .filter-bar .filters{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+    .filter-bar .filters .flabel{font-size:11px;color:var(--text-mute);font-weight:700;margin:0 2px 0 8px;}
+    .filter-bar .exports{display:flex;align-items:center;gap:6px;}
+    .audit-table td,.audit-table th{vertical-align:top;font-size:12px;}
+    .val-before{color:var(--text-mute);text-decoration:line-through;}
+    .val-after{font-weight:700;}
+    .arrow{color:var(--text-mute);padding:0 4px;}
+    .fin-up{color:#15803D;font-weight:700;}
+    .fin-down{color:#B91C1C;font-weight:700;}
+    .pill.is-on{background:var(--navy,#1e293b);color:#fff;border-color:transparent;}
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="header-logo"><span class="dot"></span><span>施設運営AI OS</span><span class="os">FACILITY OS</span></div>
+  <div class="header-facility"><span>○○リゾート箱根 — 全施設横断ビュー</span><span style="font-size:11px;color:var(--text-mute);">▾</span></div>
+  <div class="header-search"><input type="text" placeholder="提案ID・予約ID・承認者で検索"></div>
+  <div class="header-right">
+    <a class="header-link" href="index.html">← デモ一覧</a>
+    <div class="header-notif">🔔<span class="notif-badge">8</span></div>
+    <div class="header-user"><div><div class="header-user-name">支配人A</div><div class="header-user-role">支配人</div></div><span style="font-size:11px;color:var(--text-mute);">▾</span></div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <div class="sidebar-group">運営</div>
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen_meals.html">食事管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">設備保全</a>
+  <div class="sidebar-group">AI・戦略・外部</div>
+  <a class="sidebar-item" href="screen_external_signals.html">外部シグナル監視</a>
+  <a class="sidebar-item" href="screen_risk_forecast.html">リスク予測</a>
+  <a class="sidebar-item" href="screen_strategy_actions.html">AI戦略アクション</a>
+  <div class="sidebar-group">承認・監査</div>
+  <a class="sidebar-item" href="screen_approvals.html">承認待ち</a>
+  <a class="sidebar-item active" href="screen_audit_reports.html">監査レポート</a>
+  <div class="sidebar-group">展開</div>
+  <a class="sidebar-item" href="screen_public_facility.html">公共施設OS</a>
+</nav>
+
+<main class="main">
+  <div class="page-head">
+    <div class="crumb"><a href="index.html">デモ一覧</a> ／ 監査レポート</div>
+    <div class="page-kicker">AUDIT &amp; REPORTS</div>
+    <h1 class="page-title">監査レポート — 説明できる運営</h1>
+    <p class="page-sub">公共・宿泊の両方で監査に耐える記録。誰が・何を・なぜ承認したかを残し、いつでも出力できる。</p>
+  </div>
+
+  <div class="note-strip privacy-strip">
+    <span class="ico">🔏</span>
+    <span>すべての書き込みは、<b>提案ID・承認者・根拠・変更前後の値・通知状況</b>とともに記録されます。<b>AIは提案まで。実行は人の承認後のみ。</b></span>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <div class="kpi-label">記録件数（今月）</div>
+      <div class="kpi-value">248<span class="unit">件</span></div>
+      <div class="kpi-delta up">▲ 前月比 +34件</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">承認済</div>
+      <div class="kpi-value">231<span class="unit">件</span></div>
+      <div class="kpi-delta up">承認率 93.1%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">AI提案の採用率</div>
+      <div class="kpi-value">78<span class="unit">%</span></div>
+      <div class="kpi-delta up">▲ 前月比 +6pt</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">未通知</div>
+      <div class="kpi-value">2<span class="unit">件</span></div>
+      <div class="kpi-delta warn">⚠ 要対応</div>
+    </div>
+  </div>
+
+  <div class="section-title">フィルタ・出力</div>
+  <div class="card">
+    <div class="card-body">
+      <div class="filter-bar">
+        <div class="filters">
+          <span class="flabel">種別</span>
+          <span class="pill is-on" onclick="togglePill(this)">価格</span>
+          <span class="pill" onclick="togglePill(this)">返金</span>
+          <span class="pill" onclick="togglePill(this)">販売停止</span>
+          <span class="pill" onclick="togglePill(this)">発注</span>
+          <span class="pill" onclick="togglePill(this)">保全</span>
+          <span class="pill" onclick="togglePill(this)">データ修正</span>
+          <span class="pill" onclick="togglePill(this)">減免</span>
+          <span class="flabel">期間</span>
+          <span class="pill is-on" onclick="togglePill(this)">今月</span>
+          <span class="pill" onclick="togglePill(this)">直近90日</span>
+          <span class="pill" onclick="togglePill(this)">年度</span>
+          <span class="flabel">承認者</span>
+          <span class="pill" onclick="togglePill(this)">支配人A</span>
+          <span class="pill" onclick="togglePill(this)">会計担当C</span>
+          <span class="pill" onclick="togglePill(this)">管理責任者A</span>
+        </div>
+        <div class="exports">
+          <span class="btn ghost" onclick="exportDemo('CSV')">CSV出力</span>
+          <span class="btn ghost" onclick="exportDemo('PDF')">PDF出力</span>
+          <span id="exp-msg" style="display:none;margin-left:10px;font-size:11px;font-weight:700;color:#15803D;background:#DCFCE7;padding:3px 10px;border-radius:10px;"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">意思決定・監査ログ</div>
+  <div class="card">
+    <div class="card-head">
+      <h3>すべての承認済アクション（宿泊・公共施設）</h3>
+      <span class="meta">10件表示 ／ 全248件</span>
+    </div>
+    <div class="card-body">
+      <table class="table audit-table">
+        <tr>
+          <th>日時</th>
+          <th>決定内容</th>
+          <th>承認者(role)</th>
+          <th>AI提案ID</th>
+          <th>使用データソース</th>
+          <th>変更前 → 変更後</th>
+          <th>通知</th>
+          <th>財務影響</th>
+          <th>安全・保全影響</th>
+        </tr>
+        <tr class="row">
+          <td>12/18 14:02</td>
+          <td><span class="badge b-navy">価格</span> 12/24-26 客室料金 +12%</td>
+          <td>支配人A<br><span style="color:var(--text-mute);font-size:11px;">支配人</span></td>
+          <td>AI-2026-0418</td>
+          <td>外部需要 +32%／競合満室</td>
+          <td><span class="val-before">¥28,400</span><span class="arrow">→</span><span class="val-after">¥31,800</span></td>
+          <td><span class="badge b-green">OTA反映済</span></td>
+          <td class="fin-up">+¥420,000</td>
+          <td>なし</td>
+        </tr>
+        <tr class="row">
+          <td>12/18 11:47</td>
+          <td><span class="badge b-red">販売停止</span> 別館302 販売停止</td>
+          <td>支配人A<br><span style="color:var(--text-mute);font-size:11px;">支配人</span></td>
+          <td>AI-2026-0421</td>
+          <td>空調異音センサー</td>
+          <td><span class="val-before">販売中</span><span class="arrow">→</span><span class="val-after">停止</span></td>
+          <td><span class="badge b-green">該当2組へ振替案内済</span></td>
+          <td class="fin-down">−¥96,000</td>
+          <td><span class="badge b-amber">リスク低減</span></td>
+        </tr>
+        <tr class="row">
+          <td>12/17 16:30</td>
+          <td><span class="badge b-purple">返金</span> 返金 1件（課金見送り）</td>
+          <td>会計担当C<br><span style="color:var(--text-mute);font-size:11px;">会計</span></td>
+          <td><span style="color:var(--text-mute);">—（手動）</span></td>
+          <td>急病キャンセル（診断書確認）</td>
+          <td><span class="val-before">¥36,000</span><span class="arrow">→</span><span class="val-after">¥0</span></td>
+          <td><span class="badge b-green">メール済</span></td>
+          <td class="fin-down">−¥36,000</td>
+          <td>なし</td>
+        </tr>
+        <tr class="row">
+          <td>12/17 09:15</td>
+          <td><span class="badge b-red">販売停止</span> 会議室B 新規予約 一時停止 <span class="badge b-grey">公共施設</span></td>
+          <td>管理責任者A<br><span style="color:var(--text-mute);font-size:11px;">管理責任者</span></td>
+          <td>AI-2026-0419</td>
+          <td>空調異常値（温度センサー）</td>
+          <td><span class="val-before">受付中</span><span class="arrow">→</span><span class="val-after">点検まで停止</span></td>
+          <td><span class="badge b-green">予約済3件へ通知済</span></td>
+          <td><span style="color:var(--text-mute);">—</span></td>
+          <td><span class="badge b-amber">点検まで停止</span></td>
+        </tr>
+        <tr class="row">
+          <td>12/16 13:50</td>
+          <td><span class="badge b-green">減免</span> 減免申請 3件 承認 <span class="badge b-grey">公共施設</span></td>
+          <td>管理責任者A<br><span style="color:var(--text-mute);font-size:11px;">管理責任者</span></td>
+          <td><span style="color:var(--text-mute);">—（規程運用）</span></td>
+          <td>使用料減免規程 第8条</td>
+          <td><span class="val-before">通常料金</span><span class="arrow">→</span><span class="val-after">減免適用</span></td>
+          <td><span class="badge b-green">申請者へ通知済</span></td>
+          <td class="fin-down">−¥18,000</td>
+          <td>なし</td>
+        </tr>
+        <tr class="row">
+          <td>12/16 10:22</td>
+          <td><span class="badge b-navy">データ修正</span> 予約ID R-2026-1289 チェックイン日 修正</td>
+          <td>フロント承認<br><span style="color:var(--text-mute);font-size:11px;">フロント</span></td>
+          <td>AI-2026-0415</td>
+          <td>顧客メール（変更依頼）</td>
+          <td><span class="val-before">12/20</span><span class="arrow">→</span><span class="val-after">12/21</span></td>
+          <td><span class="badge b-green">確認メール済</span></td>
+          <td><span style="color:var(--text-mute);">±¥0</span></td>
+          <td>なし</td>
+        </tr>
+        <tr class="row">
+          <td>12/15 17:40</td>
+          <td><span class="badge b-amber">発注</span> 甲殻類アレルギー 代替食材 発注</td>
+          <td>会計担当C<br><span style="color:var(--text-mute);font-size:11px;">会計</span></td>
+          <td>AI-2026-0410</td>
+          <td>リスク予測（食事管理連携）</td>
+          <td><span class="val-before">標準コース</span><span class="arrow">→</span><span class="val-after">代替食材手配</span></td>
+          <td><span class="badge b-green">厨房・該当客へ周知</span></td>
+          <td class="fin-down">−¥4,200</td>
+          <td><span class="badge b-amber">事故予防</span></td>
+        </tr>
+        <tr class="row">
+          <td>12/14 12:08</td>
+          <td><span class="badge b-navy">価格</span> 1月平日プラン 早割 −8%</td>
+          <td>支配人A<br><span style="color:var(--text-mute);font-size:11px;">支配人</span></td>
+          <td>AI-2026-0407</td>
+          <td>需要予測 弱含み／在庫余剰</td>
+          <td><span class="val-before">¥22,000</span><span class="arrow">→</span><span class="val-after">¥20,240</span></td>
+          <td><span class="badge b-green">OTA反映済</span></td>
+          <td class="fin-up">+¥132,000<br><span style="color:var(--text-mute);font-size:11px;">稼働率改善見込</span></td>
+          <td>なし</td>
+        </tr>
+        <tr class="row">
+          <td>12/13 15:55</td>
+          <td><span class="badge b-amber">保全</span> 大浴場 循環ポンプ 予防交換 <span class="badge b-grey">公共施設</span></td>
+          <td>管理責任者A<br><span style="color:var(--text-mute);font-size:11px;">管理責任者</span></td>
+          <td>AI-2026-0402</td>
+          <td>振動センサー／稼働時間しきい値</td>
+          <td><span class="val-before">稼働中（劣化兆候）</span><span class="arrow">→</span><span class="val-after">交換完了</span></td>
+          <td><span class="badge b-green">利用者掲示済</span></td>
+          <td class="fin-down">−¥85,000</td>
+          <td><span class="badge b-amber">故障予防</span></td>
+        </tr>
+        <tr class="row">
+          <td>12/12 09:30</td>
+          <td><span class="badge b-purple">返金</span> 自然災害キャンセル 一括返金 4件</td>
+          <td>会計担当C<br><span style="color:var(--text-mute);font-size:11px;">会計</span></td>
+          <td>AI-2026-0399</td>
+          <td>台風接近（外部シグナル）</td>
+          <td><span class="val-before">¥152,000</span><span class="arrow">→</span><span class="val-after">¥0</span></td>
+          <td><span class="badge b-amber">2件 送信予約中</span></td>
+          <td class="fin-down">−¥152,000</td>
+          <td>なし</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <h3>通知ステータス内訳</h3>
+        <span class="meta">今月 248件</span>
+      </div>
+      <div class="card-body">
+        <div class="bar-row">
+          <span>通知済</span>
+          <div class="meter"><div class="meter-fill" style="width:94%;background:#16a34a;"></div></div>
+          <span>233件</span>
+        </div>
+        <div class="bar-row">
+          <span>送信予約</span>
+          <div class="meter"><div class="meter-fill" style="width:5%;background:#d97706;"></div></div>
+          <span>13件</span>
+        </div>
+        <div class="bar-row">
+          <span>未通知</span>
+          <div class="meter"><div class="meter-fill" style="width:1%;background:#dc2626;"></div></div>
+          <span>2件</span>
+        </div>
+        <div class="callout watch" style="margin-top:10px;">
+          未通知2件は通知期限が近づいています。承認待ち画面から再送できます。
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3>種別別の件数</h3>
+        <span class="meta">今月 248件</span>
+      </div>
+      <div class="card-body">
+        <div class="bar-row">
+          <span>価格</span>
+          <div class="meter"><div class="meter-fill" style="width:100%;"></div></div>
+          <span>82件</span>
+        </div>
+        <div class="bar-row">
+          <span>返金</span>
+          <div class="meter"><div class="meter-fill" style="width:56%;"></div></div>
+          <span>46件</span>
+        </div>
+        <div class="bar-row">
+          <span>販売停止</span>
+          <div class="meter"><div class="meter-fill" style="width:40%;"></div></div>
+          <span>33件</span>
+        </div>
+        <div class="bar-row">
+          <span>発注</span>
+          <div class="meter"><div class="meter-fill" style="width:35%;"></div></div>
+          <span>29件</span>
+        </div>
+        <div class="bar-row">
+          <span>保全</span>
+          <div class="meter"><div class="meter-fill" style="width:31%;"></div></div>
+          <span>25件</span>
+        </div>
+        <div class="bar-row">
+          <span>データ修正</span>
+          <div class="meter"><div class="meter-fill" style="width:24%;"></div></div>
+          <span>20件</span>
+        </div>
+        <div class="bar-row">
+          <span>減免</span>
+          <div class="meter"><div class="meter-fill" style="width:16%;"></div></div>
+          <span>13件</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">サンプルデータ・個人名は非表示。すべての書き込みは提案ID・承認者・根拠・前後値・通知状況とともに記録。</div>
+</main>
+
+<script>
+function exportDemo(kind){var n=document.getElementById('exp-msg');n.textContent='（デモ）'+kind+'を生成しました — 監査ログに出力操作を記録';n.style.display='inline-block';setTimeout(function(){n.style.display='none';},2600);}
+function togglePill(el){el.classList.toggle('is-on');}
+</script>
+</body>
+</html>
