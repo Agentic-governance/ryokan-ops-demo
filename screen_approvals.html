@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=1440">
 <title>承認待ち一覧</title>
 <style>
@@ -180,7 +181,7 @@ button, input, textarea { font: inherit; }
   <div class="header-right">
     <div class="header-limit">自分の承認上限: 支配人 ¥100,000</div>
     <div class="header-bell">&#x1F514;<span class="badge-notif">8</span></div>
-    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">支配人A</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
   </div>
 </header>
 
@@ -200,7 +201,7 @@ button, input, textarea { font: inherit; }
 
 <div class="main">
   <div class="page-head">
-    <div class="page-title">承認待ち一覧 <span class="ai-badge" data-guide="【書き込む前の確認】予約や会計など大もとのデータを書き換える操作は、ここで支配人などが確認してから反映されます。間違いを未然に防ぐための関所です。">&#128737; 基幹システムに書き込む前の確認</span></div>
+    <div class="page-title">承認待ち一覧 <span class="ai-badge" data-guide="【書き込む前の確認】予約や会計など大もとのデータを書き換える操作は、ここで支配人などが確認してから反映されます。すべての承認・却下は監査ログに残ります。間違いと不正を未然に防ぐための関所です。">&#128737; 意味のある書き込みは すべて承認＋監査ログを通す</span></div>
     <div class="seg">
       <button class="on">承認待ち</button>
       <button>却下済</button>
@@ -208,7 +209,7 @@ button, input, textarea { font: inherit; }
       <button>監査</button>
     </div>
   </div>
-  <div class="page-sub">予約・会計など元データの正しさを守るため、金額・在庫・顧客データの変更は必ずここを通す。営業日 <b>2026/05/30</b>。権限のない操作は自動で無効化され、却下には理由の入力が必須。</div>
+  <div class="page-sub"><b>意味のある書き込みは、すべてこの承認を通してから反映される。</b>価格変更・返金・割引・no-show課金・販売停止/客室振替・発注・保全業者の手配・OTA/Webコピーの更新・顧客への通知・AI提案によるデータ修正・公共施設の予約上書き/減免まで、金額・在庫・顧客データに触れる操作は必ずここを経由します。承認・却下・上位者送りはすべて<b>監査ログ</b>(担当者/時刻/操作/内容/端末IP)に記録。営業日 <b>2026/05/30</b>。権限のない操作は自動で無効化され、却下には理由の入力が必須。</div>
 
   <div class="nudge-wrap">
     <div class="nudge n-red" data-guide="【AIの提案(至急)】AIが急ぎの案件を見つけてお知らせします。提案であり、承認するかどうかの最終判断は人が行います。赤い帯は最も急ぎを表します。">
@@ -269,7 +270,13 @@ button, input, textarea { font: inherit; }
             <div class="filter-item"><div class="filter-left"><div class="filter-ico">⬆️</div><div><div class="filter-name">無料の客室格上げ</div><div class="filter-note">客室タイプの変更</div></div></div><div class="filter-badge">2</div></div>
             <div class="filter-item"><div class="filter-left"><div class="filter-ico">👥</div><div><div class="filter-name">団体料金</div><div class="filter-note">団体枠 / 申込締切</div></div></div><div class="filter-badge">5</div></div>
             <div class="filter-item"><div class="filter-left"><div class="filter-ico">💳</div><div><div class="filter-name">与信限度超過</div><div class="filter-note">限度額超過分の支払い</div></div></div><div class="filter-badge">4</div></div>
-            <div class="filter-item" data-guide="【AIによる元データ修正】AIが提案した予約・会計データの修正です。承認するまでは実際のデータには書き込まれません。中身を見て問題なければ承認します。"><div class="filter-left"><div class="filter-ico">🤖</div><div><div class="filter-name">元データ修正・AIアクション</div><div class="filter-note">AI提案の書き込み前の確認</div></div></div><div class="filter-badge">7</div></div>
+            <div class="filter-item" data-guide="【販売停止・客室振替】設備の不具合や食事の上限などで、その客室を売り止めたり、お客様を別の部屋へ移したりする操作です。在庫(売れる部屋)を直接動かすため、承認を通します。"><div class="filter-left"><div class="filter-ico">⛳</div><div><div class="filter-name">販売停止・客室振替</div><div class="filter-note">在庫の売止 / 部屋の振替</div></div></div><div class="filter-badge">3</div></div>
+            <div class="filter-item" data-guide="【発注】食材や備品、消耗品などを仕入れるための注文です。支払いが発生するため、金額に応じて承認を通します。"><div class="filter-left"><div class="filter-ico">📦</div><div><div class="filter-name">発注</div><div class="filter-note">食材・備品・消耗品の仕入れ</div></div></div><div class="filter-badge">2</div></div>
+            <div class="filter-item" data-guide="【保全業者の手配】設備の修理や点検のために外部の業者を呼ぶ手配です。費用と来館日程が伴うため、承認を通します。"><div class="filter-left"><div class="filter-ico">🔧</div><div><div class="filter-name">保全業者の手配</div><div class="filter-note">修理・点検の業者依頼</div></div></div><div class="filter-badge">1</div></div>
+            <div class="filter-item" data-guide="【OTA・Webコピー更新】ネット予約サイトや自社サイトに載せる料金・プラン・紹介文などの更新です。外部に公開される内容なので、承認を通します。"><div class="filter-left"><div class="filter-ico">🌐</div><div><div class="filter-name">OTA・Webコピー更新</div><div class="filter-note">予約サイト/自社サイトの掲載更新</div></div></div><div class="filter-badge">3</div></div>
+            <div class="filter-item" data-guide="【顧客通知】お客様へ送るメールやメッセージ(到着確認・変更案内など)の送信です。一斉送信や定型外の連絡は、内容を確認してから送ります。"><div class="filter-left"><div class="filter-ico">✉️</div><div><div class="filter-name">顧客通知</div><div class="filter-note">メール/メッセージの送信前確認</div></div></div><div class="filter-badge">2</div></div>
+            <div class="filter-item" data-guide="【元データ修正・AIアクション】AIが提案した予約・会計データの修正です。承認するまでは実際のデータには書き込まれません。中身を見て問題なければ承認します。"><div class="filter-left"><div class="filter-ico">🤖</div><div><div class="filter-name">元データ修正・AIアクション</div><div class="filter-note">AI提案の書き込み前の確認</div></div></div><div class="filter-badge">7</div></div>
+            <div class="filter-item" data-guide="【公共施設の予約上書き・減免】指定管理などで運営する公共の施設で、予約を上書きしたり、利用料を減らす/免除する操作です。公金や公平性に関わるため、特に厳格に承認を通します。"><div class="filter-left"><div class="filter-ico">🏛️</div><div><div class="filter-name">公共施設の予約上書き・減免</div><div class="filter-note">指定管理 / 減免 (要厳格承認)</div></div></div><div class="filter-badge">1</div></div>
           </div>
           <div class="note" style="margin-top:10px;">承認権限: 会計担当 ¥10,000 / 主任 ¥30,000 / 支配人 ¥100,000 / 総支配人 上限なし。自分の申請は自分で承認できない。</div>
         </div>
@@ -297,7 +304,7 @@ button, input, textarea { font: inherit; }
               <div class="approval-top">
                 <div>
                   <div class="approval-title">💴 料金の個別変更 <span class="chip chip-amber">理由あり</span></div>
-                  <div class="approval-meta">対象: 1208 / 会計明細 45781 / 申請者: フロント 鈴木 / 経過 12分</div>
+                  <div class="approval-meta">対象: 1208 / 会計明細 45781 / 申請者: フロント担当B / 経過 12分</div>
                 </div>
                 <div style="text-align:right;">
                   <div class="amount">-¥6,000 <small>/泊</small></div>
@@ -314,7 +321,7 @@ button, input, textarea { font: inherit; }
               <div class="approval-top">
                 <div>
                   <div class="approval-title">🏷️ 無料・優待割引 <span class="chip chip-red">理由なし</span></div>
-                  <div class="approval-meta">対象: 905 / 会計明細 45810 / 申請者: 支配人代理 佐藤 / 経過 27分</div>
+                  <div class="approval-meta">対象: 905 / 会計明細 45810 / 申請者: 支配人代理H / 経過 27分</div>
                 </div>
                 <div style="text-align:right;">
                   <div class="amount">-¥18,000 <small>/滞在</small></div>
@@ -331,7 +338,7 @@ button, input, textarea { font: inherit; }
               <div class="approval-top">
                 <div>
                   <div class="approval-title">↩️ 返金 <span class="chip chip-amber">証憑確認済</span></div>
-                  <div class="approval-meta">対象: 0712 / 会計明細 45718 / 申請者: 会計 中村 / 経過 4分</div>
+                  <div class="approval-meta">対象: 0712 / 会計明細 45718 / 申請者: 会計担当C / 経過 4分</div>
                 </div>
                 <div style="text-align:right;">
                   <div class="amount">¥9,800 <small>返金</small></div>
@@ -348,7 +355,7 @@ button, input, textarea { font: inherit; }
               <div class="approval-top">
                 <div>
                   <div class="approval-title">⛔ 伝票取消 <span class="chip chip-red" data-guide="【上限超】この案件の金額が、ご自身で承認できる上限を超えていることを表します。自分では承認できないため、上の役職の人へ回す必要があります。">上限超</span></div>
-                  <div class="approval-meta">対象: 304 / 会計明細 45688 / 申請者: 夜勤 結城 / 経過 41分</div>
+                  <div class="approval-meta">対象: 304 / 会計明細 45688 / 申請者: 夜勤担当D / 経過 41分</div>
                 </div>
                 <div style="text-align:right;">
                   <div class="amount">¥28,400 <small>取消</small></div>
@@ -395,7 +402,7 @@ button, input, textarea { font: inherit; }
               <div class="detail-head">
                 <div>
                   <div class="detail-title">料金の個別変更 - 宿泊 1208</div>
-                  <div class="detail-sub">対象予約 / 会計明細 45781 / 申請者 フロント 鈴木 / 申請日時 2026/05/30 09:42 / 理由: <b>常連優遇</b></div>
+                  <div class="detail-sub">対象予約 / 会計明細 45781 / 申請者 フロント担当B / 申請日時 2026/05/30 09:42 / 理由: <b>常連優遇</b></div>
                 </div>
                 <div style="text-align:right;">
                   <div class="amount">-14.3%</div>
@@ -425,19 +432,19 @@ button, input, textarea { font: inherit; }
               </div>
               <div class="timeline">
                 <div class="tl-row">
-                  <div><div class="tl-h">担当者</div>鈴木</div>
+                  <div><div class="tl-h">担当者</div>フロント担当B</div>
                   <div><div class="tl-h">日付・時刻</div>2026/05/30 09:42</div>
                   <div><div class="tl-h">操作種別</div>料金変更の申請</div>
                   <div><div class="tl-h">内容</div><span class="tl-desc">客室単価を ¥42,000→¥36,000 に変更。常連優遇の理由を付与。</span><div class="tl-ip">IPアドレス 10.2.18.44</div></div>
                 </div>
                 <div class="tl-row">
-                  <div><div class="tl-h">担当者</div>中村</div>
+                  <div><div class="tl-h">担当者</div>会計担当C</div>
                   <div><div class="tl-h">日付・時刻</div>2026/05/30 09:46</div>
                   <div><div class="tl-h">操作種別</div>内容確認</div>
                   <div><div class="tl-h">内容</div><span class="tl-desc">対象予約の与信と会計明細の残高を確認。締め後ではないことを判定。</span><div class="tl-ip">IPアドレス 10.2.18.17</div></div>
                 </div>
                 <div class="tl-row">
-                  <div><div class="tl-h">担当者</div>山田</div>
+                  <div><div class="tl-h">担当者</div>支配人A</div>
                   <div><div class="tl-h">日付・時刻</div>2026/05/30 09:51</div>
                   <div><div class="tl-h">操作種別</div>支配人の判断</div>
                   <div><div class="tl-h">内容</div><span class="tl-desc">支配人承認待ち。上限内だが、同じ種類の割引が同日 3 件あるためまとめて承認の候補。</span><div class="tl-ip">IPアドレス 10.2.18.3</div></div>

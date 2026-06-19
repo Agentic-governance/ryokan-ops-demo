@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=1440">
 <title>設備保全 — 止まると困る設備から先に守る</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -252,7 +253,7 @@ table.rpn tr:hover td{ background:var(--surface); }
   <div class="header-right">
     <div class="header-bell">&#x1F514;<span class="badge-notif">9</span></div>
     <div class="header-user">
-      <div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div>
+      <div class="header-user-info"><div class="name">支配人A</div><div class="role">支配人</div></div>
       <span class="arrow">&#9662;</span>
     </div>
   </div>
@@ -286,7 +287,7 @@ table.rpn tr:hover td{ background:var(--surface); }
       <button>作業オーダー</button>
     </div>
   </div>
-  <div class="page-sub">「壊れてから直す」から「予兆をつかんで先に手を打つ」へ。止まると営業・安全に直結する設備（温泉・給湯・空調・電気）を重点的に見守り、点検の優先順位と頻度を最適化します。</div>
+  <div class="page-sub">「壊れてから直す」から「予兆をつかんで先に手を打つ」へ。<b>止まると困る設備から先に守る</b>——限られた人手・部品・予算を、影響の大きい設備へ集中投下する“兵站(ロジスティクス)”の考え方で保全を組み立てます。止まると営業・安全に直結する設備（温泉・給湯・空調・電気）を重点的に見守り、資産台帳・故障履歴・点検周期・部品/業者のリードタイムを束ねて、点検の優先順位と頻度、そして販売停止の判断までを支援します。</div>
 
   <!-- KPI strip -->
   <div class="kpi-strip">
@@ -433,6 +434,66 @@ table.rpn tr:hover td{ background:var(--surface); }
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- 資産台帳 × 故障履歴 × 調達/業者リードタイム × 影響予約 -->
+      <div class="card">
+        <div class="card-h">
+          <div class="t" data-guide="【設備の台帳・故障履歴・補給線】各設備の基本情報(資産台帳)、これまでの故障の記録(故障履歴)、点検すべき間隔(点検周期)、そして部品や業者がどれくらいで手配できるか(リードタイム)を一枚にまとめた欄です。止まったときにどの客室・予約に響くかも併記し、販売を止めるかどうかの判断を助けます。">&#x1F4D2; 資産台帳 &times; 故障履歴 &times; 補給線（部品・業者）</div>
+          <div class="hint">資産ごとに 故障履歴・点検周期・調達/業者リードタイム・影響する客室予約 を束ねる</div>
+        </div>
+        <div class="card-b nopad">
+          <table class="rpn" style="font-size:11px;">
+            <thead>
+              <tr>
+                <th>資産台帳 (ID / 型式 / 設置)</th>
+                <th style="width:96px;">故障履歴</th>
+                <th style="width:70px;">点検周期</th>
+                <th style="width:120px;">部品・業者リードタイム</th>
+                <th style="width:120px;">影響する客室・予約</th>
+                <th style="width:88px;">販売停止の判断</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="asset-name">PMP-OS-02 温泉循環ポンプ#2</div><div class="asset-mode">渦巻ポンプ 3.7kW / 大浴場 男湯 / 2019設置</div></td>
+                <td>過去3年 2回<br><small style="color:var(--text-mute);">直近: 軸受交換 (14か月前)</small></td>
+                <td>振動 連続監視<br>分解点検 12か月</td>
+                <td>予備部品(シールキット): <b style="color:var(--green);">在庫あり / 入荷2日</b><br>業者(設備): <b>来館まで 1日</b></td>
+                <td><b style="color:var(--brand);">22室泊 / 男湯利用</b><br><small>連休初日 該当予約</small></td>
+                <td><span class="hf-due due-soon" data-guide="【販売停止の判断支援】この設備が止まりそうなとき、対象の客室を売り止めるべきかをAIが助言します。緑は様子見、黄は要検討、赤は今すぐ売止が安全という意味です。">要検討</span></td>
+              </tr>
+              <tr>
+                <td><div class="asset-name">HEX-OS-01 温泉熱交換器(男湯)</div><div class="asset-mode">プレート式 / 大浴場 給湯 / 2017設置</div></td>
+                <td>過去3年 1回<br><small style="color:var(--text-mute);">直近: 酸洗浄 (8か月前)</small></td>
+                <td>温度差 連続監視<br>酸洗浄 6か月</td>
+                <td>予備部品(ガスケット): <b style="color:var(--green);">在庫あり</b><br>業者(洗浄): <b>休館日調整</b></td>
+                <td><small>給湯温度低下時に</small><br>大浴場全体</td>
+                <td><span class="hf-due due-ok">様子見</span></td>
+              </tr>
+              <tr>
+                <td><div class="asset-name">AHU-AN-3F 別館3F 空調機</div><div class="asset-mode">パッケージ空調 / 別館 301-308 / 2016設置</div></td>
+                <td>過去3年 3回<br><small style="color:var(--text-mute);">直近: ベルト交換 (5か月前)</small></td>
+                <td>振動 監視<br>フィルタ 3か月</td>
+                <td>予備部品(Vベルト): <b style="color:var(--amber);">取り寄せ 4日</b><br>業者(空調): <b>来館まで 2日</b></td>
+                <td><b>8室 / 301-308</b><br><small>冷暖不能時</small></td>
+                <td><span class="hf-due due-ok">様子見</span></td>
+              </tr>
+              <tr>
+                <td><div class="asset-name">EAC-302 客室302 エアコン</div><div class="asset-mode">壁掛 / 別館302 / 2018設置</div></td>
+                <td>過去3年 0回<br><small style="color:var(--text-mute);">直近: 異音 検知中</small></td>
+                <td>事後保全<br>(運用影響 軽)</td>
+                <td>予備機(在庫品): <b style="color:var(--green);">即日交換可</b><br>業者: 自館対応</td>
+                <td><b style="color:var(--brand);">4室泊 / 302</b><br><small>今夜の該当予約2件</small></td>
+                <td><span class="hf-due due-over">今すぐ売止</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="foot-note" style="padding:10px 12px 12px;">
+            <b>販売停止の判断支援</b>: 「故障までの猶予」と「部品・業者のリードタイム」を突き合わせ、<b>間に合わないと判断した設備の客室だけ</b>を実効販売可能数から外して売止候補に上げます。
+            復旧の段取り(予備への切替・低稼働枠での修理)が立てば、売止せず維持します。
+          </div>
         </div>
       </div>
 

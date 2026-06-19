@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=1440">
 <title>連携アーキテクチャ (基幹システム ⇄ 予約サイト一元管理 ⇄ ネット予約サイト)</title>
 <style>
@@ -95,7 +96,7 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
   <div class="header-search"><input type="text" placeholder="予約番号・連携コード・部屋タイプを検索"></div>
   <div class="header-right">
     <div class="header-bell">&#x1F514;<span class="badge-notif">3</span></div>
-    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">支配人A</div><div class="role">支配人</div></div><span style="font-size:10px;color:var(--text-mute);">&#9662;</span></div>
   </div>
 </header>
 <nav class="sidebar">
@@ -184,28 +185,28 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
             </thead>
             <tbody>
               <tr>
-                <td style="padding-left:16px;"><code>RKT-7782041</code><div style="font-size:9.5px;color:var(--text-mute);">楽天 / W.J 様 2名</div></td>
+                <td style="padding-left:16px;"><code>RKT-7782041</code><div style="font-size:9.5px;color:var(--text-mute);">楽天 / ゲスト G-1310 様 2名</div></td>
                 <td><code>SC-99214</code><div style="font-size:9px;color:var(--text-mute);">重複防止番号: a1f9..c2</div></td>
                 <td><code>R-2026-1310</code></td>
                 <td><span class="gen gen-new">新規 g1</span></td>
                 <td style="padding-right:16px;"><span class="auto">自動取込済</span></td>
               </tr>
               <tr>
-                <td style="padding-left:16px;"><code>BDC-5520198</code><div style="font-size:9.5px;color:var(--text-mute);">Booking / W.J 様 2名</div></td>
+                <td style="padding-left:16px;"><code>BDC-5520198</code><div style="font-size:9.5px;color:var(--text-mute);">Booking / ゲスト G-1289 様 2名</div></td>
                 <td><code>SC-99220</code><div style="font-size:9px;color:var(--text-mute);">重複防止番号: 7b30..e1</div></td>
                 <td><code>R-2026-1289</code></td>
                 <td><span class="gen gen-chg">変更 g3</span><div style="font-size:9px;color:var(--text-mute);">人数 2→3 / 日程変更</div></td>
                 <td style="padding-right:16px;"><span class="manual">要 手動再取込</span><div style="margin-top:4px;"><button class="btn-sm btn-amber" data-guide="【再取り込み】予約の変更内容を手作業で取り込み直すボタンです。押すと最新の内容に更新されます。自動で勝手に書き換えないのは、誤った上書きを防ぐためです。">再取り込み</button></div></td>
               </tr>
               <tr>
-                <td style="padding-left:16px;"><code>JLN-3391756</code><div style="font-size:9.5px;color:var(--text-mute);">じゃらん / 青葉商事 14室</div></td>
+                <td style="padding-left:16px;"><code>JLN-3391756</code><div style="font-size:9.5px;color:var(--text-mute);">じゃらん / 法人A 14室</div></td>
                 <td><code>SC-99231</code><div style="font-size:9px;color:var(--text-mute);">重複防止番号: cc81..9a</div></td>
                 <td><code>R-2026-1295</code></td>
                 <td><span class="gen gen-chg">変更 g2</span><div style="font-size:9px;color:var(--text-mute);">取消が変更より先着 → 順序照合</div></td>
                 <td style="padding-right:16px;"><span class="manual">要 確認</span></td>
               </tr>
               <tr>
-                <td style="padding-left:16px;"><code>IKY-1180443</code><div style="font-size:9.5px;color:var(--text-mute);">一休 / S.M 様 2名</div></td>
+                <td style="padding-left:16px;"><code>IKY-1180443</code><div style="font-size:9.5px;color:var(--text-mute);">一休 / ゲスト G-0001 様 2名</div></td>
                 <td><code>SC-99240</code><div style="font-size:9px;color:var(--text-mute);">重複防止番号: 02de..7f</div></td>
                 <td>—</td>
                 <td><span class="gen gen-cxl">取消 g1</span></td>
@@ -227,7 +228,7 @@ code{ background:var(--surface); padding:1px 5px; border-radius:3px; font-size:1
           <div class="led-row"><span class="op">− 故障で使用不可</span><span class="v neg">2</span></div>
           <div class="led-row"><span class="op">− 清掃不可</span><span class="v neg">1</span></div>
           <div class="led-row"><span class="op">− 滞在中 (連泊)</span><span class="v neg">8</span></div>
-          <div class="led-row"><span class="op">− 団体おさえ (青葉商事)</span><span class="v neg">4</span></div>
+          <div class="led-row"><span class="op">− 団体おさえ (法人A)</span><span class="v neg">4</span></div>
           <div class="led-row"><span class="op">− ネット予約サイト向け割当</span><span class="v neg">3</span></div>
           <div class="led-row"><span class="op">+ 締切後の在庫戻し</span><span class="v pos">2</span></div>
           <div class="led-row tot" data-guide="【販売可能数】物理的な部屋数から、使えない部屋や予約済み・取り置き分を差し引いた、今まだ売れる部屋数です。この数字が各サイトに配信されます。"><span>販売可能数</span><span class="v" style="color:var(--navy);">8 室</span></div>

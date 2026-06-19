@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=1440">
 <title>ゲスト管理 (宿泊者名簿 / 総合プロファイル)</title>
 <style>
@@ -138,7 +139,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
   <div class="header-search"><input type="text" placeholder="予約番号・ゲスト名・旅券番号を検索"></div>
   <div class="header-right">
     <div class="header-bell">&#x1F514;<span class="badge-notif">9</span></div>
-    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">支配人A</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
   </div>
 </header>
 <nav class="sidebar">
@@ -187,8 +188,8 @@ table.tbl tr.sel td { background:var(--brand-soft); }
             </div>
           </div>
           <div class="alert-strip" style="padding:0 16px 12px;">
-            <div class="a red" data-guide="【旅券未済】海外のお客様の旅券（パスポート）の写しが、まだ受け取れていない状態を示します。到着時に確認が必要です。"><b>旅券未済</b>K.M 様 / W.J 様の一部到着資料未収</div>
-            <div class="a amber"><b>VIP / 記念日</b>512号室 J.W 様 と E.C 様 は要ケア</div>
+            <div class="a red" data-guide="【旅券未済】海外のお客様の旅券（パスポート）の写しが、まだ受け取れていない状態を示します。到着時に確認が必要です。"><b>旅券未済</b>ゲスト G-0004 様 / ゲスト G-0003 様の一部到着資料未収</div>
+            <div class="a amber"><b>VIP / 記念日</b>512号室 ゲスト G-0001 様 と ゲスト G-0002 様 は要ケア</div>
             <div class="a green" data-guide="【アレルギー・ハラル】食べられない食材があるお客様の情報です。ハラルとは、宗教上の決まりに沿った食事のこと。厨房と食事処へ自動で伝わっています。"><b>アレルギー / ハラル</b>厨房・食事処へ自動連携済</div>
             <div class="a navy" data-guide="【与信NG】お支払いに不安がある（過去の未払いなど）と判断されたお客様です。該当するとチェックインを一時的に止め、申し送りに表示します。"><b>与信NG</b>該当時は申し送りに表示しチェックインを抑止</div>
           </div>
@@ -200,7 +201,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
             </thead>
             <tbody>
               <tr class="sel">
-                <td><div class="name">J.W 様 <small>#512</small></div><div class="muted">Expedia / 英語</div></td>
+                <td><div class="name">ゲスト G-0001 様 <small>#512</small></div><div class="muted">Expedia / 英語</div></td>
                 <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
                 <td>米国 / P7***18</td>
                 <td>温泉 → 食事処 A → 会議室 2F</td>
@@ -210,7 +211,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-navy">Diamond</span></td>
               </tr>
               <tr>
-                <td><div class="name">E.C 様 <small>#512</small></div><div class="muted">Booking / 英語</div></td>
+                <td><div class="name">ゲスト G-0002 様 <small>#512</small></div><div class="muted">Booking / 英語</div></td>
                 <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
                 <td>英国 / P2***41</td>
                 <td>食事処 B → テラス → 温泉</td>
@@ -220,7 +221,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-navy">Platinum</span></td>
               </tr>
               <tr>
-                <td><div class="name">W.J 様 <small>#418</small></div><div class="muted">公式直販 / 繁中</div></td>
+                <td><div class="name">ゲスト G-0003 様 <small>#418</small></div><div class="muted">公式直販 / 繁中</div></td>
                 <td><div class="lang-badges"><span class="pill zh">中文</span></div></td>
                 <td>中国 / P8***62</td>
                 <td>ロビー → バリアフリー客室 → 食事処 C</td>
@@ -230,7 +231,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-purple">Gold</span></td>
               </tr>
               <tr>
-                <td><div class="name">K.M 様 <small>#305</small></div><div class="muted">電話 / 韓国語</div></td>
+                <td><div class="name">ゲスト G-0004 様 <small>#305</small></div><div class="muted">電話 / 韓国語</div></td>
                 <td><div class="lang-badges"><span class="pill ko">한국어</span></div></td>
                 <td>韓国 / P9***07</td>
                 <td>売店 → 温泉 → カラオケ</td>
@@ -240,7 +241,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-grey">Member</span></td>
               </tr>
               <tr>
-                <td><div class="name">T.I 様 <small>#208</small></div><div class="muted">リピーター 5回</div></td>
+                <td><div class="name">ゲスト G-0005 様 <small>#208</small></div><div class="muted">リピーター 5回</div></td>
                 <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
                 <td>日本 / 免除対象外</td>
                 <td>フロント → 温泉 → 食事処 A</td>
@@ -250,7 +251,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-green">Silver+</span></td>
               </tr>
               <tr>
-                <td><div class="name">S.J 様 <small>#411</small></div><div class="muted">ネット予約サイト / 米国</div></td>
+                <td><div class="name">ゲスト G-0006 様 <small>#411</small></div><div class="muted">ネット予約サイト / 米国</div></td>
                 <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
                 <td>米国 / P3***55</td>
                 <td>食事処 B → 会議室 1F</td>
@@ -260,7 +261,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-purple">Gold</span></td>
               </tr>
               <tr>
-                <td><div class="name">L.W 様 <small>#219</small></div><div class="muted">中国直販 / 中文</div></td>
+                <td><div class="name">ゲスト G-0007 様 <small>#219</small></div><div class="muted">中国直販 / 中文</div></td>
                 <td><div class="lang-badges"><span class="pill zh">中文</span></div></td>
                 <td>中国 / P6***88</td>
                 <td>温泉 → 売店 → 客室</td>
@@ -270,7 +271,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-grey">Member</span></td>
               </tr>
               <tr>
-                <td><div class="name">K.S 様 <small>#287</small></div><div class="muted">韓国 / 韓国語</div></td>
+                <td><div class="name">ゲスト G-0008 様 <small>#287</small></div><div class="muted">韓国 / 韓国語</div></td>
                 <td><div class="lang-badges"><span class="pill ko">한국어</span></div></td>
                 <td>韓国 / P4***72</td>
                 <td>ラウンジ → 食事処 B → 温泉</td>
@@ -280,7 +281,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-green">Silver</span></td>
               </tr>
               <tr>
-                <td><div class="name">M.B 様 <small>#503</small></div><div class="muted">Agoda / 英語</div></td>
+                <td><div class="name">ゲスト G-0009 様 <small>#503</small></div><div class="muted">Agoda / 英語</div></td>
                 <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
                 <td>米国 / P1***09</td>
                 <td>会議室 2F → 客室 → 温泉</td>
@@ -290,7 +291,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-navy">Platinum</span></td>
               </tr>
               <tr>
-                <td><div class="name">S.M 様 <small>#146</small></div><div class="muted">日本 / 再来</div></td>
+                <td><div class="name">ゲスト G-0010 様 <small>#146</small></div><div class="muted">日本 / 再来</div></td>
                 <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
                 <td>日本 / 免除対象外</td>
                 <td>温泉 → 食事処 A</td>
@@ -300,7 +301,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-purple">Gold</span></td>
               </tr>
               <tr>
-                <td><div class="name">C.R 様 <small>#392</small></div><div class="muted">中文 / 直販</div></td>
+                <td><div class="name">ゲスト G-0011 様 <small>#392</small></div><div class="muted">中文 / 直販</div></td>
                 <td><div class="lang-badges"><span class="pill zh">中文</span></div></td>
                 <td>中国 / P5***33</td>
                 <td>ロビー → 会議室 1F → 食事処 C</td>
@@ -310,7 +311,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-grey">Member</span></td>
               </tr>
               <tr>
-                <td><div class="name">P.J 様 <small>#277</small></div><div class="muted">韓国 / 韓国語</div></td>
+                <td><div class="name">ゲスト G-0012 様 <small>#277</small></div><div class="muted">韓国 / 韓国語</div></td>
                 <td><div class="lang-badges"><span class="pill ko">한국어</span></div></td>
                 <td>韓国 / P8***19</td>
                 <td>温泉 → 食事処 B → 売店</td>
@@ -320,7 +321,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-grey">Member</span></td>
               </tr>
               <tr>
-                <td><div class="name">T.Y 様 <small>#190</small></div><div class="muted">日本 / 宴会</div></td>
+                <td><div class="name">ゲスト G-0013 様 <small>#190</small></div><div class="muted">日本 / 宴会</div></td>
                 <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
                 <td>日本 / 免除対象外</td>
                 <td>会議室 2F → 宴会場 → 客室</td>
@@ -330,7 +331,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
                 <td><span class="badge b-amber">Bronze</span></td>
               </tr>
               <tr>
-                <td><div class="name">A.M 様 <small>#446</small></div><div class="muted">ドイツ / 英語</div></td>
+                <td><div class="name">ゲスト G-0014 様 <small>#446</small></div><div class="muted">ドイツ / 英語</div></td>
                 <td><div class="lang-badges"><span class="pill en">英語</span></div></td>
                 <td>独国 / P2***64</td>
                 <td>温泉 → 食事処 A → ラウンジ</td>
@@ -352,22 +353,22 @@ table.tbl tr.sel td { background:var(--brand-soft); }
           </thead>
           <tbody>
             <tr>
-              <td>J.W 様 <span class="muted">#512</span></td>
-              <td>J.W 様 <span class="muted">#801</span></td>
+              <td>ゲスト G-0001 様 <span class="muted">#512</span></td>
+              <td>ゲスト G-0001 様 <span class="muted">#801</span></td>
               <td><div class="match-bar-wrap" data-guide="【一致度】二つの登録が同じお客様である可能性をパーセントで示したものです。数字が高いほど同一人物の見込みが強く、まとめても安全と考えられます。"><div class="match-bar"><div class="match-bar-fill" style="width:96%;background:var(--green);"></div></div><span style="font-weight:600;color:var(--green);">96%</span></div></td>
               <td>メール / 電話 / 旅券一致</td>
               <td><button class="btn-merge" data-guide="【統合】二つの登録を一つにまとめます。同じお客様だと確認できた場合に押してください。まとめると履歴や好みが一本化されます。">統合</button></td>
             </tr>
             <tr>
-              <td>W.J 様 <span class="muted">#418</span></td>
-              <td>W.J 様 <span class="muted">#907</span></td>
+              <td>ゲスト G-0003 様 <span class="muted">#418</span></td>
+              <td>ゲスト G-0003 様 <span class="muted">#907</span></td>
               <td><div class="match-bar-wrap"><div class="match-bar"><div class="match-bar-fill" style="width:88%;background:var(--amber);"></div></div><span style="font-weight:600;color:var(--amber);">88%</span></div></td>
               <td>旅券番号の部分一致</td>
               <td><button class="btn-merge">統合</button></td>
             </tr>
             <tr>
-              <td>K.M 様 <span class="muted">#305</span></td>
-              <td>K.M 様 <span class="muted">#310</span></td>
+              <td>ゲスト G-0004 様 <span class="muted">#305</span></td>
+              <td>ゲスト G-0004 様 <span class="muted">#310</span></td>
               <td><div class="match-bar-wrap"><div class="match-bar"><div class="match-bar-fill" style="width:74%;background:var(--amber);"></div></div><span style="font-weight:600;color:var(--amber);">74%</span></div></td>
               <td>住所一致 / 連絡先近似</td>
               <td><button class="btn-check">確認</button></td>
@@ -382,7 +383,7 @@ table.tbl tr.sel td { background:var(--brand-soft); }
         <div class="panel-header">ゲスト総合プロファイル — 詳細</div>
         <div class="panel-section">
           <div class="section-title">選択中ゲスト</div>
-          <div class="profile-name">J.W 様 <span class="badge b-red" style="margin-left:6px;">VIP</span> <span class="badge b-amber">記念日</span></div>
+          <div class="profile-name">ゲスト G-0001 様 <span class="badge b-red" style="margin-left:6px;">VIP</span> <span class="badge b-amber">記念日</span></div>
           <div class="profile-meta">客室 512 / Expedia / 英語 / 滞在中</div>
           <div class="profile-meta">登録住所（非表示） / 登録電話（非表示） / 登録メール（非表示）</div>
           <div class="profile-meta">国籍: 米国 / 旅券番号: P7***18 / 写し保存: 3年</div>

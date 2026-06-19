@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=1440">
 <title>ダッシュボード</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -47,7 +48,19 @@ a{text-decoration:none;color:inherit;}
 .main{margin-top:56px;margin-left:200px;padding:24px;width:1240px;min-height:844px;}
 
 /* KPI */
-.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:20px;}
+.kpi-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:20px;}
+/* 実効販売可能数(OSI)パネル */
+.osi-panel{background:var(--navy-lite);border:1px solid var(--navy);border-radius:6px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:18px;}
+.osi-panel .osi-left{flex:0 0 auto;}
+.osi-panel .osi-k{font-size:11px;color:var(--navy);font-weight:700;}
+.osi-panel .osi-cmp{display:flex;align-items:baseline;gap:6px;margin-top:2px;}
+.osi-panel .osi-vacant{font-size:22px;font-weight:700;color:var(--text-mute);}
+.osi-panel .osi-arrow{font-size:14px;color:var(--text-mute);}
+.osi-panel .osi-real{font-size:30px;font-weight:800;color:var(--navy);line-height:1.1;}
+.osi-panel .osi-real .unit{font-size:13px;font-weight:600;}
+.osi-panel .osi-formula{flex:1;font-size:11px;color:var(--text-sub);line-height:1.6;}
+.osi-panel .osi-formula b{color:var(--navy);}
+.osi-panel .osi-chip{display:inline-block;font-size:10px;font-weight:700;background:#fff;border:1px solid var(--rule-soft);color:var(--text-sub);padding:2px 7px;border-radius:10px;margin:2px 3px 0 0;}
 .kpi-card{background:var(--bg);border:1px solid var(--rule-soft);border-radius:6px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.03);}
 .kpi-label{font-size:11px;color:var(--text-mute);margin-bottom:4px;white-space:nowrap;}
 .kpi-value{font-size:28px;font-weight:700;line-height:1.2;margin-bottom:4px;}
@@ -175,7 +188,7 @@ tr.data-row{cursor:pointer;}
     <a href="mobile_today.html" style="padding:4px 12px;border:1px solid var(--rule);border-radius:4px;font-size:11px;color:var(--text-sub);cursor:pointer;display:flex;align-items:center;gap:4px;">📱 モバイル版</a>
     <div class="header-notif">🔔<span class="notif-badge">12</span></div>
     <div class="header-user">
-      <div><div class="header-user-name">山田太郎</div><div class="header-user-role">支配人</div></div>
+      <div><div class="header-user-name">支配人A</div><div class="header-user-role">支配人</div></div>
       <span style="font-size:11px;color:var(--text-mute);">&#9662;</span>
     </div>
   </div>
@@ -227,6 +240,33 @@ tr.data-row{cursor:pointer;}
       <div class="kpi-value" style="color:var(--brand);">8<span class="unit">件</span></div>
       <div class="kpi-delta" style="color:var(--amber);">⚠ 要対応</div>
     </div>
+    <div class="kpi-card" style="border-color:var(--navy);" data-guide="【実効販売可能数】空室があっても、清掃が終わっていない・設備が止まっている・夕食が出しきれない・人手が足りない、といった制約で実際には売れない部屋があります。それらを差し引いた『本当に今日売っていい部屋数』が実効販売可能数です。空室数より少ないのが普通です。">
+      <div class="kpi-label" style="color:var(--navy);font-weight:700;">実効販売可能数</div>
+      <div class="kpi-value" style="color:var(--navy);">9<span class="unit">室</span></div>
+      <div class="kpi-delta" style="color:var(--text-mute);">空室 16室 から制約7室を控除</div>
+    </div>
+  </div>
+
+  <!-- 実効販売可能数 (Operationally Sellable Inventory) パネル -->
+  <div class="osi-panel" data-guide="【実効販売可能数(OSI)の内訳】左が表面上の空室数、右が実際に売ってよい部屋数です。右側の式は、空室から差し引いている制約の内訳を示します。各制約は清掃・保全・食事・人員の各画面と連動しています。">
+    <div class="osi-left">
+      <div class="osi-k">🎯 今日の実効販売可能数 (本当に今日売っていい部屋)</div>
+      <div class="osi-cmp">
+        <span class="osi-vacant">空室 16室</span>
+        <span class="osi-arrow">→</span>
+        <span class="osi-real">9<span class="unit">室</span></span>
+      </div>
+    </div>
+    <div class="osi-formula">
+      <b>実効販売可能数 = 空室 − 清掃未完 − 保全停止 − 食事提供上限超過分 − 人員制約</b><br>
+      <span class="osi-chip">空室 16</span>
+      <span class="osi-chip">− 清掃未完 3</span>
+      <span class="osi-chip">− 保全停止 2 (別館302空調ほか)</span>
+      <span class="osi-chip">− 食事上限超過 1 (夕食残24名)</span>
+      <span class="osi-chip">− 人員制約 1 (仲居配置)</span>
+      <span class="osi-chip" style="background:var(--navy-lite);color:var(--navy);border-color:var(--navy);">= 実効 9室</span>
+      <span style="display:block;margin-top:4px;color:var(--text-mute);">「空室があるから売れる」ではなく、清掃・保全・食事・人員の処理能力で売れる室数が頭打ちになります。AIの売止・販売提案はこの実効値を基準に算出します。</span>
+    </div>
   </div>
 
   <!-- Row 1: Chart + AI Actions -->
@@ -251,7 +291,7 @@ tr.data-row{cursor:pointer;}
     <div class="col-35">
       <div class="card">
         <div class="card-head">
-          <h3 data-guide="【AIからの優先提案】AIが今いちばん気にかけてほしいことを、優先順位の高い順に並べてお知らせします。あくまで提案で、最終的な判断は支配人や現場の方が行います。">🤖 AI優先アクション</h3>
+          <h3 data-guide="【AIからの優先提案】AIが今いちばん気にかけてほしいことを、優先順位の高い順に並べてお知らせします。基幹システム(予約・会計)に加え、保全・食事・外部の需要シグナルを横断して判断しています。あくまで提案で、最終的な判断は支配人や現場の方が行います。">🤖 AI優先アクション <span style="font-size:9px;font-weight:600;color:var(--text-mute);">基幹PMS＋保全＋食事＋外部シグナル横断</span></h3>
           <span class="badge" style="background:var(--brand-lite);color:var(--brand-dark);">8件</span>
         </div>
         <div class="card-body" style="padding:10px;">
@@ -266,7 +306,7 @@ tr.data-row{cursor:pointer;}
               <div class="nudge-msg">別館302の空調を、今夜分の販売から外しましょう。</div>
               <div class="nudge-why">センサーが異音を検知しています。このままご案内すると、ご滞在中の不具合とクレームにつながります。</div>
               <div class="nudge-rec">12時までに販売を止め、保全担当へ点検を依頼すると安心です。今夜の該当予約2件は別室へのご移動を提案できます。</div>
-              <div class="nudge-basis" data-guide="【根拠】AIがこの提案をした理由と、放っておいた場合に見込まれる損失の目安です。判断材料としてご確認ください。">根拠: 同型機の故障パターン3件と一致 / 週末の見込み損失 約¥96,000</div>
+              <div class="nudge-basis" data-guide="【根拠】AIがこの提案をした理由と、放っておいた場合に見込まれる損失の目安です。複数の領域のデータを突き合わせて判断しています。判断材料としてご確認ください。">根拠 (横断): 保全=同型機の故障パターン3件と一致 / 基幹PMS=今夜の該当予約2件 / 週末の見込み損失 約¥96,000</div>
               <div class="nudge-btns">
                 <a href="screen6_maintenance.html" class="nudge-btn primary">対象予約を見る</a>
                 <span class="nudge-btn secondary">後で</span>
@@ -282,7 +322,7 @@ tr.data-row{cursor:pointer;}
               <div class="nudge-msg">到着がまだ確認できないお客様が4組いらっしゃいます。</div>
               <div class="nudge-why">ご連絡がないまま当日を迎えると、お部屋とお食事の準備が無駄になり、他のお客様をお断りした分の機会損失にもつながります。</div>
               <div class="nudge-rec">17時までに4組へ到着予定の確認メッセージをお送りすると、当日の段取りが立てやすくなります。文面の候補をご用意しています。</div>
-              <div class="nudge-basis">根拠: 到着未確認 4組 / 影響額の目安 約¥192,000</div>
+              <div class="nudge-basis">根拠 (横断): 基幹PMS=到着未確認 4組 / 食事=夕食仕込み4組分が無駄に / 影響額の目安 約¥192,000</div>
               <div class="nudge-btns">
                 <a href="screen3_reservations.html" class="nudge-btn primary">対象予約を見る</a>
                 <span class="nudge-btn secondary">文面を見る</span>
@@ -298,7 +338,7 @@ tr.data-row{cursor:pointer;}
               <div class="nudge-msg">12/24〜26は料金を見直す余地がありそうです。</div>
               <div class="nudge-why">紅葉ライトアップで予約の動きが活発になっており、今の料金は周辺施設より少し低めです。</div>
               <div class="nudge-rec">3日間を約12%引き上げる候補を表示しています。最終確認は支配人が行ってください。問題なければそのまま反映できます。</div>
-              <div class="nudge-basis">根拠: 当該期間の需要 +32% / 期待増収 約+¥420,000</div>
+              <div class="nudge-basis">根拠 (横断): 外部シグナル=紅葉ライトアップで当該期間の需要 +32% / 基幹PMS=周辺施設より低単価 / 食事=提供能力に余裕 / 期待増収 約+¥420,000</div>
               <div class="nudge-btns">
                 <a href="screen7_marketing.html" class="nudge-btn primary">対象予約を見る</a>
                 <span class="nudge-btn secondary">候補を見る</span>
@@ -435,17 +475,17 @@ tr.data-row{cursor:pointer;}
         </tr>
       </thead>
       <tbody>
-        <tr class="data-row" style="background:var(--brand-soft);"><td>08:41</td><td><span class="badge b-phone">🔴 クレーム</span></td><td><strong>J.W 様</strong> (#R-2026-1341) — 512号室 隣室騒音+朝食混雑。即時対応要</td><td>🌐 英語</td><td>別館512</td><td style="font-weight:600;color:var(--brand);">-¥144,000</td><td><span class="badge" style="background:var(--brand-lite);color:var(--brand-dark);">🔴 緊急</span></td><td><a class="detail-link" href="mobile_action.html">詳細→</a></td></tr>
-        <tr class="data-row"><td>09:23</td><td><span class="badge b-mail">📧 メール変更</span></td><td>T.I 様 (#R-2026-1289) — チェックイン日変更 12/20→12/21</td><td>🇯🇵 日本語</td><td>スイートB</td><td style="font-weight:600;">¥48,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
-        <tr class="data-row"><td>09:45</td><td><span class="badge b-phone">📞 キャンセル</span></td><td>S. 様 (#R-2026-1304) — 急病でキャンセル希望</td><td>🇯🇵 日本語</td><td>和室C</td><td style="font-weight:600;">¥36,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
-        <tr class="data-row"><td>09:58</td><td><span class="badge b-mail">🌐 英語メール</span></td><td><strong>E.C 様</strong> — "Late check-in 22:30 + vegetarian dinner request"</td><td>🌐 英語</td><td>ツインA</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
-        <tr class="data-row"><td>10:12</td><td><span class="badge b-mail">🌐 中国語メール</span></td><td><strong>W.J 様</strong> — "接送服务咨询" 東京駅からの送迎+高齢者同伴</td><td>🌐 中国語</td><td>和室特別</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
-        <tr class="data-row"><td>10:30</td><td><span class="badge b-mail">🌐 韓国語メール</span></td><td><strong>K.M 様</strong> — "온천 이용 문의" タトゥー温泉利用+家族風呂予約</td><td>🌐 韓国語</td><td>ツインB</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
-        <tr class="data-row"><td>10:45</td><td><span class="badge" style="background:var(--purple-lite);color:var(--purple);">👥 団体調整</span></td><td><strong>青葉商事 研修旅行</strong> 38名/14室 — 未確定: 3名到着時間、飲み放題有無</td><td>🇯🇵 日本語</td><td>本館2F</td><td style="font-weight:600;color:var(--green);">+¥684,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen3_reservations.html">詳細→</a></td></tr>
+        <tr class="data-row" style="background:var(--brand-soft);"><td>08:41</td><td><span class="badge b-phone">🔴 クレーム</span></td><td><strong>ゲスト G-1341 様</strong> (#R-2026-1341) — 512号室 隣室騒音+朝食混雑。即時対応要</td><td>🌐 英語</td><td>別館512</td><td style="font-weight:600;color:var(--brand);">-¥144,000</td><td><span class="badge" style="background:var(--brand-lite);color:var(--brand-dark);">🔴 緊急</span></td><td><a class="detail-link" href="mobile_action.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>09:23</td><td><span class="badge b-mail">📧 メール変更</span></td><td>ゲスト G-1289 様 (#R-2026-1289) — チェックイン日変更 12/20→12/21</td><td>🇯🇵 日本語</td><td>スイートB</td><td style="font-weight:600;">¥48,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>09:45</td><td><span class="badge b-phone">📞 キャンセル</span></td><td>ゲスト G-1304 様 (#R-2026-1304) — 急病でキャンセル希望</td><td>🇯🇵 日本語</td><td>和室C</td><td style="font-weight:600;">¥36,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>09:58</td><td><span class="badge b-mail">🌐 英語メール</span></td><td><strong>ゲスト G-0001 様</strong> — "Late check-in 22:30 + vegetarian dinner request"</td><td>🌐 英語</td><td>ツインA</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>10:12</td><td><span class="badge b-mail">🌐 中国語メール</span></td><td><strong>ゲスト G-0002 様</strong> — "接送服务咨询" 東京駅からの送迎+高齢者同伴</td><td>🌐 中国語</td><td>和室特別</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>10:30</td><td><span class="badge b-mail">🌐 韓国語メール</span></td><td><strong>ゲスト G-0003 様</strong> — "온천 이용 문의" タトゥー温泉利用+家族風呂予約</td><td>🌐 韓国語</td><td>ツインB</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>10:45</td><td><span class="badge" style="background:var(--purple-lite);color:var(--purple);">👥 団体調整</span></td><td><strong>法人A 研修旅行</strong> 38名/14室 — 未確定: 3名到着時間、飲み放題有無</td><td>🇯🇵 日本語</td><td>本館2F</td><td style="font-weight:600;color:var(--green);">+¥684,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen3_reservations.html">詳細→</a></td></tr>
         <tr class="data-row"><td>10:55</td><td data-guide="【保全アラート（予兆保全）】設備が壊れる前に、センサーが捉えた異常の兆しからAIが故障の予兆を知らせる仕組みです。止まる前に点検でき、急な使用中止やお客様への迷惑を防げます。"><span class="badge b-maint">🔧 保全アラート</span></td><td>別館302 エアコン異音 (センサー検知) — 同型機3件故障パターン一致</td><td>—</td><td>別館302</td><td style="font-weight:600;color:var(--brand);">-¥96,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen6_maintenance.html">詳細→</a></td></tr>
         <tr class="data-row"><td>11:10</td><td><span class="badge b-ota">🟪 予約サイト自動</span></td><td>Booking.com 自動メッセージ — 到着時間確認リクエスト (3件未回答)</td><td>—</td><td>—</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen3_reservations.html">詳細→</a></td></tr>
         <tr class="data-row"><td>11:32</td><td><span class="badge b-ai">💰 AI価格提案</span></td><td>12/24-26 +12%値上げ提案 — 紅葉ライトアップ需要+32%上昇中</td><td>—</td><td>全棟</td><td style="font-weight:600;color:var(--green);">+¥420,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen7_marketing.html">詳細→</a></td></tr>
-        <tr class="data-row"><td>11:45</td><td><span class="badge b-hold">⏰ 仮押さえ期限</span></td><td>T.K 様 — 18:00 までに本予約確定要</td><td>🇯🇵 日本語</td><td>スイートA</td><td style="font-weight:600;">¥56,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
+        <tr class="data-row"><td>11:45</td><td><span class="badge b-hold">⏰ 仮押さえ期限</span></td><td>ゲスト G-0004 様 — 18:00 までに本予約確定要</td><td>🇯🇵 日本語</td><td>スイートA</td><td style="font-weight:600;">¥56,000</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen2_action_detail.html">詳細→</a></td></tr>
         <tr class="data-row"><td>12:05</td><td><span class="badge" style="background:var(--amber-lite);color:var(--amber);">🍽️ 特別対応</span></td><td>R-24018 — 甲殻類アレルギー+ベビーベッド+記念日ケーキ手配 (12/20泊)</td><td>🇯🇵 日本語</td><td>和室D</td><td style="color:var(--text-mute);">—</td><td><span class="badge b-status">🟡 要対応</span></td><td><a class="detail-link" href="screen3_reservations.html">詳細→</a></td></tr>
       </tbody>
     </table>

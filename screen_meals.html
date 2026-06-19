@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=1440">
 <title>食事管理 (旅館の料飲 / 配膳の取りまとめ・アレルギー・配膳)</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -233,7 +234,7 @@ a { text-decoration: none; color: inherit; }
   <div class="header-search"><input type="text" placeholder="食事・席割・アレルギー・会場を検索"></div>
   <div class="header-right">
     <div class="header-bell">&#128276;<span class="badge-notif">5</span></div>
-    <div class="header-user"><div class="header-user-info"><div class="name">山田太郎</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
+    <div class="header-user"><div class="header-user-info"><div class="name">支配人A</div><div class="role">支配人</div></div><span class="arrow">&#9662;</span></div>
   </div>
 </header>
 
@@ -262,7 +263,7 @@ a { text-decoration: none; color: inherit; }
       <button class="on">夕食</button><button>朝食</button><button>デシャップ</button><button>アレルギー</button><button>子供食</button><button>配膳</button>
     </div>
   </div>
-  <div class="page-sub">営業日 2026/05/30。食事の提供能力が客室販売数を決める前提で、会場席数・時間枠・厨房ピークを客室在庫へ戻して販売を止める。未確認アレルギーと定員超過は予約チップと仕込み表に即時反映。</div>
+  <div class="page-sub">営業日 2026/05/30。<b>食事の提供能力が客室の販売数を決める</b>——会場の席数(席数キャパ)・時間帯・厨房のピーク・仕込みと人員の負荷・アレルギーや特別食の対応能力・仕入れ/調達の状況をすべて足し合わせた「今夜出しきれる上限」を客室在庫へ戻し、<b>推奨販売上限</b>を超える予約は売止候補に上げます。未確認アレルギーと定員超過は予約チップと仕込み表に即時反映。</div>
 
   <div class="kpi-strip">
     <div class="kpi-card" data-guide="【本日夕食】今夜お食事を召し上がるお客様の合計人数です。下の数字は翌朝の朝食の見込み人数です。"><div class="label">本日夕食</div><div class="value" style="color:var(--brand);">96<span class="unit">名</span></div><div class="sub delta-up">朝食見込み 88名</div></div>
@@ -327,30 +328,30 @@ a { text-decoration: none; color: inherit; }
               <div class="cell">
                 <div class="seatbar"><div class="cap">24</div><div class="track"><span style="width:75%;"></span></div><div class="val">24/32</div></div>
                 <div class="chip-row">
-                  <span class="chip chip-room">302 S.M 様 3名</span><span class="chip chip-course">梅</span><span class="chip chip-alert" data-guide="【アレルギー表示】このお客様が食べられない食材です。厨房に必ず伝え、別の料理に差し替える目印になります。">卵</span>
+                  <span class="chip chip-room">302 ゲスト G-0001 様 3名</span><span class="chip chip-course">梅</span><span class="chip chip-alert" data-guide="【アレルギー表示】このお客様が食べられない食材です。厨房に必ず伝え、別の料理に差し替える目印になります。">卵</span>
                   <span class="chip chip-anniv">記念日</span><span class="chip chip-flag">日本</span>
                 </div>
                 <div class="chip-row">
-                  <span class="chip chip-room">305 K. 様 2名</span><span class="chip chip-course">竹</span><span class="chip chip-flag">大2子1</span>
+                  <span class="chip chip-room">305 ゲスト G-0002 様 2名</span><span class="chip chip-course">竹</span><span class="chip chip-flag">大2子1</span>
                 </div>
               </div>
               <div class="cell">
                 <div class="seatbar"><div class="cap">48</div><div class="track"><span style="width:100%;"></span></div><div class="val">32/32</div></div>
                 <div class="chip-row">
-                  <span class="chip chip-room">201 T.I 様 4名</span><span class="chip chip-course">松</span><span class="chip chip-alert">えび</span>
+                  <span class="chip chip-room">201 ゲスト G-0003 様 4名</span><span class="chip chip-course">松</span><span class="chip chip-alert">えび</span>
                   <span class="chip chip-flag bad" data-guide="【定員超過】この時間枠が席数を超えている状態です。数字は何名分はみ出しているかを表します。別の時間へのご案内を検討する合図です。">超過 +8</span>
                 </div>
                 <div class="chip-row">
-                  <span class="chip chip-room">409 G. 様 2名</span><span class="chip chip-course">梅</span><span class="chip chip-flag">🇪🇸</span>
+                  <span class="chip chip-room">409 ゲスト G-0004 様 2名</span><span class="chip chip-course">梅</span><span class="chip chip-flag">🇪🇸</span>
                 </div>
               </div>
               <div class="cell">
                 <div class="seatbar"><div class="cap">24</div><div class="track"><span style="width:58%;"></span></div><div class="val">19/32</div></div>
                 <div class="chip-row">
-                  <span class="chip chip-room">118 S. 様 3名</span><span class="chip chip-course">竹</span><span class="chip chip-alert">未確認</span>
+                  <span class="chip chip-room">118 ゲスト G-0005 様 3名</span><span class="chip chip-course">竹</span><span class="chip chip-alert">未確認</span>
                 </div>
                 <div class="chip-row">
-                  <span class="chip chip-room">512 L. 様 2名</span><span class="chip chip-flag">韓国</span>
+                  <span class="chip chip-room">512 ゲスト G-0006 様 2名</span><span class="chip chip-flag">韓国</span>
                 </div>
               </div>
               <div class="cell">
@@ -363,21 +364,21 @@ a { text-decoration: none; color: inherit; }
               <div class="cell full">
                 <div class="seatbar"><div class="cap">8</div><div class="track"><span style="width:100%;"></span></div><div class="val">8/8</div></div>
                 <div class="chip-row">
-                  <span class="chip chip-room">210 T.K 様 2名</span><span class="chip chip-course">松</span><span class="chip chip-alert">乳</span>
+                  <span class="chip chip-room">210 ゲスト G-0007 様 2名</span><span class="chip chip-course">松</span><span class="chip chip-alert">乳</span>
                   <span class="chip chip-anniv">結婚記念</span>
                 </div>
-                <div class="chip-row"><span class="chip chip-room">214 W.J 様 4名</span><span class="chip chip-course">竹</span><span class="chip chip-flag">子供食2</span></div>
+                <div class="chip-row"><span class="chip chip-room">214 ゲスト G-0008 様 4名</span><span class="chip chip-course">竹</span><span class="chip chip-flag">子供食2</span></div>
               </div>
               <div class="cell full">
                 <div class="seatbar"><div class="cap">8</div><div class="track"><span style="width:100%;"></span></div><div class="val">8/8</div></div>
                 <div class="chip-row">
-                  <span class="chip chip-room">112 S. 様 3名</span><span class="chip chip-course">松</span><span class="chip chip-alert">そば</span>
+                  <span class="chip chip-room">112 ゲスト G-0009 様 3名</span><span class="chip chip-course">松</span><span class="chip chip-alert">そば</span>
                   <span class="chip chip-flag bad">満</span>
                 </div>
               </div>
               <div class="cell full">
                 <div class="seatbar"><div class="cap">4</div><div class="track"><span style="width:100%;"></span></div><div class="val">4/4</div></div>
-                <div class="chip-row"><span class="chip chip-room">517 I. 様 2名</span><span class="chip chip-course">梅</span><span class="chip chip-flag">記念日</span></div>
+                <div class="chip-row"><span class="chip chip-room">517 ゲスト G-0010 様 2名</span><span class="chip chip-course">梅</span><span class="chip chip-flag">記念日</span></div>
               </div>
               <div class="cell full over">
                 <div class="seatbar"><div class="cap">0</div><div class="track"><span style="width:100%;"></span></div><div class="val">0/0</div></div>
@@ -411,17 +412,17 @@ a { text-decoration: none; color: inherit; }
               <div class="grid-label"><div class="name">部屋食</div><div class="meta">仲居配膳 / 布団連動</div></div>
               <div class="cell">
                 <div class="seatbar"><div class="cap">6</div><div class="track"><span style="width:19%;"></span></div><div class="val">6/32</div></div>
-                <div class="chip-row"><span class="chip chip-room">821 Y. 様 2名</span><span class="chip chip-course">梅</span></div>
+                <div class="chip-row"><span class="chip chip-room">821 ゲスト G-0011 様 2名</span><span class="chip chip-course">梅</span></div>
               </div>
               <div class="cell">
                 <div class="seatbar"><div class="cap">8</div><div class="track"><span style="width:25%;"></span></div><div class="val">8/32</div></div>
                 <div class="chip-row">
-                  <span class="chip chip-room">825 P. 様 3名</span><span class="chip chip-course">竹</span><span class="chip chip-alert">落花生</span>
+                  <span class="chip chip-room">825 ゲスト G-0012 様 3名</span><span class="chip chip-course">竹</span><span class="chip chip-alert">落花生</span>
                 </div>
               </div>
               <div class="cell">
                 <div class="seatbar"><div class="cap">4</div><div class="track"><span style="width:13%;"></span></div><div class="val">4/32</div></div>
-                <div class="chip-row"><span class="chip chip-room">832 F. 様 2名</span><span class="chip chip-course">朝食へ変更候補</span></div>
+                <div class="chip-row"><span class="chip chip-room">832 ゲスト G-0013 様 2名</span><span class="chip chip-course">朝食へ変更候補</span></div>
               </div>
               <div class="cell">
                 <div class="seatbar"><div class="cap">2</div><div class="track"><span style="width:6%;"></span></div><div class="val">2/32</div></div>
@@ -505,16 +506,16 @@ a { text-decoration: none; color: inherit; }
             <div>室番</div><div>担当卓 / 代表者</div><div>人数</div><div>コース</div><div>ステータス</div><div>通知</div>
           </div>
           <div class="alist-r">
-            <div>302</div><div>S.M 様 / 3名</div><div>大2子1</div><div><span class="tag tag-ok">梅</span></div><div><span class="stat" style="color:var(--amber);">未着席</span></div><div>待機</div>
+            <div>302</div><div>ゲスト G-0001 様 / 3名</div><div>大2子1</div><div><span class="tag tag-ok">梅</span></div><div><span class="stat" style="color:var(--amber);">未着席</span></div><div>待機</div>
           </div>
           <div class="alist-r">
-            <div>201</div><div>T.I 様 / 4名</div><div>大2子2</div><div><span class="tag tag-ok">松</span></div><div><span class="stat" style="color:var(--green);">配膳済</span></div><div>OK</div>
+            <div>201</div><div>ゲスト G-0003 様 / 4名</div><div>大2子2</div><div><span class="tag tag-ok">松</span></div><div><span class="stat" style="color:var(--green);">配膳済</span></div><div>OK</div>
           </div>
           <div class="alist-r">
-            <div>825</div><div>P. 様 / 3名</div><div>大2子1</div><div><span class="tag tag-warn">竹</span></div><div><span class="stat" style="color:var(--navy);">食事中</span></div><div>追跡</div>
+            <div>825</div><div>ゲスト G-0012 様 / 3名</div><div>大2子1</div><div><span class="tag tag-warn">竹</span></div><div><span class="stat" style="color:var(--navy);">食事中</span></div><div>追跡</div>
           </div>
           <div class="alist-r">
-            <div>832</div><div>F. 様 / 2名</div><div>大2</div><div><span class="tag tag-ok">梅</span></div><div><span class="stat" style="color:var(--green);">下膳済</span></div><div><span class="tag tag-bad">布団班へ自動通知</span></div>
+            <div>832</div><div>ゲスト G-0013 様 / 2名</div><div>大2</div><div><span class="tag tag-ok">梅</span></div><div><span class="stat" style="color:var(--green);">下膳済</span></div><div><span class="tag tag-bad">布団班へ自動通知</span></div>
           </div>
         </div>
       </div>
@@ -571,13 +572,13 @@ a { text-decoration: none; color: inherit; }
               <div>予約</div><div>えび</div><div>かに</div><div>くるみ</div><div>小麦</div><div>そば</div><div>卵</div><div>乳</div><div>落花生</div>
             </div>
             <div class="alist-r" style="grid-template-columns:1fr 50px 50px 50px 50px 50px 50px 50px 50px;">
-              <div>302 S.M 様 3名 <span class="tag tag-warn">未確認</span></div><div>—</div><div>—</div><div>—</div><div>◯</div><div>—</div><div>◯</div><div>—</div><div>—</div>
+              <div>302 ゲスト G-0001 様 3名 <span class="tag tag-warn">未確認</span></div><div>—</div><div>—</div><div>—</div><div>◯</div><div>—</div><div>◯</div><div>—</div><div>—</div>
             </div>
             <div class="alist-r" style="grid-template-columns:1fr 50px 50px 50px 50px 50px 50px 50px 50px;">
-              <div>201 T.I 様 4名 <span class="tag tag-bad">赤旗</span></div><div>◯</div><div>—</div><div>—</div><div>—</div><div>—</div><div>◯</div><div>◯</div><div>—</div>
+              <div>201 ゲスト G-0003 様 4名 <span class="tag tag-bad">赤旗</span></div><div>◯</div><div>—</div><div>—</div><div>—</div><div>—</div><div>◯</div><div>◯</div><div>—</div>
             </div>
             <div class="alist-r" style="grid-template-columns:1fr 50px 50px 50px 50px 50px 50px 50px 50px;">
-              <div>825 P. 様 3名 <span class="tag tag-bad">未確認</span></div><div>—</div><div>—</div><div>◯</div><div>◯</div><div>—</div><div>—</div><div>—</div><div>◯</div>
+              <div>825 ゲスト G-0012 様 3名 <span class="tag tag-bad">未確認</span></div><div>—</div><div>—</div><div>◯</div><div>◯</div><div>—</div><div>—</div><div>—</div><div>◯</div>
             </div>
           </div>
           <div class="prep-note">7日前ルール: 到着前7日以内の申告は優先確認。未確認は自動で赤点滅し、食事チップにも反映。</div>
@@ -587,6 +588,44 @@ a { text-decoration: none; color: inherit; }
             <div class="box"><div class="k">幼児 食事布団付</div><div class="v">3</div></div>
             <div class="box"><div class="k">幼児 3区分</div><div class="v">0 / 0 / 0</div></div>
           </div>
+        </div>
+      </div>
+
+      <div class="card right-card">
+        <div class="card-h">
+          <div class="t" data-guide="【食事提供能力 → 推奨販売上限】食事を出しきれる人数の上限から、これ以上は客室を売らない方がよいという目安(推奨販売上限)を導きます。席数・厨房の手・仕入れ・特別食の対応余力のうち、いちばん厳しいものが上限を決めます。">&#127869;&#65039; 食事提供能力 → 客室の推奨販売上限</div>
+          <span class="src">最も厳しい制約が上限を決める</span>
+        </div>
+        <div class="card-b">
+          <div style="font-size:10.5px;color:var(--text-sub);line-height:1.6;margin-bottom:10px;">食事を出しきれる上限を、4つの制約の<b>いちばん厳しい値</b>で決め、客室の<b>推奨販売上限</b>に戻します。</div>
+          <div class="alist" style="margin-top:0;">
+            <div class="alist-h" style="grid-template-columns:1.4fr 60px 1fr;">
+              <div>制約</div><div>余力</div><div>状況</div>
+            </div>
+            <div class="alist-r" style="grid-template-columns:1.4fr 60px 1fr;">
+              <div>時間帯別の席数 (席数キャパ)</div><div><span class="tag tag-warn">残24</span></div><div>18:30満・19:00超過 +8</div>
+            </div>
+            <div class="alist-r" style="grid-template-columns:1.4fr 60px 1fr;">
+              <div>仕込み・人員負荷 (厨房/仲居)</div><div><span class="tag tag-warn">逼迫</span></div><div>18:30ピークに集中・仲居2名増要</div>
+            </div>
+            <div class="alist-r" style="grid-template-columns:1.4fr 60px 1fr;">
+              <div>アレルギー・特別食の対応能力</div><div><span class="tag tag-ok">残6</span></div><div>除去食/代替 1日6食まで・未確認3件</div>
+            </div>
+            <div class="alist-r" style="grid-template-columns:1.4fr 60px 1fr;">
+              <div>仕入れ・調達の警告</div><div><span class="tag tag-bad">1件</span></div><div>鮮魚(松コース)入荷遅延・松は残4まで</div>
+            </div>
+          </div>
+          <div class="small-grid">
+            <div class="box" style="background:var(--navy-lite);">
+              <div class="k" style="color:var(--navy);">今夜の推奨販売上限</div>
+              <div class="v" style="color:var(--navy);">+残24名 → 客室 約9室まで</div>
+            </div>
+            <div class="box">
+              <div class="k">支配人の判断</div>
+              <div class="v" style="font-size:11px;">超過分は売止候補へ</div>
+            </div>
+          </div>
+          <div class="prep-note">いちばん厳しい制約(ここでは仕入れ=松コース残4 と席数=残24)が上限を決めます。これを超える新規予約は、客室管理の<b>実効販売可能数</b>から差し引いて売止候補に上げます。</div>
         </div>
       </div>
 
