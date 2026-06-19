@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>リスク予測 — 施設運営AI OS</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .risk-rows .bar-row{align-items:center;}
+    .risk-rec{font-size:11px;color:var(--text-mute,#667);margin-top:2px;}
+    .seg-cell small{display:block;color:var(--text-mute,#667);font-size:10px;margin-top:2px;}
+    .risk-mini{display:flex;align-items:center;gap:6px;}
+    .risk-mini .meter{flex:1;min-width:70px;}
+    .risk-mini .rl{font-size:10px;font-weight:700;white-space:nowrap;}
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="header-logo"><span class="dot"></span><span>施設運営AI OS</span><span class="os">FACILITY OS</span></div>
+  <div class="header-facility"><span>○○リゾート箱根 — 全施設横断ビュー</span><span style="font-size:11px;color:var(--text-mute);">▾</span></div>
+  <div class="header-search"><input type="text" placeholder="予約ID・部屋番号・提案IDを検索"></div>
+  <div class="header-right">
+    <a class="header-link" href="index.html">← デモ一覧</a>
+    <div class="header-notif">🔔<span class="notif-badge">8</span></div>
+    <div class="header-user"><div><div class="header-user-name">支配人A</div><div class="header-user-role">支配人</div></div><span style="font-size:11px;color:var(--text-mute);">▾</span></div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <div class="sidebar-group">運営</div>
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen_meals.html">食事管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">設備保全</a>
+  <div class="sidebar-group">AI・戦略・外部</div>
+  <a class="sidebar-item" href="screen_external_signals.html">外部シグナル監視</a>
+  <a class="sidebar-item active" href="screen_risk_forecast.html">リスク予測</a>
+  <a class="sidebar-item" href="screen_strategy_actions.html">AI戦略アクション</a>
+  <div class="sidebar-group">承認・監査</div>
+  <a class="sidebar-item" href="screen_approvals.html">承認待ち</a>
+  <a class="sidebar-item" href="screen_audit_reports.html">監査レポート</a>
+  <div class="sidebar-group">展開</div>
+  <a class="sidebar-item" href="screen_public_facility.html">公共施設OS</a>
+</nav>
+
+<main class="main">
+  <div class="page-head">
+    <div class="crumb"><a href="index.html">デモ一覧</a> ／ リスク予測</div>
+    <div class="page-kicker">RISK FORECAST</div>
+    <h1 class="page-title">リスク予測 — 顧客の採点ではなく「対応準備リスク」</h1>
+    <p class="page-sub">到着日・予約セグメント別に、当日の対応が間に合わないリスクを予測し、現場の準備を支援する。差別的・センシティブ属性は扱わない。</p>
+  </div>
+
+  <!-- 1) プライバシー/倫理の枠組み -->
+  <div class="note-strip privacy-strip">
+    <span class="ico">🛡️</span>
+    <span>これは「お客様を採点する」ものではありません。現場の準備を助けるための<b>運用リスク</b>です。差別的・センシティブ属性の語は使いません。扱うのは「対応準備リスク／到着遅延可能性／多言語案内の必要度／食事制約確認／事前説明推奨」のみです。</span>
+  </div>
+
+  <!-- 2) KPI strip -->
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <div class="kpi-label">本日到着</div>
+      <div class="kpi-value">38<span class="unit">件</span></div>
+      <div class="kpi-delta up">前日 +6件</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">高リスク準備</div>
+      <div class="kpi-value">7<span class="unit">件</span></div>
+      <div class="kpi-delta warn">要先行準備</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">多言語案内が必要</div>
+      <div class="kpi-value">12<span class="unit">件</span></div>
+      <div class="kpi-delta up">英 7 / 中 3 / 韓 2</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">食事制約の確認待ち</div>
+      <div class="kpi-value">5<span class="unit">件</span></div>
+      <div class="kpi-delta down">前日 -2件</div>
+    </div>
+  </div>
+
+  <!-- 3) リスクカテゴリ -->
+  <div class="section-title">リスクカテゴリ（本日到着分・強弱）</div>
+  <div class="card">
+    <div class="card-head">
+      <h3>対応準備リスクの内訳</h3>
+      <span class="meta">スコア = 当日の対応が間に合わない可能性。<span class="badge b-ai">AI推定</span></span>
+    </div>
+    <div class="card-body risk-rows">
+      <div class="bar-row">
+        <span class="lab">到着遅延可能性</span>
+        <span class="meter"><span class="meter-fill" style="width:78%;background:#C8102E;"></span></span>
+        <span class="val">高</span>
+      </div>
+      <div class="risk-rec">推奨：到着見込み時間を事前確認し、夜勤の受付体制を1名厚めに。</div>
+
+      <div class="bar-row">
+        <span class="lab">多言語案内の必要度</span>
+        <span class="meter"><span class="meter-fill" style="width:71%;background:#D97706;"></span></span>
+        <span class="val">中〜高</span>
+      </div>
+      <div class="risk-rec">推奨：英・中・韓の案内シートを準備、多言語対応スタッフのシフトを確認。</div>
+
+      <div class="bar-row">
+        <span class="lab">食事制約確認</span>
+        <span class="meter"><span class="meter-fill" style="width:64%;background:#D97706;"></span></span>
+        <span class="val">中</span>
+      </div>
+      <div class="risk-rec">推奨：アレルギー・ベジタリアン等の未確認分を前日までに照会、代替メニューを仮組み。</div>
+
+      <div class="bar-row">
+        <span class="lab">事前説明推奨</span>
+        <span class="meter"><span class="meter-fill" style="width:52%;background:#D97706;"></span></span>
+        <span class="val">中</span>
+      </div>
+      <div class="risk-rec">推奨：温泉利用・館内動線・チェックイン手順を事前メッセージで案内。</div>
+
+      <div class="bar-row">
+        <span class="lab">天候・交通障害</span>
+        <span class="meter"><span class="meter-fill" style="width:46%;background:#D97706;"></span></span>
+        <span class="val">中</span>
+      </div>
+      <div class="risk-rec">推奨：箱根エリアの降雪・運休情報を監視、送迎の繰り上げ可否を準備。</div>
+
+      <div class="bar-row">
+        <span class="lab">レビュー・苦情リスク</span>
+        <span class="meter"><span class="meter-fill" style="width:33%;background:#15803D;"></span></span>
+        <span class="val">低〜中</span>
+      </div>
+      <div class="risk-rec">推奨：前回フィードバックのある予約に、担当からの一言フォローを準備。</div>
+
+      <div class="bar-row">
+        <span class="lab">過剰対応（特別要望集中）リスク</span>
+        <span class="meter"><span class="meter-fill" style="width:28%;background:#15803D;"></span></span>
+        <span class="val">低</span>
+      </div>
+      <div class="risk-rec">推奨：特別要望が同時間帯に集中しないよう、対応枠を分散して割り付け。</div>
+    </div>
+  </div>
+
+  <!-- 4) 到着日×セグメント別 一覧 -->
+  <div class="section-title">到着日 × セグメント別 対応準備リスク</div>
+  <div class="card">
+    <div class="card-head">
+      <h3>準備が必要な予約</h3>
+      <span class="meta">運用ベースの主因・推奨のみ。属性差別表現は扱いません。</span>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>到着日</th>
+            <th>予約</th>
+            <th>セグメント</th>
+            <th>対応準備リスク</th>
+            <th>主因</th>
+            <th>推奨対応</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row">
+            <td>06/19（本日）</td>
+            <td>予約ID R-2026-1289</td>
+            <td class="seg-cell">インバウンド<small>2名</small></td>
+            <td><span class="risk-mini"><span class="meter"><span class="meter-fill" style="width:82%;background:#C8102E;"></span></span><span class="rl">高</span></span></td>
+            <td>多言語案内が必要・到着遅延の可能性</td>
+            <td>英語案内シート準備＋到着時間の事前確認連絡</td>
+          </tr>
+          <tr class="row">
+            <td>06/19（本日）</td>
+            <td>予約ID R-2026-1290</td>
+            <td class="seg-cell">家族<small>3名</small></td>
+            <td><span class="risk-mini"><span class="meter"><span class="meter-fill" style="width:74%;background:#C8102E;"></span></span><span class="rl">高</span></span></td>
+            <td>甲殻類アレルギーの確認待ち</td>
+            <td>食材の事前確認・代替メニューを準備</td>
+          </tr>
+          <tr class="row">
+            <td>06/19（本日）</td>
+            <td>予約ID R-2026-1294</td>
+            <td class="seg-cell">法人<small>5名</small></td>
+            <td><span class="risk-mini"><span class="meter"><span class="meter-fill" style="width:58%;background:#D97706;"></span></span><span class="rl">中</span></span></td>
+            <td>会議室・夕食時間の事前説明推奨</td>
+            <td>会場動線と食事開始時刻を事前案内</td>
+          </tr>
+          <tr class="row">
+            <td>06/20（明日）</td>
+            <td>予約ID R-2026-1301</td>
+            <td class="seg-cell">インバウンド<small>4名</small></td>
+            <td><span class="risk-mini"><span class="meter"><span class="meter-fill" style="width:68%;background:#D97706;"></span></span><span class="rl">中〜高</span></span></td>
+            <td>多言語案内が必要・ベジタリアン対応の確認</td>
+            <td>中国語案内＋精進メニューの可否を厨房へ照会</td>
+          </tr>
+          <tr class="row">
+            <td>06/20（明日）</td>
+            <td>予約ID R-2026-1305</td>
+            <td class="seg-cell">家族<small>2名（小児含む）</small></td>
+            <td><span class="risk-mini"><span class="meter"><span class="meter-fill" style="width:49%;background:#D97706;"></span></span><span class="rl">中</span></span></td>
+            <td>食事制約確認（小児向け）</td>
+            <td>お子様メニューと食器の事前準備</td>
+          </tr>
+          <tr class="row">
+            <td>06/21</td>
+            <td>予約ID R-2026-1312</td>
+            <td class="seg-cell">個人<small>1名</small></td>
+            <td><span class="risk-mini"><span class="meter"><span class="meter-fill" style="width:44%;background:#D97706;"></span></span><span class="rl">中</span></span></td>
+            <td>天候・交通障害（降雪見込み）</td>
+            <td>運休情報を監視し送迎の繰り上げを準備</td>
+          </tr>
+          <tr class="row">
+            <td>06/21</td>
+            <td>予約ID R-2026-1318</td>
+            <td class="seg-cell">家族<small>4名</small></td>
+            <td><span class="risk-mini"><span class="meter"><span class="meter-fill" style="width:31%;background:#15803D;"></span></span><span class="rl">低〜中</span></span></td>
+            <td>事前説明推奨（温泉・館内動線）</td>
+            <td>到着前メッセージで利用案内を送付</td>
+          </tr>
+          <tr class="row">
+            <td>06/22</td>
+            <td>予約ID R-2026-1325</td>
+            <td class="seg-cell">法人<small>8名</small></td>
+            <td><span class="risk-mini"><span class="meter"><span class="meter-fill" style="width:27%;background:#15803D;"></span></span><span class="rl">低</span></span></td>
+            <td>特別要望の集中（同時間帯）</td>
+            <td>対応枠を分散して割り付け</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 5) AIの準備提案（要承認） -->
+  <div class="section-title">AIの準備提案（要承認）</div>
+  <div class="grid-3">
+
+    <div class="proposal urgent">
+      <div class="proposal-top">
+        <span class="ai-badge">AI提案</span>
+        <span class="prio urgent">最優先</span>
+      </div>
+      <div class="proposal-msg">
+        <span class="proposal-line"><b>多言語対応スタッフを当夜の夜勤に1名追加</b></span>
+        <span class="proposal-basis">根拠：本日到着のうち多言語案内が必要な予約が12件（英7/中3/韓2）。うち2件は到着遅延の可能性あり。夜勤帯に対応者が不在の見込み。</span>
+        <span class="proposal-meta"><b>承認者：支配人A</b> ／ 立案：外部シグナル監視AI</span>
+      </div>
+      <div class="btns">
+        <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+        <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+        <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+        <button class="btn ghost">根拠を見る</button>
+      </div>
+    </div>
+
+    <div class="proposal today">
+      <div class="proposal-top">
+        <span class="ai-badge">AI提案</span>
+        <span class="prio today">本日対応</span>
+      </div>
+      <div class="proposal-msg">
+        <span class="proposal-line"><b>甲殻類アレルギーの食材を事前確認・代替メニューを準備</b></span>
+        <span class="proposal-basis">根拠：予約ID R-2026-1290（家族・3名）で食事制約の確認待ち。夕食の甲殻類使用メニューに該当。厨房の仕込み開始まで残り3時間。</span>
+        <span class="proposal-meta"><b>承認者：フロント担当B</b> ／ 連携：食事管理・会計担当C</span>
+      </div>
+      <div class="btns">
+        <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+        <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+        <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+        <button class="btn ghost">根拠を見る</button>
+      </div>
+    </div>
+
+    <div class="proposal good">
+      <div class="proposal-top">
+        <span class="ai-badge">AI提案</span>
+        <span class="prio suggest">推奨</span>
+      </div>
+      <div class="proposal-msg">
+        <span class="proposal-line"><b>到着遅延が見込まれる2組へ、事前に到着時間の確認連絡</b></span>
+        <span class="proposal-basis">根拠：予約ID R-2026-1289・R-2026-1312で交通障害・降雪の影響を検知。事前確認で受付混雑と送迎の手戻りを回避できる見込み。</span>
+        <span class="proposal-meta"><b>承認者：支配人A</b> ／ 実行：夜勤担当D</span>
+      </div>
+      <div class="btns">
+        <button class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</button>
+        <button class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</button>
+        <button class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</button>
+        <button class="btn ghost">根拠を見る</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">サンプルデータ・個人名は非表示。AIは検知・要約・提案まで／重要な実行は人の承認後・監査ログに記録。</div>
+</main>
+
+<script>
+function actOn(btn,label,color){var c=btn.closest('.proposal')||btn.closest('.card');if(!c)return;var b=c.querySelector('.btns');var t=c.querySelector('.act-result');if(!t){t=document.createElement('span');t.className='act-result';t.style.cssText='display:inline-block;margin-left:8px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;';b.appendChild(t);}t.textContent=label;t.style.background=color+'22';t.style.color=color;}
+</script>
+</body>
+</html>

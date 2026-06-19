@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>公共施設OS — 施設運営AI OS</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .ev-table td{vertical-align:middle;}
+    .ev-table .btn{padding:4px 11px;}
+    .kv-card{padding:16px;}
+    .kv-card dt{padding:4px 0;}
+    .kv-card dd{padding:4px 0;}
+    .zone-rows .bar-row{align-items:center;}
+    .zone-rows .lab{flex:0 0 110px;}
+    .staff-card{text-align:center;padding:14px 12px;}
+    .staff-card .sl{font-size:12px;color:var(--text-sub);margin-bottom:6px;font-weight:600;}
+    .staff-card .sv{font-size:24px;font-weight:800;line-height:1.1;}
+    .staff-card .meter{margin-top:8px;}
+    .deploy-strip{background:var(--purple-lite);color:var(--purple);}
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="header-logo"><span class="dot"></span><span>施設運営AI OS</span><span class="os">FACILITY OS</span></div>
+  <div class="header-facility"><span>△△市 総合スポーツ・文化センター — 全施設横断ビュー</span><span style="font-size:11px;color:var(--text-mute);">▾</span></div>
+  <div class="header-search"><input type="text" placeholder="予約ID・施設・提案IDを検索"></div>
+  <div class="header-right">
+    <a class="header-link" href="index.html">← デモ一覧</a>
+    <div class="header-notif">🔔<span class="notif-badge">6</span></div>
+    <div class="header-user"><div><div class="header-user-name">管理責任者A</div><div class="header-user-role">施設管理</div></div><span style="font-size:11px;color:var(--text-mute);">▾</span></div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <div class="sidebar-group">運営</div>
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen_meals.html">食事管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">設備保全</a>
+  <div class="sidebar-group">AI・戦略・外部</div>
+  <a class="sidebar-item" href="screen_external_signals.html">外部シグナル監視</a>
+  <a class="sidebar-item" href="screen_risk_forecast.html">リスク予測</a>
+  <a class="sidebar-item" href="screen_strategy_actions.html">AI戦略アクション</a>
+  <div class="sidebar-group">承認・監査</div>
+  <a class="sidebar-item" href="screen_approvals.html">承認待ち</a>
+  <a class="sidebar-item" href="screen_audit_reports.html">監査レポート</a>
+  <div class="sidebar-group">展開</div>
+  <a class="sidebar-item active" href="screen_public_facility.html">公共施設OS</a>
+</nav>
+
+<main class="main">
+  <div class="page-head">
+    <div class="crumb"><a href="index.html">デモ一覧</a> ／ 公共施設OS</div>
+    <div class="page-kicker">PUBLIC FACILITY</div>
+    <h1 class="page-title">公共施設OS — 同じOSで、宿泊以外も運営する</h1>
+    <p class="page-sub">自治体の体育・文化施設運営。予約・保全・安全・減免・監査をひとつの運用画面で。宿泊専用ではなく、汎用の施設運営OS。</p>
+  </div>
+
+  <!-- 展開メッセージ -->
+  <div class="note-strip deploy-strip">
+    <span class="ico">🏛️</span>
+    <span>これは旅館・ホテル向け画面と<b>同じOS・同じデザイン言語・同じ承認/監査の仕組み</b>を、公共施設（体育館・ホール・プール・会議室）に展開した例です。業種が変わっても、<b>検知はAI／実行は人の承認後／すべて監査ログ</b>という運用原則は変わりません。</span>
+  </div>
+
+  <!-- 1) KPI strip -->
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <div class="kpi-label">本日の予約・イベント</div>
+      <div class="kpi-value">23<span class="unit">件</span></div>
+      <div class="kpi-delta up">前週同曜日 +4件</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">施設稼働率</div>
+      <div class="kpi-value">78<span class="unit">%</span></div>
+      <div class="kpi-delta up">目標 70% を超過</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">保全アラート</div>
+      <div class="kpi-value">3<span class="unit">件</span></div>
+      <div class="kpi-delta warn">うち要対応 1件</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">安全イベント（未確認）</div>
+      <div class="kpi-value">4<span class="unit">件</span></div>
+      <div class="kpi-delta down">夜間帯 2件</div>
+    </div>
+  </div>
+
+  <!-- 2) 本日の予約・イベント -->
+  <div class="section-title">本日の予約・イベント</div>
+  <div class="card">
+    <div class="card-head">
+      <h3>当日スケジュール（全施設横断）</h3>
+      <span class="meta">2026-06-19（金）／ 表示 6 件</span>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <table>
+        <thead>
+          <tr>
+            <th>時間</th><th>施設・ゾーン</th><th>区分</th><th>予約ID</th><th>状態</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row">
+            <td><b>09:00–12:00</b></td><td>体育館A</td>
+            <td><span class="badge b-navy">学校</span></td>
+            <td>K-2026-0309</td>
+            <td><span class="badge b-green">受付済</span></td>
+          </tr>
+          <tr class="row">
+            <td><b>10:00–17:00</b></td><td>多目的ホール</td>
+            <td><span class="badge b-purple">団体</span></td>
+            <td>K-2026-0310</td>
+            <td><span class="badge b-green">受付済</span></td>
+          </tr>
+          <tr class="row">
+            <td><b>13:00–15:00</b></td><td>会議室B</td>
+            <td><span class="badge b-grey">一般</span></td>
+            <td>K-2026-0311</td>
+            <td><span class="badge b-amber">確認待ち</span></td>
+          </tr>
+          <tr class="row">
+            <td><b>15:00–17:00</b></td><td>プール</td>
+            <td><span class="badge b-navy">減免</span></td>
+            <td>U-1180 ／ K-2026-0314</td>
+            <td><span class="badge b-green">受付済</span></td>
+          </tr>
+          <tr class="row">
+            <td><b>18:00–21:00</b></td><td>体育館A</td>
+            <td><span class="badge b-purple">団体</span></td>
+            <td>K-2026-0312</td>
+            <td><span class="badge b-amber">混雑予測</span></td>
+          </tr>
+          <tr class="row">
+            <td><b>18:30–20:30</b></td><td>会議室C</td>
+            <td><span class="badge b-grey">一般</span></td>
+            <td>K-2026-0313</td>
+            <td><span class="badge b-green">受付済</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3) 施設ゾーンと利用率 + 4) 保全アラート -->
+  <div class="section-title">施設ゾーンと設備の状況</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <h3>施設ゾーンと利用率</h3>
+        <span class="meta">本日 14:00 時点</span>
+      </div>
+      <div class="card-body zone-rows">
+        <div class="bar-row">
+          <span class="lab">体育館A</span>
+          <span class="meter"><span class="meter-fill" style="width:92%;background:var(--brand);"></span></span>
+          <span class="val">92%</span>
+        </div>
+        <div class="bar-row">
+          <span class="lab">体育館B</span>
+          <span class="meter"><span class="meter-fill" style="width:64%;background:var(--navy);"></span></span>
+          <span class="val">64%</span>
+        </div>
+        <div class="bar-row">
+          <span class="lab">会議室（合計）</span>
+          <span class="meter"><span class="meter-fill" style="width:71%;background:var(--navy);"></span></span>
+          <span class="val">71%</span>
+        </div>
+        <div class="bar-row">
+          <span class="lab">多目的ホール</span>
+          <span class="meter"><span class="meter-fill" style="width:85%;background:var(--amber);"></span></span>
+          <span class="val">85%</span>
+        </div>
+        <div class="bar-row">
+          <span class="lab">プール</span>
+          <span class="meter"><span class="meter-fill" style="width:48%;background:var(--green);"></span></span>
+          <span class="val">48%</span>
+        </div>
+        <div class="bar-row">
+          <span class="lab">駐車場</span>
+          <span class="meter"><span class="meter-fill" style="width:96%;background:var(--brand);"></span></span>
+          <span class="val">96%</span>
+        </div>
+        <div style="margin-top:8px;font-size:10px;color:var(--text-mute);">赤＝逼迫（90%超）／橙＝高負荷／紺＝通常／緑＝余裕</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3>設備・保全アラート</h3>
+        <span class="meta">AI監視 + 設備担当D</span>
+      </div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="callout risk">
+          <div class="ct">空調2号機の異常値（会議室B）</div>
+          <div class="cd">消費電力と吸気温度が基準レンジを逸脱。設備担当Dへ通知済。新規予約の一時停止を提案中（下記AI推奨を参照）。</div>
+        </div>
+        <div class="callout watch">
+          <div class="ct">プール濾過ポンプ 点検期限が接近</div>
+          <div class="cd">法定点検まで残り 4 日。部品在庫あり。優先度：中。点検枠の確保を推奨。</div>
+        </div>
+        <div class="callout watch">
+          <div class="ct">駐車場ゲート（南側）の開閉不調</div>
+          <div class="cd">開閉応答に遅延を検知（直近24時間で3回）。雨天時の入庫集中前に保守を推奨。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5) 人員・シフト充足 -->
+  <div class="section-title">人員・シフト充足（本日）</div>
+  <div class="grid-3">
+    <div class="card staff-card">
+      <div class="sl">受付</div>
+      <div class="sv" style="color:var(--amber);">3 / 4</div>
+      <div class="meter"><span class="meter-fill" style="width:75%;background:var(--amber);"></span></div>
+      <div style="font-size:10px;color:var(--text-mute);margin-top:6px;">夕方ピークは増員候補</div>
+    </div>
+    <div class="card staff-card">
+      <div class="sl">警備</div>
+      <div class="sv" style="color:var(--green);">2 / 2</div>
+      <div class="meter"><span class="meter-fill" style="width:100%;background:var(--green);"></span></div>
+      <div style="font-size:10px;color:var(--text-mute);margin-top:6px;">充足（警備担当C 含む）</div>
+    </div>
+    <div class="card staff-card">
+      <div class="sl">設備</div>
+      <div class="sv" style="color:var(--navy);">2 / 2</div>
+      <div class="meter"><span class="meter-fill" style="width:100%;background:var(--navy);"></span></div>
+      <div style="font-size:10px;color:var(--text-mute);margin-top:6px;">充足（設備担当D 含む）</div>
+    </div>
+  </div>
+
+  <!-- 6) 防犯カメラ イベント要約 -->
+  <div class="section-title">防犯カメラ イベント要約</div>
+  <div class="note-strip privacy-strip">
+    <span class="ico">🛡️</span>
+    <span>顔認識・個人追跡は行いません。イベントのメタデータと確認ログのみを扱います。</span>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <h3>検知イベント（人の確認が必要）</h3>
+      <span class="meta">AIは検知のみ／確認は担当者</span>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <table class="ev-table">
+        <thead>
+          <tr>
+            <th>時刻</th><th>場所</th><th>イベント種別</th><th>区分</th><th>確認</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row">
+            <td>13:42</td><td>体育館A</td>
+            <td>混雑検知</td>
+            <td><span class="badge b-amber">注意</span></td>
+            <td><span class="btn ghost" onclick="confirmEvent(this)">確認済みにする</span></td>
+          </tr>
+          <tr class="row">
+            <td>21:18</td><td>設備通路（夜間）</td>
+            <td>立入禁止エリアへの進入</td>
+            <td><span class="badge b-red">要確認</span></td>
+            <td><span class="btn ghost" onclick="confirmEvent(this)">確認済みにする</span></td>
+          </tr>
+          <tr class="row">
+            <td>14:05</td><td>ロビー</td>
+            <td>転倒のような動き</td>
+            <td><span class="badge b-red">要確認</span></td>
+            <td><span class="btn ghost" onclick="confirmEvent(this)">確認済みにする</span></td>
+          </tr>
+          <tr class="row">
+            <td>22:40</td><td>多目的ホール</td>
+            <td>時間外在館</td>
+            <td><span class="badge b-amber">注意</span></td>
+            <td><span class="btn ghost" onclick="confirmEvent(this)">確認済みにする</span></td>
+          </tr>
+          <tr class="row">
+            <td>11:27</td><td>設備室</td>
+            <td>設備室の扉が開放</td>
+            <td><span class="badge b-amber">注意</span></td>
+            <td><span class="btn ghost" onclick="confirmEvent(this)">確認済みにする</span></td>
+          </tr>
+          <tr class="row">
+            <td>09:50</td><td>プール側カメラ</td>
+            <td>カメラ死活（オフライン）</td>
+            <td><span class="badge b-grey">機器</span></td>
+            <td><span class="btn ghost" onclick="confirmEvent(this)">確認済みにする</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 7) 天候 / 交通 / 地域SNSリスク -->
+  <div class="section-title">天候 / 交通 / 地域シグナル</div>
+  <div class="grid-3">
+    <div class="callout watch">
+      <div class="ct">☔ 午後から雨予報</div>
+      <div class="cd">屋内施設（体育館・多目的ホール）の需要増が見込まれ、駐車場（現在96%）が不足の可能性。臨時駐車・公共交通案内を推奨。</div>
+    </div>
+    <div class="callout risk">
+      <div class="ct">🚗 周辺道路で渋滞</div>
+      <div class="cd">南側アクセス道で工事渋滞。18時の団体利用（K-2026-0312）の到着遅延・受付集中の可能性。</div>
+    </div>
+    <div class="callout up">
+      <div class="ct">📣 地域SNSで来館言及が増加</div>
+      <div class="cd">市民向けイベント告知が拡散。多目的ホール周辺の人流増を観測。混雑・問い合わせ増に先回り対応を推奨。</div>
+    </div>
+  </div>
+
+  <!-- 8) 利用料 / 収入 / 減免 + 9) 監査ログ -->
+  <div class="section-title">収入・減免 と 監査ログ</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <h3>利用料・収入・減免／免除 要約</h3>
+        <span class="meta">本日 速報値</span>
+      </div>
+      <div class="card-body">
+        <dl class="kv kv-card">
+          <dt>本日収入（速報）</dt><dd>¥184,500</dd>
+          <dt>前週同曜日比</dt><dd style="color:var(--green);">+8.2%</dd>
+          <dt>減免申請</dt><dd>3 件（確認待ち）</dd>
+          <dt>免除額（本日）</dt><dd>¥22,000</dd>
+          <dt>減免区分</dt><dd>学校 2 ／ 障がい者 1</dd>
+          <dt>未収・要請求</dt><dd>1 件</dd>
+        </dl>
+        <div style="margin-top:10px;font-size:10px;color:var(--text-mute);">減免・免除は規定に基づき担当者が確認。AIは申請の分類・整合チェックまで。</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3>インシデント・意思決定ログ（監査用）</h3>
+        <span class="meta">改ざん不可ログ</span>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <table>
+          <thead>
+            <tr>
+              <th>日時</th><th>種別</th><th>内容</th><th>承認者</th><th>記録</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row">
+              <td>06-19 13:50</td><td>安全</td>
+              <td>混雑検知（体育館A）を確認・問題なし</td>
+              <td>警備担当C</td>
+              <td><span class="badge b-green">記録済</span></td>
+            </tr>
+            <tr class="row">
+              <td>06-19 11:30</td><td>保全</td>
+              <td>設備室扉 開放を確認・施錠対応</td>
+              <td>設備担当D</td>
+              <td><span class="badge b-green">記録済</span></td>
+            </tr>
+            <tr class="row">
+              <td>06-19 10:15</td><td>予約</td>
+              <td>会議室B 新規受付の一時保留を判断</td>
+              <td>管理責任者A</td>
+              <td><span class="badge b-green">記録済</span></td>
+            </tr>
+            <tr class="row">
+              <td>06-19 09:55</td><td>機器</td>
+              <td>プール側カメラ オフラインを起票</td>
+              <td>設備担当D</td>
+              <td><span class="badge b-green">記録済</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10) AIの推奨（要承認） -->
+  <div class="section-title">AIの推奨（要承認）</div>
+
+  <div class="proposal urgent">
+    <div class="proposal-top">
+      <span class="ai-badge">⚙ AI検知</span>
+      <span class="prio urgent">至急</span>
+      <span class="badge b-navy">人員</span>
+    </div>
+    <div class="proposal-msg">18時の体育館利用は混雑・雨天・駐車場不足が重なるため、受付を1名増員</div>
+    <div class="proposal-line">対象：<b>体育館A 18:00–21:00（団体／K-2026-0312）</b>。受付の夕方ピークと到着集中が重なる見込み。</div>
+    <div class="proposal-basis">根拠：稼働率92% ＋ 午後から雨予報（屋内需要増）＋ 駐車場96% ＋ 周辺道路の渋滞。受付充足 3/4。</div>
+    <div class="proposal-meta"><span>承認者：<b>管理責任者A</b></span><span>提案ID：P-PF-2041</span></div>
+    <div class="btns">
+      <span class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</span>
+      <span class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</span>
+      <span class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</span>
+      <span class="btn ghost">根拠を見る</span>
+    </div>
+  </div>
+
+  <div class="proposal today">
+    <div class="proposal-top">
+      <span class="ai-badge">⚙ AI検知</span>
+      <span class="prio today">本日</span>
+      <span class="badge b-amber">保全</span>
+    </div>
+    <div class="proposal-msg">空調2号機の異常値により、会議室Bの新規予約を一時停止する候補</div>
+    <div class="proposal-line">対象：<b>会議室B</b>。点検完了まで新規受付を停止し、既存予約（K-2026-0311）は代替室を案内。</div>
+    <div class="proposal-basis">根拠：空調2号機の消費電力・吸気温度が基準レンジを逸脱。利用者の快適性・安全に影響の可能性。</div>
+    <div class="proposal-meta"><span>承認者：<b>管理責任者A</b></span><span>提案ID：P-PF-2042</span></div>
+    <div class="btns">
+      <span class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</span>
+      <span class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</span>
+      <span class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</span>
+      <span class="btn ghost">根拠を見る</span>
+    </div>
+  </div>
+
+  <div class="proposal urgent">
+    <div class="proposal-top">
+      <span class="ai-badge">⚙ AI検知</span>
+      <span class="prio urgent">至急</span>
+      <span class="badge b-red">安全</span>
+    </div>
+    <div class="proposal-msg">夜間の立入検知イベントを警備担当が確認済みにする</div>
+    <div class="proposal-line">対象：<b>21:18 設備通路（夜間）— 立入禁止エリアへの進入</b>。現地確認のうえ確認ログを記録。</div>
+    <div class="proposal-basis">根拠：時間外帯の立入禁止エリア進入イベント。顔認識・個人追跡は行わず、イベントのメタデータのみで判定。</div>
+    <div class="proposal-meta"><span>承認者：<b>警備担当C</b></span><span>提案ID：P-PF-2043</span></div>
+    <div class="btns">
+      <span class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</span>
+      <span class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</span>
+      <span class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</span>
+      <span class="btn ghost">根拠を見る</span>
+    </div>
+  </div>
+
+  <div class="proposal good">
+    <div class="proposal-top">
+      <span class="ai-badge">⚙ AI検知</span>
+      <span class="prio good">推奨</span>
+      <span class="badge b-navy">減免</span>
+    </div>
+    <div class="proposal-msg">減免申請3件を規定に基づきまとめて確認</div>
+    <div class="proposal-line">対象：<b>減免申請 3件（学校2／障がい者1・免除額 計¥22,000）</b>。規定との整合性チェック済。まとめて承認可。</div>
+    <div class="proposal-basis">根拠：申請区分・添付・適用条件をAIが事前照合し、規定に適合。最終判断は担当者の確認後に確定。</div>
+    <div class="proposal-meta"><span>承認者：<b>管理責任者A</b></span><span>提案ID：P-PF-2044</span></div>
+    <div class="btns">
+      <span class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</span>
+      <span class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</span>
+      <span class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</span>
+      <span class="btn ghost">根拠を見る</span>
+    </div>
+  </div>
+
+  <div class="foot">サンプルデータ・個人名は非表示。AIは検知・要約・提案まで／重要な実行は人の承認後・監査ログに記録。</div>
+</main>
+
+<script>
+function actOn(btn,label,color){var c=btn.closest('.proposal')||btn.closest('.card');if(!c)return;var b=c.querySelector('.btns');var t=c.querySelector('.act-result');if(!t){t=document.createElement('span');t.className='act-result';t.style.cssText='display:inline-block;margin-left:8px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;';b.appendChild(t);}t.textContent=label;t.style.background=color+'22';t.style.color=color;}
+function confirmEvent(btn){btn.textContent='✓ 確認済み';btn.style.background='#DCFCE7';btn.style.color='#15803D';btn.style.borderColor='#15803D';}
+</script>
+</body>
+</html>

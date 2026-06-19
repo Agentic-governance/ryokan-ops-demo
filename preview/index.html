@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>施設運営AI OS — 画面デモ</title>
+<style>
+:root{--navy:#14283D;--navy2:#1E3A5F;--red:#C8102E;--grey:#6B7886;--rule:#DCE2E9;--panel:#F4F7FA;--ink:#1A2330;--green:#15803D;--amber:#D97706;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;color:var(--ink);background:#fff;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px 72px}
+
+/* ---- Hero ---- */
+.hero{background:linear-gradient(135deg,#14283D 0%,#1E3A5F 60%,#24405f 100%);color:#fff;margin-bottom:8px}
+.hero-in{max-width:1120px;margin:0 auto;padding:46px 24px 40px}
+.kicker{color:#FF9FB0;font-weight:700;letter-spacing:2px;font-size:12px}
+.hero h1{font-size:30px;font-weight:800;margin:8px 0 6px;line-height:1.35;letter-spacing:.3px}
+.hero h1 .accent{color:#FF8FA3}
+.hero .promise{color:#D5DEE9;font-size:14.5px;max-width:860px;margin-bottom:18px}
+.principles{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.principles .p{font-size:11.5px;font-weight:600;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#EAF0F6;padding:5px 11px;border-radius:14px}
+
+/* ---- Three concepts ---- */
+.concepts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0 8px}
+.concept{border:1px solid var(--rule);border-radius:10px;padding:16px 18px;background:var(--panel)}
+.concept .ct{font-weight:800;font-size:15px;color:var(--navy);display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.concept .ci{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
+.concept.see .ci{background:var(--navy2)}
+.concept.read .ci{background:var(--amber)}
+.concept.act .ci{background:var(--red)}
+.concept ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.concept li{font-size:11.5px;color:var(--grey);background:#fff;border:1px solid var(--rule);border-radius:12px;padding:3px 9px}
+.concept .flow{font-size:11px;color:var(--grey);margin-top:9px}
+
+/* ---- Scenario buttons ---- */
+.scen-h{font-size:13px;font-weight:700;color:var(--navy);margin:26px 0 10px;letter-spacing:.3px}
+.scenarios{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+a.scen{display:block;border:1px solid var(--rule);border-radius:10px;padding:15px 16px;text-decoration:none;background:#fff;transition:.15s;position:relative;overflow:hidden}
+a.scen::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--red)}
+a.scen.s2::before{background:var(--navy2)}
+a.scen.s3::before{background:var(--green)}
+a.scen.s4::before{background:var(--amber)}
+a.scen:hover{border-color:var(--navy);box-shadow:0 4px 16px rgba(20,40,61,.10);transform:translateY(-2px)}
+a.scen .num{font-size:11px;font-weight:700;color:var(--red)}
+a.scen.s2 .num{color:var(--navy2)} a.scen.s3 .num{color:var(--green)} a.scen.s4 .num{color:var(--amber)}
+a.scen .st{font-weight:800;font-size:15px;color:var(--navy);margin:3px 0 3px}
+a.scen .sd{font-size:11.5px;color:var(--grey);line-height:1.45}
+a.scen .go{font-size:11px;color:var(--red);font-weight:700;margin-top:8px;display:inline-block}
+
+/* ---- Grids ---- */
+h2{font-size:14px;color:var(--navy);margin:34px 0 12px;padding-left:10px;border-left:4px solid var(--red);display:flex;align-items:center;gap:8px}
+h2 .cnt{font-size:11px;color:var(--grey);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px}
+a.card{display:block;border:1px solid var(--rule);border-radius:8px;padding:13px 15px;text-decoration:none;color:var(--navy);background:var(--panel);transition:.15s;position:relative}
+a.card:hover{border-color:var(--navy);background:#fff;box-shadow:0 2px 10px rgba(20,40,61,.08);transform:translateY(-1px)}
+a.card .t{font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px}
+a.card .d{color:var(--grey);font-size:11.5px;margin-top:3px}
+.tag-new{font-size:9px;font-weight:800;color:#fff;background:var(--green);padding:1px 6px;border-radius:8px;letter-spacing:.4px}
+
+/* ---- intro note + foot ---- */
+.lead{color:var(--grey);font-size:13px;margin:22px 0 2px}
+.note{color:#9DAAB7;font-size:12px}
+.foot{margin-top:44px;color:#9DAAB7;font-size:11px;border-top:1px solid var(--rule);padding-top:16px;line-height:1.7}
+
+@media(max-width:900px){.concepts,.scenarios{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.concepts,.scenarios{grid-template-columns:1fr}.hero h1{font-size:23px}}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-in">
+    <div class="kicker">FACILITY OPERATIONS AI OS — 画面デモ</div>
+    <h1>施設運営AI OS — <span class="accent">PMS / 予約システムの上で</span>、需要・リスク・保全・承認を統合する</h1>
+    <p class="promise">既存PMSや予約システムはそのまま接続。現場が毎朝見る画面をAI運用レイヤーに置き換え、最終的には基幹機能も内包できる。第一の現場は<b style="color:#fff">旅館・ホテル</b>、第二の現場は<b style="color:#fff">公共施設</b>。</p>
+    <div class="principles">
+      <span class="p">既存PMS/予約システムはそのまま、現場の主画面を置き換える</span>
+      <span class="p">AIは読む・提案する。書き込みは人間の承認後のみ</span>
+      <span class="p">空室ではなく、実効販売可能数を見る</span>
+      <span class="p">外部需要と内部制約を同じ画面で判断する</span>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+
+  <!-- ============ 3 CONCEPTS ============ -->
+  <div class="concepts">
+    <div class="concept see">
+      <div class="ct"><span class="ci">🔭</span>外部を見る</div>
+      <ul>
+        <li>SNS</li><li>Web</li><li>口コミ</li><li>天候</li><li>交通</li><li>イベント</li><li>インバウンド動向</li>
+      </ul>
+      <div class="flow">CCDM型の外部シグナルを需要・リスクとして検知</div>
+    </div>
+    <div class="concept read">
+      <div class="ct"><span class="ci">📋</span>内部を読む</div>
+      <ul>
+        <li>予約</li><li>客室</li><li>食事</li><li>清掃</li><li>設備</li><li>人員</li><li>在庫</li><li>会計例外</li>
+      </ul>
+      <div class="flow">基幹データを横断し「実効販売可能数」で判断</div>
+    </div>
+    <div class="concept act">
+      <div class="ct"><span class="ci">✓</span>承認して動かす</div>
+      <ul>
+        <li>価格変更</li><li>販売停止</li><li>顧客通知</li><li>保全依頼</li><li>発注</li><li>レポート</li>
+      </ul>
+      <div class="flow">重要な変更は人の承認 → 監査ログに記録</div>
+    </div>
+  </div>
+
+  <!-- ============ SCENARIO BUTTONS ============ -->
+  <div class="scen-h">▶ 3分でわかるデモシナリオ</div>
+  <div class="scenarios">
+    <a class="scen s1" href="screen1_dashboard.html">
+      <div class="num">SCENARIO 01</div>
+      <div class="st">旅館 3分デモ</div>
+      <div class="sd">朝の司令塔画面。需要・保全・到着リスクをAIが整理し、対応を提案。</div>
+      <span class="go">ダッシュボードへ →</span>
+    </a>
+    <a class="scen s2" href="screen_public_facility.html">
+      <div class="num">SCENARIO 02</div>
+      <div class="st">公共施設 3分デモ</div>
+      <div class="sd">体育・文化センター運営。予約・保全・安全イベント・減免を一画面で。</div>
+      <span class="go">公共施設OSへ →</span>
+    </a>
+    <a class="scen s3" href="screen_approvals.html">
+      <div class="num">SCENARIO 03</div>
+      <div class="st">承認・監査デモ</div>
+      <div class="sd">価格・返金・販売停止・発注。すべて承認を通し、記録に残す。</div>
+      <span class="go">承認・監査へ →</span>
+    </a>
+    <a class="scen s4" href="screen_external_signals.html">
+      <div class="num">SCENARIO 04</div>
+      <div class="st">外部シグナル監視デモ</div>
+      <div class="sd">SNS・口コミ・天候・交通から需要とリスクを先読みし、提案へ。</div>
+      <span class="go">外部シグナルへ →</span>
+    </a>
+  </div>
+
+  <p class="lead">各画面はクリックで実際に操作できます。</p>
+  <p class="note">PC 12 画面 ＋ 新規 AI/公共施設 5 画面 ＋ モバイル 11 画面 ＋ 資料。サンプルデータ・個人名は非表示（役割ラベル／IDで表示）。本ページは検索エンジンに登録されません。</p>
+
+  <!-- ============ GROUPED GRID ============ -->
+  <h2>宿泊運営 <span class="cnt">Lodging operations</span></h2>
+  <div class="grid">
+    <a class="card" href="screen1_dashboard.html"><div class="t">ダッシュボード</div><div class="d">今日の運営司令塔 — 需要・保全・到着リスクとAIの確認事項</div></a>
+    <a class="card" href="screen3_reservations.html"><div class="t">予約管理</div><div class="d">予約・到着・連携の状態を一元表示</div></a>
+    <a class="card" href="screen4_rooms.html"><div class="t">客室管理</div><div class="d">清掃・客室状況ボード／担当割り当て</div></a>
+    <a class="card" href="screen5_guests.html"><div class="t">ゲスト管理</div><div class="d">宿泊者プロファイル（ID表示）</div></a>
+    <a class="card" href="screen_meals.html"><div class="t">食事管理</div><div class="d">食事の提供能力が客室の販売数を決める</div></a>
+    <a class="card" href="screen2_action_detail.html"><div class="t">アクション詳細</div><div class="d">お客様対応とAI返信案</div></a>
+  </div>
+
+  <h2>AI・戦略・外部シグナル <span class="cnt">AI / strategy / external signals</span></h2>
+  <div class="grid">
+    <a class="card" href="screen_external_signals.html"><div class="t">外部シグナル監視 <span class="tag-new">NEW</span></div><div class="d">SNS・口コミ・検索・天候・交通から需要とリスクを検知</div></a>
+    <a class="card" href="screen_risk_forecast.html"><div class="t">リスク予測 <span class="tag-new">NEW</span></div><div class="d">到着遅延・多言語・食事制約など対応準備リスクを先読み</div></a>
+    <a class="card" href="screen_strategy_actions.html"><div class="t">AI戦略アクション <span class="tag-new">NEW</span></div><div class="d">増収・運用・保全の提案を承認ワークフローで実行</div></a>
+    <a class="card" href="screen7_marketing.html"><div class="t">マーケティング分析</div><div class="d">需要を先読み、承認付きで実行</div></a>
+  </div>
+
+  <h2>保全・ロジスティクス <span class="cnt">Maintenance / logistics</span></h2>
+  <div class="grid">
+    <a class="card" href="screen6_maintenance.html"><div class="t">設備保全</div><div class="d">資産台帳・故障履歴・部材/業者リードタイム・影響予約・販売停止支援</div></a>
+  </div>
+
+  <h2>承認・監査 <span class="cnt">Approval / audit</span></h2>
+  <div class="grid">
+    <a class="card" href="screen_approvals.html"><div class="t">承認待ち一覧</div><div class="d">価格・返金・販売停止・発注・保全・通知をすべて承認・記録で管理</div></a>
+    <a class="card" href="screen_audit_reports.html"><div class="t">監査レポート <span class="tag-new">NEW</span></div><div class="d">誰が承認したか・根拠・前後値・影響を監査用に出力</div></a>
+    <a class="card" href="screen8_reports.html"><div class="t">レポート（会計）</div><div class="d">税区分・監査バランス</div></a>
+    <a class="card" href="screen_connectivity.html"><div class="t">連携状況</div><div class="d">基幹システム⇄予約サイトの連携監視</div></a>
+  </div>
+
+  <h2>公共施設への展開 <span class="cnt">Public facility expansion</span></h2>
+  <div class="grid">
+    <a class="card" href="screen_public_facility.html"><div class="t">公共施設OS <span class="tag-new">NEW</span></div><div class="d">体育・文化センター運営 — 予約・保全・安全イベント（プライバシー配慮）・減免・監査</div></a>
+  </div>
+
+  <h2>モバイル現場運用 <span class="cnt">Mobile field operations</span></h2>
+  <div class="grid">
+    <a class="card" href="mobile_today.html"><div class="t">今日（ホーム）</div><div class="d">当日のやること・確認事項</div></a>
+    <a class="card" href="mobile_action.html"><div class="t">アクション詳細</div><div class="d">お客様対応の現場ビュー</div></a>
+    <a class="card" href="mobile_rooms.html"><div class="t">客室</div><div class="d">清掃・客室状況</div></a>
+    <a class="card" href="mobile_approvals.html"><div class="t">承認</div><div class="d">外出先でも承認・記録</div></a>
+    <a class="card" href="mobile_meals.html"><div class="t">食事</div><div class="d">配膳・アレルギー対応</div></a>
+    <a class="card" href="mobile_reservations.html"><div class="t">予約</div><div class="d">予約・到着の確認</div></a>
+    <a class="card" href="mobile_guests.html"><div class="t">ゲスト</div><div class="d">担当ゲストの情報</div></a>
+    <a class="card" href="mobile_maintenance.html"><div class="t">設備保全</div><div class="d">不具合の確認・点検登録</div></a>
+    <a class="card" href="mobile_marketing.html"><div class="t">マーケティング</div><div class="d">予約の動きと販売候補</div></a>
+    <a class="card" href="mobile_reports.html"><div class="t">レポート</div><div class="d">売上・会計の確認</div></a>
+    <a class="card" href="mobile_connectivity.html"><div class="t">連携</div><div class="d">予約データの取り込み状況</div></a>
+  </div>
+
+  <h2>システム構成・提案資料 <span class="cnt">Architecture / materials</span></h2>
+  <div class="grid">
+    <a class="card" href="architecture.html"><div class="t">システム構成</div><div class="d">判断はAI・書き込みは承認後のみ</div></a>
+    <a class="card" href="market_research.html"><div class="t">市場調査レポート</div><div class="d">基幹システム連携AI市場（世界・日本／TAM・SAM・SOM）</div></a>
+    <a class="card" href="hms_pitch.html"><div class="t">提案デッキ</div><div class="d">提案資料（全10枚・ブラウザ閲覧／PPTダウンロード可）</div></a>
+  </div>
+
+  <div class="foot">
+    施設運営AI OS — 画面デモ（サンプルデータ・個人名非表示）。<br>
+    AIは読む・提案する。重要な書き込みは人間の承認後のみ実行し、監査ログに記録する。売上最大化だけでなく、事故・混乱・苦情・監査リスクを下げることを目的とする。<br>
+    本ページは検索エンジンに登録されません。
+  </div>
+</div>
+</body>
+</html>

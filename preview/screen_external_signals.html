@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>外部シグナル監視 — 施設運営AI OS</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+/* screen-specific tweaks */
+.src-strip{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--bg);border:1px solid var(--rule-soft);border-radius:6px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.04);margin-bottom:18px;}
+.src-strip .src-lab{font-size:11px;font-weight:700;color:var(--text-mute);margin-right:4px;}
+.src-strip .src-note{flex-basis:100%;font-size:10.5px;color:var(--text-mute);margin-top:6px;}
+.sig-card{position:relative;}
+.sig-card .sig-pct{font-size:22px;font-weight:800;line-height:1.1;}
+.sig-card .sig-pct.up{color:var(--green);}
+.sig-card .sig-pct.flat{color:var(--amber);}
+.sig-card .sig-pct.down{color:var(--brand);}
+.sig-card .sig-mkt{font-size:13px;font-weight:700;color:var(--navy);}
+.sig-card .sig-sub{font-size:10.5px;color:var(--text-mute);margin-top:2px;}
+.sig-card .sig-msg{font-size:11px;color:var(--text-sub);line-height:1.45;margin-top:7px;}
+.mini-spark{display:flex;align-items:flex-end;gap:2px;height:22px;margin-top:8px;}
+.mini-spark span{flex:1;background:var(--rule);border-radius:1px;}
+.mini-spark.up span{background:var(--green-lite);}
+.mini-spark.up span:last-child{background:var(--green);}
+.sec-note{font-size:11px;color:var(--text-mute);margin:-6px 0 12px;padding-left:10px;}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-logo"><span class="dot"></span><span>施設運営AI OS</span><span class="os">FACILITY OS</span></div>
+  <div class="header-facility"><span>○○リゾート箱根 — 全施設横断ビュー</span><span style="font-size:11px;color:var(--text-mute);">▾</span></div>
+  <div class="header-search"><input type="text" placeholder="予約ID・部屋番号・提案IDを検索"></div>
+  <div class="header-right">
+    <a class="header-link" href="index.html">← デモ一覧</a>
+    <div class="header-notif">🔔<span class="notif-badge">8</span></div>
+    <div class="header-user"><div><div class="header-user-name">支配人A</div><div class="header-user-role">支配人</div></div><span style="font-size:11px;color:var(--text-mute);">▾</span></div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <div class="sidebar-group">運営</div>
+  <a class="sidebar-item" href="screen1_dashboard.html">ダッシュボード</a>
+  <a class="sidebar-item" href="screen3_reservations.html">予約管理</a>
+  <a class="sidebar-item" href="screen4_rooms.html">客室管理</a>
+  <a class="sidebar-item" href="screen_meals.html">食事管理</a>
+  <a class="sidebar-item" href="screen6_maintenance.html">設備保全</a>
+  <div class="sidebar-group">AI・戦略・外部</div>
+  <a class="sidebar-item active" href="screen_external_signals.html">外部シグナル監視</a>
+  <a class="sidebar-item" href="screen_risk_forecast.html">リスク予測</a>
+  <a class="sidebar-item" href="screen_strategy_actions.html">AI戦略アクション</a>
+  <div class="sidebar-group">承認・監査</div>
+  <a class="sidebar-item" href="screen_approvals.html">承認待ち</a>
+  <a class="sidebar-item" href="screen_audit_reports.html">監査レポート</a>
+  <div class="sidebar-group">展開</div>
+  <a class="sidebar-item" href="screen_public_facility.html">公共施設OS</a>
+</nav>
+
+<main class="main">
+<div class="page-head">
+  <div class="crumb"><a href="index.html">デモ一覧</a> ／ 外部シグナル監視</div>
+  <div class="page-kicker">EXTERNAL SIGNALS</div>
+  <h1 class="page-title">外部シグナル監視 — 需要とリスクを外から先読み</h1>
+  <p class="page-sub">SNS / Web / 口コミ / 検索 / 天候 / 交通 / イベントを横断し、需要機会とリスクを検知する。検知はAI、実行は承認後。</p>
+</div>
+
+<div class="note-strip">
+  <span class="ico">🤖</span>
+  <span>AIは外部シグナルの<b>検知・要約・提案</b>まで。値上げ・Webコピー更新などの<b>実行は必ず人間の承認後</b>に行い、すべて<b>監査ログに記録</b>します。本画面のデータはサンプルです。</span>
+</div>
+
+<!-- KPI strip -->
+<div class="kpi-strip">
+  <div class="kpi-card">
+    <div class="kpi-label">監視中ソース</div>
+    <div class="kpi-value">42<span class="unit">系統</span></div>
+    <div class="kpi-delta up">▲ +6 今週追加</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">今週の検知シグナル</div>
+    <div class="kpi-value">137<span class="unit">件</span></div>
+    <div class="kpi-delta up">▲ +24% 前週比</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">機会シグナル</div>
+    <div class="kpi-value">9<span class="unit">件</span></div>
+    <div class="kpi-delta up">▲ 要対応 3件</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">リスクシグナル</div>
+    <div class="kpi-value">5<span class="unit">件</span></div>
+    <div class="kpi-delta warn">⚠ 監視 2 / 警戒 3</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">承認待ちAI提案</div>
+    <div class="kpi-value">5<span class="unit">件</span></div>
+    <div class="kpi-delta warn">⚠ うち期限あり 2件</div>
+  </div>
+</div>
+
+<!-- 1) Signal sources -->
+<div class="section-title">監視中の外部シグナルソース</div>
+<div class="src-strip">
+  <span class="src-lab">横断監視中：</span>
+  <span class="pill">📱 SNS（X / Instagram / 繁体字・簡体字・韓・英）</span>
+  <span class="pill">🔍 検索トレンド</span>
+  <span class="pill">⭐ レビューサイト</span>
+  <span class="pill">🛏 OTAレビュー</span>
+  <span class="pill">📅 地域イベントページ</span>
+  <span class="pill">🌦 天候・交通・ニュース</span>
+  <span class="src-note">これら6カテゴリ・計42系統を<b>横断監視</b>し、需要機会とリスクをAIが自動検知。検知結果は要約され、必要なものだけ提案として提示されます。</span>
+</div>
+
+<!-- 2) Inbound demand trend -->
+<div class="section-title">インバウンド需要トレンド（市場別シグナル）</div>
+<p class="sec-note">SNS・検索・OTA閲覧シグナルを市場別に合成。% は前年同期比の需要シグナル強度。</p>
+<div class="grid-auto">
+  <div class="card sig-card"><div class="card-body">
+    <div class="sig-mkt">🇹🇼 台湾</div>
+    <div class="sig-pct up">▲ +38%</div>
+    <div class="sig-sub">需要シグナル強度（前年同期比）</div>
+    <div class="mini-spark up"><span style="height:30%"></span><span style="height:42%"></span><span style="height:48%"></span><span style="height:66%"></span><span style="height:88%"></span><span style="height:100%"></span></div>
+    <div class="sig-msg">繁体字SNSで「箱根 雪見温泉」の言及が急増。冬季の連泊検索も上昇。</div>
+  </div></div>
+  <div class="card sig-card"><div class="card-body">
+    <div class="sig-mkt">🇭🇰 香港</div>
+    <div class="sig-pct up">▲ +21%</div>
+    <div class="sig-sub">需要シグナル強度（前年同期比）</div>
+    <div class="mini-spark up"><span style="height:40%"></span><span style="height:46%"></span><span style="height:52%"></span><span style="height:60%"></span><span style="height:72%"></span><span style="height:84%"></span></div>
+    <div class="sig-msg">旧正月連休の旅行プラン投稿が増加。露天風呂付き客室への関心が高い。</div>
+  </div></div>
+  <div class="card sig-card"><div class="card-body">
+    <div class="sig-mkt">🇰🇷 韓国</div>
+    <div class="sig-pct flat">▬ +4%</div>
+    <div class="sig-sub">需要シグナル強度（前年同期比）</div>
+    <div class="mini-spark"><span style="height:60%"></span><span style="height:58%"></span><span style="height:55%"></span><span style="height:57%"></span><span style="height:54%"></span><span style="height:56%"></span></div>
+    <div class="sig-msg">横ばい。検索は安定だが価格感度が高く、平日プランの反応が中心。</div>
+  </div></div>
+  <div class="card sig-card"><div class="card-body">
+    <div class="sig-mkt">🇺🇸🇪🇺 米国 / 欧州</div>
+    <div class="sig-pct up">▲ +15%</div>
+    <div class="sig-sub">需要シグナル強度（前年同期比）</div>
+    <div class="mini-spark up"><span style="height:48%"></span><span style="height:50%"></span><span style="height:58%"></span><span style="height:62%"></span><span style="height:70%"></span><span style="height:78%"></span></div>
+    <div class="sig-msg">英語レビューで「静かな高級宿」評価が拡散。長期滞在・高単価層の閲覧増。</div>
+  </div></div>
+  <div class="card sig-card"><div class="card-body">
+    <div class="sig-mkt">🌏 東南アジア</div>
+    <div class="sig-pct up">▲ +27%</div>
+    <div class="sig-sub">需要シグナル強度（前年同期比）</div>
+    <div class="mini-spark up"><span style="height:32%"></span><span style="height:40%"></span><span style="height:50%"></span><span style="height:58%"></span><span style="height:74%"></span><span style="height:90%"></span></div>
+    <div class="sig-msg">タイ・シンガポールで「初雪・温泉」体験の検索が拡大。家族旅行の文脈が多い。</div>
+  </div></div>
+</div>
+
+<!-- 3) Domestic segments -->
+<div class="section-title">国内セグメント別 需要シグナル</div>
+<div class="card"><div class="card-body">
+  <div class="bar-row"><span class="lab">ファミリー</span><span class="meter"><span class="meter-fill" style="width:82%;background:var(--green);"></span></span><span class="val">強</span></div>
+  <div class="bar-row"><span class="lab">シニア</span><span class="meter"><span class="meter-fill" style="width:68%;background:var(--green);"></span></span><span class="val">やや強</span></div>
+  <div class="bar-row"><span class="lab">一人旅</span><span class="meter"><span class="meter-fill" style="width:46%;background:var(--amber);"></span></span><span class="val">中</span></div>
+  <div class="bar-row"><span class="lab">法人・オフサイト</span><span class="meter"><span class="meter-fill" style="width:34%;background:var(--amber);"></span></span><span class="val">弱め</span></div>
+  <div class="bar-row"><span class="lab">リピーター</span><span class="meter"><span class="meter-fill" style="width:74%;background:var(--green);"></span></span><span class="val">強</span></div>
+</div></div>
+
+<!-- 4) Detected opportunities -->
+<div class="section-title">検知された機会</div>
+<div class="grid-3">
+  <div class="callout up">
+    <div class="ct">繁体字SNSで「箱根 雪見温泉」の言及が急増 <span class="badge b-green">機会</span></div>
+    <div class="cd">過去2週で言及 +38%。台湾市場の冬季連泊需要が立ち上がりつつある。Web・OTAでの訴求最適化で取りこぼし回避が見込める。</div>
+  </div>
+  <div class="callout up">
+    <div class="ct">週末イベントにより日帰り・前泊需要が上昇 <span class="badge b-green">機会</span></div>
+    <div class="cd">地域イベントページに大型イベント告知。週末の前泊・素泊まり需要シグナルが +29%。空室の埋め込み余地あり。</div>
+  </div>
+  <div class="callout up">
+    <div class="ct">競合施設の高単価客室が満室傾向 <span class="badge b-green">機会</span></div>
+    <div class="cd">OTA在庫シグナルで近隣競合の高単価帯が満室化。当館の露天風呂付き客室に価格弾力性の余地。実効販売可能数と要照合。</div>
+  </div>
+</div>
+
+<!-- 5) Detected risks -->
+<div class="section-title">検知されたリスク</div>
+<div class="grid-3">
+  <div class="callout watch">
+    <div class="ct">交通障害の予兆 <span class="badge b-amber">監視</span></div>
+    <div class="cd">交通ニュースで小田原方面の道路規制情報。チェックイン集中時間帯に到着遅延の可能性。送迎調整の検討を推奨。</div>
+  </div>
+  <div class="callout watch">
+    <div class="ct">天候障害（降雪）の可能性 <span class="badge b-amber">監視</span></div>
+    <div class="cd">気象シグナルで週末の積雪確率が上昇。チェーン規制・送迎・暖房負荷の事前案内が必要になる見込み。</div>
+  </div>
+  <div class="callout risk">
+    <div class="ct">レビュー評価の低下 <span class="badge b-red">警戒</span></div>
+    <div class="cd">直近のOTAレビューで「朝食の待ち時間」への低評価が3件クラスタ化。総合スコアの下押し要因。要因の特定と対応を推奨。</div>
+  </div>
+  <div class="callout risk">
+    <div class="ct">多言語対応の負荷増 <span class="badge b-red">警戒</span></div>
+    <div class="cd">繁体字・英語の問い合わせシグナルが急増。フロントの一次応答が滞留しつつある。事前案内・テンプレ整備で負荷軽減が可能。</div>
+  </div>
+  <div class="callout risk">
+    <div class="ct">SNS苦情クラスタの兆候 <span class="badge b-red">警戒</span></div>
+    <div class="cd">SNSで「チェックイン行列」に関する投稿が同時多発。拡散前の早期一次対応が必要。担当へのエスカレーションを推奨。</div>
+  </div>
+</div>
+
+<!-- 6) AI proposals (require approval) -->
+<div class="section-title">AIの提案（要承認）</div>
+<p class="sec-note">AIは下記を提案するのみ。実行は承認後にAI OSが代行し、すべて監査ログに記録されます。</p>
+
+<div class="proposal good">
+  <div class="proposal-top">
+    <span class="ai-badge">🤖 AI検知</span>
+    <span class="prio good">機会</span>
+    <span class="badge b-navy">提案ID P-2026-3101</span>
+    <span class="badge b-grey">対象：公式Web</span>
+  </div>
+  <div class="proposal-msg">公式Webコピーを「雪見温泉・冬の箱根」訴求に更新</div>
+  <div class="proposal-line">トップと冬季プランLPの見出し・本文を、繁体字SNSで伸びている文脈（雪見・露天）に合わせて更新する案を生成済み。</div>
+  <div class="proposal-line"><b>期待効果：</b>台湾・香港経由の冬季予約 CV +0.4〜0.7pt の想定。</div>
+  <div class="proposal-basis">根拠：繁体字SNS言及 +38%（過去2週）／検索「箱根 雪見温泉」上昇／競合の同訴求が先行。</div>
+  <div class="proposal-meta"><span>承認者：<b>支配人A</b></span><span>実行：承認後にコピー差し替え＋監査ログ記録</span></div>
+  <div class="btns">
+    <span class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</span>
+    <span class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</span>
+    <span class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</span>
+    <span class="btn ghost">根拠を見る</span>
+  </div>
+</div>
+
+<div class="proposal good">
+  <div class="proposal-top">
+    <span class="ai-badge">🤖 AI検知</span>
+    <span class="prio good">機会</span>
+    <span class="badge b-navy">提案ID P-2026-3102</span>
+    <span class="badge b-grey">対象：OTA説明文</span>
+  </div>
+  <div class="proposal-msg">OTA説明文を多言語ニーズに合わせて調整</div>
+  <div class="proposal-line">露天風呂付き客室の説明文に、英語・繁体字レビューで評価の高い「静けさ・プライベート感」要素を追記する案。</div>
+  <div class="proposal-line"><b>期待効果：</b>高単価客室の閲覧→予約転換 +0.3pt の想定。</div>
+  <div class="proposal-basis">根拠：英語レビューで「静かな高級宿」評価が拡散／競合の高単価帯が満室傾向。</div>
+  <div class="proposal-meta"><span>承認者：<b>支配人A</b></span><span>実行：承認後にOTA管理画面へ反映＋監査ログ記録</span></div>
+  <div class="btns">
+    <span class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</span>
+    <span class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</span>
+    <span class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</span>
+    <span class="btn ghost">根拠を見る</span>
+  </div>
+</div>
+
+<div class="proposal urgent">
+  <div class="proposal-top">
+    <span class="ai-badge">🤖 AI検知</span>
+    <span class="prio urgent">要承認・期限あり</span>
+    <span class="badge b-navy">提案ID P-2026-3103</span>
+    <span class="badge b-red">対象：料金（重要）</span>
+  </div>
+  <div class="proposal-msg">対象期間（1/24〜1/26）の露天風呂付き客室を +8% に調整</div>
+  <div class="proposal-line">外部需要シグナルと内部の実効販売可能数を突き合わせ、需要超過が見込まれる期間のみの限定値上げ案。</div>
+  <div class="proposal-line"><b>期待効果：</b>当該3日間の客室収益 +約12万円／OCC低下リスクは限定的と試算。</div>
+  <div class="proposal-basis">根拠：台湾+38%・東南アジア+27%の需要シグナル ＋ 内部の実効販売可能数（残14室・既受注ペース上振れ）。競合高単価帯が満室傾向。</div>
+  <div class="proposal-meta"><span>承認者：<b>支配人A</b></span><span>関連予約：R-2026-1208 ほか</span><span>実行：承認後にPMS料金を更新＋監査ログ記録</span></div>
+  <div class="btns">
+    <span class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</span>
+    <span class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</span>
+    <span class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</span>
+    <span class="btn ghost">根拠を見る</span>
+  </div>
+</div>
+
+<div class="proposal today">
+  <div class="proposal-top">
+    <span class="ai-badge">🤖 AI検知</span>
+    <span class="prio today">本日対応</span>
+    <span class="badge b-navy">提案ID P-2026-3104</span>
+    <span class="badge b-grey">対象：ゲスト案内</span>
+  </div>
+  <div class="proposal-msg">降雪・交通向けの多言語事前案内を配信</div>
+  <div class="proposal-line">週末到着予定の海外ゲスト向けに、繁体字・英語の「降雪時のアクセス・送迎・チェーン規制」事前案内文を生成済み。</div>
+  <div class="proposal-line"><b>期待効果：</b>到着時の混乱・苦情・フロント問い合わせの抑制。</div>
+  <div class="proposal-basis">根拠：週末の積雪確率上昇（気象シグナル）／繁体字・英語の問い合わせ急増／交通規制ニュース。</div>
+  <div class="proposal-meta"><span>承認者：<b>支配人A</b></span><span>配信補助：フロント担当B</span><span>実行：承認後に該当予約へ案内送信＋監査ログ記録</span></div>
+  <div class="btns">
+    <span class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</span>
+    <span class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</span>
+    <span class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</span>
+    <span class="btn ghost">根拠を見る</span>
+  </div>
+</div>
+
+<div class="proposal today">
+  <div class="proposal-top">
+    <span class="ai-badge">🤖 AI検知</span>
+    <span class="prio today">本日対応</span>
+    <span class="badge b-navy">提案ID P-2026-3105</span>
+    <span class="badge b-grey">対象：人員・在庫</span>
+  </div>
+  <div class="proposal-msg">週末の人員・食材在庫の準備を強化</div>
+  <div class="proposal-line">週末イベント＋インバウンド上振れに備え、朝食オペレーション人員の前倒し配置と食材発注数の見直し案を提示。</div>
+  <div class="proposal-line"><b>期待効果：</b>朝食待ち時間の短縮（低評価クラスタの再発防止）と品切れ回避。</div>
+  <div class="proposal-basis">根拠：週末需要シグナル上昇／OTAレビューで「朝食の待ち時間」低評価3件クラスタ／予約ペース上振れ。</div>
+  <div class="proposal-meta"><span>承認者：<b>支配人A</b></span><span>関連：会計担当C（発注）・夜勤担当D（前準備）</span><span>実行：承認後にシフト・発注へ反映＋監査ログ記録</span></div>
+  <div class="btns">
+    <span class="btn approve" onclick="actOn(this,'✓ 承認済 — 監査ログに記録','#15803D')">承認</span>
+    <span class="btn reject" onclick="actOn(this,'却下','#C8102E')">却下</span>
+    <span class="btn escalate" onclick="actOn(this,'上位者へ送付','#1E3A5F')">上位者へ送る</span>
+    <span class="btn ghost">根拠を見る</span>
+  </div>
+</div>
+
+<div class="foot">サンプルデータ・個人名は非表示。AIは検知・要約・提案まで／重要な実行は人の承認後・監査ログに記録。</div>
+</main>
+
+<script>
+function actOn(btn,label,color){var c=btn.closest('.proposal')||btn.closest('.card');if(!c)return;var b=c.querySelector('.btns');var t=c.querySelector('.act-result');if(!t){t=document.createElement('span');t.className='act-result';t.style.cssText='display:inline-block;margin-left:8px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;';b.appendChild(t);}t.textContent=label;t.style.background=color+'22';t.style.color=color;}
+</script>
+</body>
+</html>
